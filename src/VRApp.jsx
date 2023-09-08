@@ -60,11 +60,11 @@ export default function VRApp() {
     return (
         <>
             <VRButton />
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
             <div style={{ width: "50vw", height: "50vh" }}>
                 <Canvas camera={{ position: [-10, 10, 10], fov: 50 }}>
                     <XR>
+                        <ambientLight intensity={0.5} />
+                        <pointLight position={[5, 5, 5]} />
                         <ControllersWithEnvMap />
                         <Hands />
                         <RayGrab>
