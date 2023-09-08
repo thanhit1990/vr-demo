@@ -20,12 +20,6 @@ const my_polyhedron = {
     Dodecahedron: new THREE.DodecahedronGeometry(0.785398)
 }
 
-const MODELS = {
-    Box: new THREE.BoxGeometry(),
-    Sphere: new THREE.SphereGeometry(0.785398),
-    Dodecahedron: new THREE.DodecahedronGeometry(0.785398)
-}
-
 const options = {
     x: { value: 0, min: 0, max: Math.PI * 2, step: 0.01 },
     y: { value: 0, min: 0, max: Math.PI * 2, step: 0.01 },
@@ -71,8 +65,6 @@ export default function VRApp() {
                     <XR>
                         <ControllersWithEnvMap />
                         <Hands />
-                        <hemisphereLight color="white" groundColor="blue" intensity={0.75} />
-                        <spotLight position={[50, 50, 10]} angle={0.15} penumbra={1} />
                         <RayGrab>
                             <Polyhedron
                                 key="polyhedronA"
@@ -95,8 +87,6 @@ export default function VRApp() {
                                 polyhedron_shape={my_polyhedron[pB.model]}
                             />
                         </RayGrab>
-                        <ContactShadows scale={20} blur={10} far={20} />
-                        <Environment files="./resting.hdr" background />
                         <OrbitControls target-y={1} />
                         <axesHelper args={[5]} />
                         <gridHelper />
