@@ -35,10 +35,12 @@ export default function VRApp() {
     return (
         <>
             <VRButton />
-            <Canvas camera={{ position: [1, 2, -10] }}>
+            <Canvas camera={{ position: [1, 2, 3] }} >
                 <XR>
                     <Controllers />
                     <Hands />
+                    <hemisphereLight color="white" groundColor="blue" intensity={0.75} />
+                    <spotLight position={[50, 50, 10]} angle={0.15} penumbra={1} />
                     <RayGrab>
                         <Polyhedron
                             key="polyhedronA"
@@ -49,6 +51,8 @@ export default function VRApp() {
                             wireframe={pA.wireframe}
                             polyhedron_shape={my_polyhedron[pA.model]}
                         />
+                    </RayGrab>
+                    <RayGrab>
                         <Polyhedron
                             key="polyhedronB"
                             position={[1, 1, 0]}
@@ -59,6 +63,8 @@ export default function VRApp() {
                             polyhedron_shape={my_polyhedron[pB.model]}
                         />
                     </RayGrab>
+                    <ContactShadows scale={20} blur={10} far={20} />
+                    <Environment files="./resting.hdr" background />
                     <OrbitControls target-y={1} />
                     <axesHelper args={[5]} />
                     <gridHelper />
