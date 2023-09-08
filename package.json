@@ -10,8 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@react-three/drei": "9.78.1",
+    "@react-three/fiber": "8.13.4",
+    "@react-three/xr": "^5.7.1",
+    "@types/three": "0.153.0",
+    "leva": "0.9.34",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-scripts": "5.0.1",
+    "react-spring": "9.0.0-rc.3",
+    "react-three-fiber": "5.0.0-beta.11",
+    "react-three-gui": "0.4.2",
+    "three": "0.154.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -21,6 +31,8 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "vite": "^4.4.5"
+    "typescript": "3.3.3",
+    "vite": "^4.4.5",
+    "vite-plugin-mkcert": "^1.16.0"
   }
 }
