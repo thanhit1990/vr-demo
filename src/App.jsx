@@ -1,7 +1,7 @@
 import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from './vite.svg'
-import 'https://<your_github_username>.github.io/App.css'
+import 'https://thanhit1990.github.io/App.css'
 
 function App() {
   const [count, setCount] = useState(0)
