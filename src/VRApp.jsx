@@ -1,4 +1,4 @@
-import { VRButton, ARButton, XR, Controllers, Hands } from '@react-three/xr'
+import { VRButton, ARButton, XR, Controllers, Hands, RayGrab } from '@react-three/xr'
 import { Canvas } from '@react-three/fiber'
 import Polyhedron from './Polyhedron.jsx'
 import * as THREE from 'three'
@@ -35,28 +35,30 @@ export default function VRApp() {
     return (
         <>
             <VRButton />
-            <Canvas camera={{ position: [1, 2, 3] }}>
+            <Canvas camera={{ position: [1, 2, -10] }}>
                 <XR>
                     <Controllers />
                     <Hands />
-                    <Polyhedron
-                        key="polyhedronA"
-                        position={[-1, 1, 0]}
-                        rotation={[pA.x, pA.y, pA.z]}
-                        visible={pA.visible}
-                        color={pA.color}
-                        wireframe={pA.wireframe}
-                        polyhedron_shape={my_polyhedron[pA.model]}
-                    />
-                    <Polyhedron
-                        key="polyhedronB"
-                        position={[1, 1, 0]}
-                        rotation={[pB.x, pB.y, pB.z]}
-                        visible={pB.visible}
-                        color={pB.color}
-                        wireframe={pB.wireframe}
-                        polyhedron_shape={my_polyhedron[pB.model]}
-                    />
+                    <RayGrab>
+                        <Polyhedron
+                            key="polyhedronA"
+                            position={[-1, 1, 0]}
+                            rotation={[pA.x, pA.y, pA.z]}
+                            visible={pA.visible}
+                            color={pA.color}
+                            wireframe={pA.wireframe}
+                            polyhedron_shape={my_polyhedron[pA.model]}
+                        />
+                        <Polyhedron
+                            key="polyhedronB"
+                            position={[1, 1, 0]}
+                            rotation={[pB.x, pB.y, pB.z]}
+                            visible={pB.visible}
+                            color={pB.color}
+                            wireframe={pB.wireframe}
+                            polyhedron_shape={my_polyhedron[pB.model]}
+                        />
+                    </RayGrab>
                     <OrbitControls target-y={1} />
                     <axesHelper args={[5]} />
                     <gridHelper />

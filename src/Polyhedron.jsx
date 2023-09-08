@@ -1,9 +1,11 @@
+import { useInteraction } from '@react-three/xr'
 import { useRef, useState } from 'react'
 
 export default function Polyhedron({ polyhedron_shape, color, wireframe, ...props }) {
     const ref = useRef()
     const [count, setCount] = useState(2)
-
+    useInteraction(ref, { onSelect: () => setCount((count + 1) % 3) })
+    
     console.log('Me ', polyhedron_shape)
 
     return (
