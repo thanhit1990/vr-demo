@@ -60,6 +60,8 @@ export default function VRApp() {
     return (
         <>
             <VRButton />
+            <ambientLight />
+            <pointLight position={[10, 10, 10]} />
             <div style={{ width: "50vw", height: "50vh" }}>
                 <Canvas camera={{ position: [-10, 10, 10], fov: 50 }}>
                     <XR>
@@ -68,7 +70,7 @@ export default function VRApp() {
                         <RayGrab>
                             <Polyhedron
                                 key="polyhedronA"
-                                position={[-5, 5, 5]}
+                                position={[-2, 2, 2]}
                                 rotation={[pA.x, pA.y, pA.z]}
                                 visible={pA.visible}
                                 color={pA.color}
@@ -79,7 +81,7 @@ export default function VRApp() {
                         <RayGrab>
                             <Polyhedron
                                 key="polyhedronB"
-                                position={[5, 5, 5]}
+                                position={[2, 2, 2]}
                                 rotation={[pB.x, pB.y, pB.z]}
                                 visible={pB.visible}
                                 color={pB.color}
