@@ -3,7 +3,11 @@ import { Canvas } from '@react-three/fiber'
 import Polyhedron from './Polyhedron.jsx'
 import * as THREE from 'three'
 import { useMemo } from 'react'
-import { Stats, OrbitControls } from '@react-three/drei'
+import { 
+    Stats, 
+    OrbitControls, 
+    ContactShadows,
+    Environment } from '@react-three/drei'
 import { Leva, useControls } from 'leva'
 
 
