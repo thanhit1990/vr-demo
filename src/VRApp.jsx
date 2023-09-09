@@ -2,7 +2,7 @@ import { VRButton, ARButton, XR, Controllers, Hands, RayGrab } from '@react-thre
 import { Canvas, useThree } from '@react-three/fiber'
 import Polyhedron from './Polyhedron.jsx'
 import { RGBELoader } from 'three-stdlib'
-import { PMREMGenerator, Texture } from 'three'
+import { PMREMGenerator, Texture, gl } from 'three'
 import * as THREE from 'three'
 import { useMemo, useEffect, useState } from 'react'
 import {
