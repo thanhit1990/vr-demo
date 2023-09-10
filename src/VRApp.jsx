@@ -1,14 +1,15 @@
-import { VRButton, ARButton, XR, Controllers, Hands, RayGrab } from '@react-three/xr'
-import { Canvas, useThree } from '@react-three/fiber'
+import { VRButton, ARButton, useXR, XR, Controllers, Hands, RayGrab } from '@react-three/xr'
+import { Canvas, useThree, useFrame } from '@react-three/fiber'
 import Polyhedron from './Polyhedron.jsx'
 import { RGBELoader } from 'three-stdlib'
-import { PMREMGenerator, Texture, gl } from 'three'
+import { PMREMGenerator, Texture } from 'three'
 import * as THREE from 'three'
 import { useMemo, useEffect, useState } from 'react'
 import {
     Stats,
     OrbitControls,
     ContactShadows,
+    Box,
     Environment
 } from '@react-three/drei'
 import { Leva, useControls } from 'leva'
@@ -30,28 +31,17 @@ const options = {
     model: { value: 'Box', options: Object.keys(my_polyhedron) }
 }
 
-function ControllersWithEnvMap() {
-    const renderer = useThree(({ gl }) => gl);
-    const [envMap, setEnvMap] = useState(null); // Initialize with null instead of specifying a type
+function PlayerExample() {
+    const player = useXR((state) => state.player)
+    useFrame(() => void (player.rotation.y += 0.0005))
 
-    useEffect(() => {
-        const generateEnvMap = async () => {
-            const rgbeLoader = new RGBELoader();
-            const dataTexture = await rgbeLoader.loadAsync('./resting.hdr');
-            const pmremGenerator = new PMREMGenerator(renderer);
-            pmremGenerator.compileEquirectangularShader();
-            const rt = pmremGenerator.fromEquirectangular(dataTexture);
-            const radianceMap = rt.texture;
-            setEnvMap(radianceMap);
-            pmremGenerator.dispose();
-        };
-
-        generateEnvMap();
-    }, [renderer]);
-
-    return <Controllers envMap={envMap} envMapIntensity={1} />;
+    return (
+        <>
+            <Environment preset="sunset" background />
+            <Box position={[0, 0.8, -1]} args={[0.4, 0.1, 0.1]} />
+        </>
+    )
 }
-
 
 export default function VRApp() {
     const pA = useControls('Polyhedron A', options)
@@ -65,7 +55,6 @@ export default function VRApp() {
                     <XR>
                         <ambientLight intensity={0.5} />
                         <pointLight position={[5, 5, 5]} />
-                        <ControllersWithEnvMap />
                         <Hands />
                         <RayGrab>
                             <Polyhedron
@@ -89,6 +78,8 @@ export default function VRApp() {
                                 polyhedron_shape={my_polyhedron[pB.model]}
                             />
                         </RayGrab>
+                        <Controllers />
+                        <PlayerExample />
                         <OrbitControls target-y={1} />
                         <axesHelper args={[5]} />
                         <gridHelper />
