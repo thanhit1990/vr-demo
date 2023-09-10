@@ -50,7 +50,7 @@ export default function VRApp() {
     return (
         <>
             <VRButton />
-            <div style={{ width: "50vw", height: "50vh" }}>
+            {/* <div style={{ width: "50vw", height: "50vh" }}> */}
                 <Canvas camera={{ position: [-10, 10, 10], fov: 50 }}>
                     <XR>
                         <ambientLight intensity={0.5} />
@@ -86,7 +86,7 @@ export default function VRApp() {
                         <Stats />
                     </XR>
                 </Canvas>
-            </div>
+            {/* </div> */}
         </>
     )
 }
