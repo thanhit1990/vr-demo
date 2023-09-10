@@ -32,8 +32,8 @@ const options = {
 }
 
 function PlayerExample() {
-    const player = useXR((state) => state.player)
-    useFrame(() => void (player.rotation.y += 0.0005))
+    // const player = useXR((state) => state.player)
+    // useFrame(() => void (player.rotation.y += 0.0005))
 
     return (
         <>
