@@ -118,7 +118,7 @@ export default function VRApp() {
                         />
                     </RayGrab>
                     <Controllers />
-                    <Button position={[0, 0.8, -1]} />
+                    <Button position={[0, 0.8, -4]} />
                     <PlayerExample />
                     <OrbitControls target-y={1} />
                     <axesHelper args={[5]} />
