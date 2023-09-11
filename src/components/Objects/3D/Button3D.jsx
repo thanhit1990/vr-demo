@@ -17,7 +17,10 @@ export default function Button3D(props) {
     const [color, setColor] = useState(0x123456);
     const onSelect = () => {
         setColor((Math.random() * 0xffffff) | 0);
-        window.close();
+        if (window.opener) {
+            // window.opener.location.href = '/tab-a';
+            window.close(); // Close tab B
+        }
     };
 
     return (

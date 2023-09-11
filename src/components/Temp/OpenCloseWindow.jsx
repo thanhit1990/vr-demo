@@ -10,10 +10,14 @@ const OpenCloseWindow = () => {
 
     const closeWindow = () => {
         // Change the variable here as needed
-        const variableChanged = true;
-
+        // const variableChanged = true;
+        if (window.opener) {
+            // window.opener.location.href = '/tab-a';
+            window.close(); // Close tab B
+        }
         // Send a message to Window A
-        window.opener.postMessage({ variableChanged }, '*');
+        // window.opener.postMessage({ variableChanged }, '*');
+
     };
 
     return (
