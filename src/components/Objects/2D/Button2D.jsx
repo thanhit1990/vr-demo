@@ -2,7 +2,6 @@ import { useControls, button } from 'leva'
 
 export default function Button() {
     const values = useControls({
-        number: 3,
         'Exit Room!': button((get) => {
             const result = window.confirm('Are you sure to exit XR Room?');
             if (result) {
