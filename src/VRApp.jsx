@@ -17,6 +17,7 @@ import {
     Environment
 } from '@react-three/drei'
 import { Leva, useControls } from 'leva'
+import Button2D from './components/Objects/2D/Button2D.jsx'
 
 
 const my_polyhedron = {
@@ -49,7 +50,8 @@ function PlayerExample() {
 export default function VRApp() {
     const pA = useControls('Polyhedron A', options)
     const pB = useControls('Polyhedron B', options)
-
+    const pC = Button2D()
+    
     return (
         <>
             <VRButton />

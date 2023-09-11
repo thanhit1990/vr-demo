@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-function MyComponent() {
+function EnterVR() {
     // useEffect to find the button element by its inner text
     useEffect(() => {
         const buttons = document.querySelectorAll('button');
@@ -20,4 +20,4 @@ function MyComponent() {
     );
 }
 
-export default MyComponent;
+export default EnterVR;
