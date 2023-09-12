@@ -14,7 +14,7 @@ function Box({ color, size, scale, children, ...rest }) {
 
 export default function Button3D(props) {
     const [hover, setHover] = useState(false);
-    const [color, setColor] = useState(0x123456);
+    const [color, setColor] = useState(0x417EB1);
     const ref = useRef()
     const onSelect = () => {
         setColor((Math.random() * 0xffffff) | 0);
