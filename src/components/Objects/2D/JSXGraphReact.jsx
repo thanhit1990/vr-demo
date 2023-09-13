@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
- 
+
 import JXGBoard from 'jsxgraph-react-js'
- 
+
 let logicJC = `
 $board.setView([-1.5, 2, 1.5, -1]);
  
@@ -53,19 +53,19 @@ euler = line(i1, i2) <<
         strokeColor:'#901B77'
     >>;
 `
- 
+
 class JSXGraphReact extends Component {
-  render () {
-    return (
-        <JXGBoard
-          logic={logicJC}
-          style={{
-            border: "3px solid red"
-          }}
-          jessieCode
-        />
-    )
-  }
+    render() {
+        return (
+            <JXGBoard
+                logic={logicJC}
+                style={{
+                    border: "3px solid red"
+                }}
+                jessieCode
+            />
+        )
+    }
 }
 
 export default JSXGraphReact;

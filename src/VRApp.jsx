@@ -37,9 +37,6 @@ const options = {
 }
 
 function PlayerExample() {
-    // const player = useXR((state) => state.player)
-    // useFrame(() => void (player.rotation.y += 0.0005))
-
     return (
         <>
             <Environment preset="sunset" background />
@@ -55,7 +52,6 @@ export default function VRApp() {
     return (
         <>
             <VRButton />
-            {/* <div style={{ width: "50vw", height: "50vh" }}> */}
             <Canvas camera={{ position: [-10, 10, 10], fov: 50 }}>
                 <XR>
                     <Sky sunPosition={[0, 1, 0]} />
@@ -94,7 +90,6 @@ export default function VRApp() {
                     <Stats />
                 </XR>
             </Canvas>
-            {/* </div> */}
         </>
     )
 }

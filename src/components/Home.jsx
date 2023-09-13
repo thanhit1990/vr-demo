@@ -33,7 +33,7 @@ const Home = () => {
         });
 
         // Save a reference to the child window
-        setChildWindow(newWindow);
+        // setChildWindow(newWindow);
     };
 
     const rooms = [
