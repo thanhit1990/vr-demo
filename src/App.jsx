@@ -1,35 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-// import viteLogo from './vite.svg'
-import './App.css'
+// App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Home from './components/Home.jsx';
+import VRApp from './VRApp.jsx'
+import JSXGraphReact from './components/Objects/2D/JSXGraphReact.jsx'
+import JSXGraphComponent from './components/Objects/2D/JSXGraphComponent.jsx'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        {/* <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a> */}
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <Routes>
+      <Route exact path="/vr-demo" element={<Home />} />
+        <Route exact path="/vr-demo/VRApp" element={<VRApp />} />
+        <Route path="/vr-demo/JSXGraphReact" Component={JSXGraphReact} />
+        <Route path="/vr-demo/JSXGraphComponent" Component={JSXGraphComponent} />
+        {/* You can define more routes here */}
+      </Routes>
+    </Router>
+  );
+};
 
-export default App
+export default App;
