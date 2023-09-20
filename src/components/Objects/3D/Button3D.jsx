@@ -36,9 +36,9 @@ export default function Button3D(props) {
             }}
         >
             <Interactive onSelect={onSelect} onHover={() => setHover(true)} onBlur={() => setHover(false)}>
-                <Box color={color} scale={hover ? [7.5, 7.5, 7.5] : [5, 5, 5]} size={[0.4, 0.1, 0.1]} {...props}>
-                    <Text position={[0, 0, 0.06]} fontSize={0.05} color="#000" anchorX="center" anchorY="middle">
-                        Exit Room!
+                <Box color={color} scale={hover ? [7.5, 7.5, 7.5] : [5, 5, 5]} size={[0.6, 0.10, 0.05]} {...props}>
+                    <Text position={[0, 0, 0.05]} fontSize={0.05} color="#000" anchorX="center" anchorY="middle">
+                        {props.text}
                     </Text>
                 </Box>
             </Interactive>

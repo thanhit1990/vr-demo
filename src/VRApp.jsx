@@ -52,7 +52,7 @@ export default function VRApp() {
     return (
         <>
             <VRButton />
-            <Canvas camera={{ position: [-10, 10, 10], fov: 50 }}>
+            <Canvas camera={{ position: [-10, 10, 10], fov: 50 }} shadows>
                 <XR>
                     <Sky sunPosition={[0, 1, 0]} />
                     <Floor />
