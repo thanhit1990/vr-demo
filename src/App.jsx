@@ -12,7 +12,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-      <Route exact path="/vr-demo" element={<Home />} />
+      <Route exact path="/vr-demo" element={<VRApp />} />
         <Route exact path="/vr-demo/Box/:box_id" element={<Box3D />} />
         <Route exact path="/vr-demo/VRApp" element={<VRApp />} />
         <Route path="/vr-demo/JSXGraphReact" Component={JSXGraphReact} />
