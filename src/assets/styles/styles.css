@@ -2,6 +2,13 @@
     box-sizing: border-box;
 }
 
+text[id$='licenseText'] {
+    display: none;
+}
+#board_o5w0cbx60_licenseText {
+    display: none;
+}
+
 html,
 body,
 #root {

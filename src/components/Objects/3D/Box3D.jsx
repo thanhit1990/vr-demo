@@ -38,9 +38,15 @@ const button_positions = [
 
 export default function Box3D() {
     const percentage = useAnimationControls();
-    const { box_id } = useParams();
-    const box_model = models[box_id]
-    const button_position = button_positions[box_id]
+    // Get value from parameters using useParams hook
+    // if value is undefined, set it to 0
+    let box_idx = 0
+    box_idx = useParams().box_id
+    if (box_idx === undefined) {
+        box_idx = 0
+    }
+    const box_model = models[box_idx]
+    const button_position = button_positions[box_idx]
     return (
         <>
 

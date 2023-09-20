@@ -10,9 +10,9 @@ import JSXGraphReact from './components/Objects/2D/JSXGraphReact.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <React.Fragment>
     {/* <OpenCloseWindow /> */}
     <App />
     {/* <EnterVR /> */}
-  </React.StrictMode>,
+  </React.Fragment>,
 )
