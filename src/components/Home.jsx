@@ -38,10 +38,10 @@ const Home = () => {
 
     const rooms = [
         { name: 'Algebra', pictureUrl: Algebra_Avatar, roomUrl: '/vr-demo/VRApp' },
-        { name: 'Geometry', pictureUrl: Geometry_Avatar, roomUrl: '/vr-demo/JSXGraphReact' },
-        { name: 'Operations', pictureUrl: Operations_Avatar, roomUrl: '/vr-demo/JSXGraphComponent' },
-        { name: 'Measurement', pictureUrl: Measurement_Avatar, roomUrl: '/vr-demo/JSXGraphReact' },
-        { name: 'Number Sense', pictureUrl: Number_Avatar, roomUrl: '/vr-demo/JSXGraphComponent' },
+        { name: 'Geometry', pictureUrl: Geometry_Avatar, roomUrl: '/vr-demo/VRApp' },
+        { name: 'Operations', pictureUrl: Operations_Avatar, roomUrl: '/vr-demo/VRApp' },
+        { name: 'Measurement', pictureUrl: Measurement_Avatar, roomUrl: '/vr-demo/VRApp' },
+        { name: 'Number Sense', pictureUrl: Number_Avatar, roomUrl: '/vr-demo/VRApp' },
         { name: 'Probability and Statistics', pictureUrl: Statistics_Avatar, roomUrl: '/vr-demo/VRApp' },
         // Add more rooms with their respective picture URLs
     ];
