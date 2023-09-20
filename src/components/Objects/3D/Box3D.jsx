@@ -27,12 +27,20 @@ function useAnimationControls() {
 // List of models that can be loaded
 const models = [
     "../box3d0.gltf",
-    "../box3d1.gltf",]
+    "../box3d1.gltf",
+    "../box3d2.gltf",]
+const button_positions = [
+    [3.8, 0.2, 2.5],
+    [0.1, 0.2, 2.5],
+    [0.1, 0.2, 2.5],
+]
+
 
 export default function Box3D() {
     const percentage = useAnimationControls();
     const { box_id } = useParams();
     const box_model = models[box_id]
+    const button_position = button_positions[box_id]
     return (
         <>
 
@@ -40,7 +48,7 @@ export default function Box3D() {
                 <XR>
                     <Sky sunPosition={[0, 1, 0]} />
                     <Lights3D />
-                    <Button3D position={[3.8, 0.2, 3]} text="thanhit08@msn.com"  />
+                    <Button3D position={button_position} text="thanhit08@msn.com"  />
                     <Suspense fallback={null}>
                         <Model3D percentage={percentage} model={box_model} color={0xEE811E} />
                         <OrbitControls />
