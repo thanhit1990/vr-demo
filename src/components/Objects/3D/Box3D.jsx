@@ -28,10 +28,14 @@ function useAnimationControls() {
 const models = [
     "../box3d0.gltf",
     "../box3d1.gltf",
-    "../box3d2.gltf",]
+    "../box3d2.gltf",
+    "../dagiac2.gltf",
+    "../_source Cylinder2 100fps.glb"]
 const button_positions = [
     [3.8, 0.2, 2.5],
     [0.1, 0.2, 2.5],
+    [0.1, 0.2, 2.8],
+    [0.1, 0.2, 2.8],
     [0.1, 0.2, 2.8],
 ]
 
@@ -54,7 +58,7 @@ export default function Box3D() {
                 <XR>
                     <Sky sunPosition={[0, 1, 0]} />
                     <Lights3D />
-                    <Button3D position={button_position} text="thanhit08@msn.com"  />
+                    <Button3D position={button_position} text="tekville.com"  />
                     <Suspense fallback={null}>
                         <Model3D percentage={percentage} model={box_model} color={0xEE811E} />
                         <OrbitControls />
