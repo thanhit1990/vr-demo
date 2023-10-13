@@ -29,13 +29,13 @@ const models = [
     "../box3d0.gltf",
     "../box3d1.gltf",
     "../box3d2.gltf",
-    "../dagiac2.gltf",
+    "../dagiac1.gltf",
     "../_source Cylinder2 100fps.glb"]
 const button_positions = [
     [3.8, 0.2, 2.5],
     [0.1, 0.2, 2.5],
     [0.1, 0.2, 2.8],
-    [0.1, 0.2, 2.8],
+    [0.1, 0.2, 3.8],
     [0.1, 0.2, 2.8],
 ]
 
@@ -51,14 +51,34 @@ export default function Box3D() {
     }
     const box_model = models[box_idx]
     const button_position = button_positions[box_idx]
+    const directionalCtl = {
+        visible: true,
+        position: {
+            x: 3.3,
+            y: 1.0,
+            z: 4.4,
+        },
+        castShadow: true,
+    }
     return (
         <>
 
             <Canvas camera={{ position: [-10, 10, 10], fov: 60 }}>
                 <XR>
                     <Sky sunPosition={[0, 1, 0]} />
-                    <Lights3D />
-                    <Button3D position={button_position} text="tekville.com"  />
+                    {/* <Lights3D /> */}
+
+                    <ambientLight/>
+                    <directionalLight
+                        visible={directionalCtl.visible}
+                        position={[
+                            directionalCtl.position.x,
+                            directionalCtl.position.y,
+                            directionalCtl.position.z,
+                        ]}
+                        castShadow={directionalCtl.castShadow}
+                    />
+                    <Button3D position={button_position} text="tekville.com" />
                     <Suspense fallback={null}>
                         <Model3D percentage={percentage} model={box_model} color={0xEE811E} />
                         <OrbitControls />
