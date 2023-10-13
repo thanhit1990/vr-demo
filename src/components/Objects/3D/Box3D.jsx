@@ -46,7 +46,7 @@ export default function Box3D() {
     // if value is undefined, set it to 0
     let box_idx = 0
     const values = useControls({
-        Style: {
+        box_style: {
             options: { 'Style 01': 0, 'Style 02': 1, 'Style 03': 2 },
             onChange: (value) => {
                 box_idx = value
@@ -54,7 +54,8 @@ export default function Box3D() {
             transient: false
         }
     });
-    box_idx = useParams().box_id
+    // box_idx = useParams().box_id
+    box_idx = values.box_style
     if (box_idx === undefined) {
         box_idx = 0
     }
