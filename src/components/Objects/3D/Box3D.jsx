@@ -41,10 +41,19 @@ const button_positions = [
 
 
 export default function Box3D() {
-    const percentage = useAnimationControls();
+    let percentage = useAnimationControls();
     // Get value from parameters using useParams hook
     // if value is undefined, set it to 0
     let box_idx = 0
+    const values = useControls({
+        Style: {
+            options: { 'Style 01': 0, 'Style 02': 1, 'Style 03': 2 },
+            onChange: (value) => {
+                box_idx = value
+            },
+            transient: false
+        }
+    });
     box_idx = useParams().box_id
     if (box_idx === undefined) {
         box_idx = 0
@@ -68,7 +77,7 @@ export default function Box3D() {
                     <Sky sunPosition={[0, 1, 0]} />
                     {/* <Lights3D /> */}
 
-                    <ambientLight/>
+                    <ambientLight />
                     <directionalLight
                         visible={directionalCtl.visible}
                         position={[

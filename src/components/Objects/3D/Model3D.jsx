@@ -46,6 +46,6 @@ export default function Model3D({ percentage, ...props }) {
     });
 
     seek(percentage); // Seek the animation to the desired percentage
-
+    
     return <primitive object={scene} scale={2} />;
 }
