@@ -19,21 +19,21 @@ export default function Model3D({ percentage, ...props }) {
         }
     });
 
-    
+
 
 
     const anims = useRef([]);
 
-    if (!mixer.current) {
-        mixer.current = new THREE.AnimationMixer(scene);
+    // if (!mixer.current) {
+    mixer.current = new THREE.AnimationMixer(scene);
 
-        for (const clip of animations) {
-            const action = mixer.current.clipAction(clip);
-            action.play();
-            action.paused = true;
-            anims.current.push({ clip, action });
-        }
+    for (const clip of animations) {
+        const action = mixer.current.clipAction(clip);
+        action.play();
+        action.paused = true;
+        anims.current.push({ clip, action });
     }
+    // }
 
     const seek = (percentage) => {
         for (const { clip, action } of anims.current) {
@@ -46,6 +46,6 @@ export default function Model3D({ percentage, ...props }) {
     });
 
     seek(percentage); // Seek the animation to the desired percentage
-    
+
     return <primitive object={scene} scale={2} />;
 }
