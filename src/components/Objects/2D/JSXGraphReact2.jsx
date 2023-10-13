@@ -4,7 +4,7 @@ import JXGBoard from 'jsxgraph-react-js'
 
 let logicJC = `
 $board.setView([-1.5, 2, 1.5, -1]);
- 
+
 // Triangle ABC
 A = point(1, 0);
 B = point(-1, 0);
@@ -16,9 +16,7 @@ pol = polygon(A,B,C) <<
             strokeColor: '#009256'
         >>
     >>;
- 
 
- 
 // Midpoints of segments
 mAB = midpoint(A, B);
 mBC = midpoint(B, C);
@@ -29,7 +27,7 @@ pABC = perpendicular(pol.borders[0], mAB);
 pBCA = perpendicular(pol.borders[1], mBC);
 pCAB = perpendicular(pol.borders[2], mCA);
 i1 = intersection(pABC, pCAB, 0);
- 
+
 // Circum circle and circum center
 c = circumcircle(A, B, C) <<
         strokeColor: '#000000',

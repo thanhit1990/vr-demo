@@ -5,6 +5,7 @@
 text[id$='licenseText'] {
     display: none;
 }
+
 #board_o5w0cbx60_licenseText {
     display: none;
 }
@@ -16,4 +17,10 @@ body,
     height: 100%;
     margin: 0;
     padding: 0;
+}
+
+.jxgbox {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
 }
