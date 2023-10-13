@@ -45,22 +45,42 @@ export default function Box3D() {
     // Get value from parameters using useParams hook
     // if value is undefined, set it to 0
     let box_idx = 0
-    const values = useControls({
-        box_style: {
-            options: { 'Style 01': 0, 'Style 02': 1, 'Style 03': 2 },
-            onChange: (value) => {
-                box_idx = value
-            },
-            transient: false
-        }
-    });
-    // box_idx = useParams().box_id
-    box_idx = values.box_style
-    if (box_idx === undefined) {
+    // Get value from parameters using useParams hook
+    const model_idx = useParams().box_id
+    // if value is undefined, set it to 0
+    if (model_idx === undefined) {
         box_idx = 0
+    }  
+    else {
+        // convert string to integer
+        box_idx = parseInt(model_idx)
+    }      
+    // if box_idx is 0, use useControls hook to get value from GUI
+    if(box_idx == 0) {
+        // Define GUI controls
+        const values = useControls({
+            box_style: {
+                options: { 'Style 01': 0, 'Style 02': 1, 'Style 03': 2 },
+                onChange: (value) => {
+                    box_idx = value
+                },
+                transient: false
+            }
+        });
+        // box_idx = useParams().box_id
+        box_idx = values.box_style
+        if (box_idx === undefined) {
+            box_idx = 0
+        }
+    } else {
+        box_idx += 2
     }
+    
+    // Get model and button position from the list
     const box_model = models[box_idx]
+    // Get button position from the list
     const button_position = button_positions[box_idx]
+    // Define directional light control
     const directionalCtl = {
         visible: true,
         position: {
@@ -72,12 +92,10 @@ export default function Box3D() {
     }
     return (
         <>
-
             <Canvas camera={{ position: [-10, 10, 10], fov: 60 }}>
                 <XR>
                     <Sky sunPosition={[0, 1, 0]} />
                     {/* <Lights3D /> */}
-
                     <ambientLight />
                     <directionalLight
                         visible={directionalCtl.visible}
