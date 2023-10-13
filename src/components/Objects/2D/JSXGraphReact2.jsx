@@ -25,7 +25,7 @@ class JSXGraphComponent extends Component {
                 </div>
                 <JXGBoard
                     logic={logicJS}
-                    boardAttributes={{ axis: true, boundingbox: [-12, 10, 12, -10] }}
+                    boardAttributes={{ axis: true, boundingbox: [-10, 10, 10, -10] }}
                     style={{
                         border: "3px solid red"
                     }}
