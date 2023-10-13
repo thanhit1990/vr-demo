@@ -32,6 +32,11 @@ class JSXGraphReact extends Component {
     render() {
         return (
             <>
+                <div>
+                    <h2>
+                        무게중심 작도
+                    </h2>
+                </div>
                 <JXGBoard
                     logic={logicJC}
                     style={{

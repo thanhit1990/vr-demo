@@ -43,14 +43,23 @@ c = circumcircle(A, B, C) <<
 
 class JSXGraphReact2 extends Component {
     render() {
+
         return (
-            <JXGBoard
-                logic={logicJC}
-                style={{
-                    border: "3px solid red"
-                }}
-                jessieCode
-            />
+            <>
+                <div >
+                    <h2>
+                        삼각형의  외심 작도
+                    </h2>
+                </div>
+                <JXGBoard
+                    logic={logicJC}
+                    style={{
+                        border: "3px solid red"
+                    }}
+                    jessieCode
+                />
+            </>
+
         )
     }
 }

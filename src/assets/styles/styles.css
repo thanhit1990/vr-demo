@@ -24,3 +24,12 @@ body,
     width: 50%;
     padding: 10px;
 }
+
+h2 {
+    text-align: center;
+    /* Center the text horizontally */
+    margin-top: 20px;
+    /* Add top margin (adjust as needed) */
+    margin-bottom: 20px;
+    /* Add bottom margin (adjust as needed) */
+}
