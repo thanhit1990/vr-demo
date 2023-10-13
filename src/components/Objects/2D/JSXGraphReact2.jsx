@@ -2,66 +2,37 @@ import React, { Component } from 'react'
 
 import JXGBoard from 'jsxgraph-react-js'
 
-let logicJC = `
-$board.setView([-1.5, 2, 1.5, -1]);
+let logicJS = (brd) => {
+    brd.suspendUpdate();
+    var p1 = brd.create('point', [0.0, 0.0]);
+    var p2 = brd.create('point', [4.0, 0.0]);
+    var c1 = brd.create('circle', [p1, p2]);
 
-// Triangle ABC
-A = point(1, 0);
-B = point(-1, 0);
-C = point(0.2, 1.5);
-pol = polygon(A,B,C) <<
-        fillColor: '#FFFF00',
-        borders: <<
-            strokeWidth: 2,
-            strokeColor: '#009256'
-        >>
-    >>;
+    var c2 = brd.create('circle', [p2, p1], { strokeColor: 'blue' });
+    var p3 = brd.create('intersection', [c1, c2, 0]);
+    var p1 = brd.create('polygon', [p1, p2, p3]);
+    brd.unsuspendUpdate();
+}
 
-// Midpoints of segments
-mAB = midpoint(A, B);
-mBC = midpoint(B, C);
-mCA = midpoint(C, A);
-
-// Perpendiculars and orthocenter i1
-pABC = perpendicular(pol.borders[0], mAB);
-pBCA = perpendicular(pol.borders[1], mBC);
-pCAB = perpendicular(pol.borders[2], mCA);
-i1 = intersection(pABC, pCAB, 0);
-
-// Circum circle and circum center
-c = circumcircle(A, B, C) <<
-        strokeColor: '#000000',
-        dash: 3,
-        strokeWidth: 1,
-        center: <<
-            name: 'i_3',
-            withlabel:true,
-            visible: true
-        >>
-    >>;
-`
-
-class JSXGraphReact2 extends Component {
+class JSXGraphComponent extends Component {
     render() {
-
         return (
             <>
                 <div >
                     <h2>
-                        삼각형의  외심 작도
+                        정삼각형 작도
                     </h2>
                 </div>
                 <JXGBoard
-                    logic={logicJC}
+                    logic={logicJS}
+                    boardAttributes={{ axis: true, boundingbox: [-12, 10, 12, -10] }}
                     style={{
                         border: "3px solid red"
                     }}
-                    jessieCode
                 />
             </>
-
         )
     }
 }
 
-export default JSXGraphReact2;
+export default JSXGraphComponent;
