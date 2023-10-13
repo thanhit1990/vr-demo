@@ -16,7 +16,7 @@ let logicJS = (brd) => {
         strokeColor: 'green',
         postLabel: '°',
         precision: 0,
-        label: {fontSize: 20, strokeColor: 'orange'},
+        label: {fontSize: 18, strokeColor: 'red', cssStyle: 'margin-left: 12px; margin-bottom: 10px;'},
         baseline: { strokeColor: 'green', strokeWidth:1},
         highline: { strokeColor: 'green', strokeWidth:3},
 
@@ -64,7 +64,7 @@ let logicJS = (brd) => {
     var per1 = brd.create('perpendicular', [axis_X, p4], { strokeColor: 'red', strokeWidth: 0 });
     var is3 = brd.create('intersection', [per1, axis_X, 0], { name: 'C', withLabel: true, visible: true, strokeColor: 'blue', strokeWidth: 2, size: 0 });
     var s3 = brd.create('segment', [p4, is3], { strokeColor: 'red', strokeWidth: 2 });
-    
+
     var s1 = brd.create('segment', [p4, p1], { strokeColor: 'blue', dash: 2, strokeWidth: 1 });
     brd.unsuspendUpdate();
 }
