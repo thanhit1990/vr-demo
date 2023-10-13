@@ -57,9 +57,14 @@ let logicJS = (brd) => {
     var p4 = brd.create('point', [function () { return degrees_to_radians(theta.Value()); }, function () { return 2 * Math.sin(degrees_to_radians(theta.Value())); }], { name: 'P', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 3 });
     // Perpendicular line from p4 to X Axis
     // Perpendicular line from p1 to X Axis
-    var per0 = brd.create('perpendicularsegment', [axis_X, p1], { strokeColor: 'red', strokeWidth: 2 });
-    var per1 = brd.create('perpendicularsegment', [axis_X, p4], { strokeColor: 'red', strokeWidth: 2 });
+    var per0 = brd.create('perpendicular', [axis_X, p1], { strokeColor: 'red', strokeWidth: 0 });
+    var is2 = brd.create('intersection', [per0, axis_X, 0], { name: 'B', withLabel: true, visible: true, strokeColor: 'blue', strokeWidth: 2, size: 0 });
+    var s2 = brd.create('segment', [p1, is2], { strokeColor: 'red', strokeWidth: 2 });
 
+    var per1 = brd.create('perpendicular', [axis_X, p4], { strokeColor: 'red', strokeWidth: 0 });
+    var is3 = brd.create('intersection', [per1, axis_X, 0], { name: 'C', withLabel: true, visible: true, strokeColor: 'blue', strokeWidth: 2, size: 0 });
+    var s3 = brd.create('segment', [p4, is3], { strokeColor: 'red', strokeWidth: 2 });
+    
     var s1 = brd.create('segment', [p4, p1], { strokeColor: 'blue', dash: 2, strokeWidth: 1 });
     brd.unsuspendUpdate();
 }
