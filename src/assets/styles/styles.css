@@ -33,3 +33,20 @@ h2 {
     margin-bottom: 20px;
     /* Add bottom margin (adjust as needed) */
 }
+
+.vecteur {
+    position: relative;
+    font-size: 2em;
+}
+.plus {
+    position: relative;
+    font-size: 2em;
+}
+
+.vecteur::before {
+    content: "\2192";
+    position: absolute;
+    top: -0.7em;
+    left: -0.1em;
+    font-size: 1.2em;
+}
