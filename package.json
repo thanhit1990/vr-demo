@@ -16,6 +16,7 @@
     "@types/three": "0.153.0",
     "jsxgraph-react-js": "^1.0.4",
     "leva": "0.9.34",
+    "mathjs": "^11.11.2",
     "react": "18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-dom": "18.2.0",
