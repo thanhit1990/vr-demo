@@ -12,6 +12,7 @@ let logicJS = (brd) => {
         fillColor: 'white',
         strokeColor: 'blue',
         postLabel: '',
+        snapWidth: 1,
         precision: 0,
         label: { fontSize: 18, strokeColor: 'blue', cssStyle: 'margin-left: 12px; margin-bottom: 10px;' },
         baseline: { strokeColor: 'blue', strokeWidth: 1 },
