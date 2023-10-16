@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import JXGBoard from 'jsxgraph-react-js'
+import JXG from 'jsxgraph'
 
 let logicJS = (brd) => {
     brd.suspendUpdate();
@@ -22,6 +23,7 @@ let logicJS = (brd) => {
         name: 'n',
         fillColor: 'white',
         strokeColor: 'green',
+        snapWidth: 1,
         postLabel: '',
         precision: 0,
         label: { fontSize: 18, strokeColor: 'green', cssStyle: 'margin-left: 12px; margin-bottom: 10px;' },
@@ -40,26 +42,107 @@ let logicJS = (brd) => {
         baseline: { strokeColor: 'gray', strokeWidth: 1 },
         highline: { strokeColor: 'gray', strokeWidth: 3 },
     });
+    var fg1, fg2, q, A, B, g1, tang1, per1, C, C1, lAC1, D, D1, pol, vertices, polygon;
 
+    n.on('drag', function () {
+        if (tang1) {
+            brd.removeObject(tang1);
+        }
+        if (per1) {
+            brd.removeObject(per1);
+        }
+        if (C) {
+            brd.removeObject(C);
+        }
+        if (C1) {
+            brd.removeObject(C1);
+        }
+        if (lAC1) {
+            brd.removeObject(lAC1);
+        }
+        if (D) {
+            brd.removeObject(D);
+        }
+        if (D1) {
+            brd.removeObject(D1);
+        }
+        if (fg1) {
+            brd.removeObject(fg1);
+        }
+        if (fg2) {
+            brd.removeObject(fg2);
+        }
+        if (q) {
+            brd.removeObject(q);
+        }
+        if (A) {
+            brd.removeObject(A);
+        }
+        if (B) {
+            brd.removeObject(B);
+        }
+        if (g1) {
+            brd.removeObject(g1);
+        }
+        if (pol) {
+            brd.removeObject(pol);
+        }
+        if (polygon) {
+            const vertices = polygon.vertices;
+            vertices.forEach((vertex) => {
+                brd.removeObject(vertex);
+            });
+            brd.removeObject(polygon);
+            brd.fullUpdate();
+        }
+
+        var sides = n.Value();
+        var phi = Math.PI / n.Value();
+        var a = Math.cos(phi);
+        var f1 = (x) => { return d.Value() - Math.cos(Math.PI / n.Value()) * Math.cosh(x / Math.cos(Math.PI / n.Value())) };
+        fg1 = brd.create('functiongraph', [f1], { strokeColor: '#4181CA', strokeWidth: 1, visible: true });
+        // calculate cosh invert of d/a    
+        var p = Math.cos(Math.PI / n.Value()) * Math.acosh(d.Value() / Math.cos(Math.PI / n.Value()));
+        var f2 = (x) => { return f1(x - 2 * Math.cos(Math.PI / n.Value()) * Math.acosh(d.Value() / Math.cos(Math.PI / n.Value())) * Math.floor((x + Math.cos(Math.PI / n.Value()) * Math.acosh(d.Value() / Math.cos(Math.PI / n.Value()))) / (2 * Math.cos(Math.PI / n.Value()) * Math.acosh(d.Value() / Math.cos(Math.PI / n.Value()))))) };
+        fg2 = brd.create('functiongraph', [f2], { strokeColor: '#4181CA', strokeWidth: 2 });
+        // create line crossing y = 1
+        q = brd.create('line', [[0, function () { return d.Value() }], [1, function () { return d.Value() }]], { strokeColor: '#FF5CFF', strokeWidth: 3 });
+        A = brd.create('point', [function () { return k.Value() }, function () { return d.Value() }], { name: 'A', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+        B = brd.create('point', [function () { return A.X(); }, function () { return f2(A.X()) }], { name: 'B', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+        g1 = brd.create('glider', [function () { return B.X() }, function () { return B.Y() }, fg2]);
+        tang1 = brd.create('tangent', [g1], { visible: true });
+        per1 = brd.create('perpendicular', [tang1, A], { visible: true });
+        C = brd.create('intersection', [per1, tang1, 0], { name: 'C', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+        C1 = brd.create('point', [function () { return A.X() + (C.X() - A.X()) * Math.cos(phi) - (C.Y() - A.Y()) * Math.sin(phi); }, function () { return A.Y() + (C.X() - A.X()) * Math.sin(phi) + (C.Y() - A.Y()) * Math.cos(phi); }], { name: 'C1', size: 2, visible: true });
+        lAC1 = brd.create('line', [A, C1], { strokeColor: 'black', strokeWidth: 1, visible: true });
+        D = brd.create('intersection', [lAC1, tang1, 0], { name: 'D', strokeColor: 'black', size: 2 });
+        D1 = brd.create('reflection', [D, per1], { name: 'D1', size: 2 });
+        polygon = brd.create('regularpolygon', [D1, D, n.Value()]);
+
+
+    });
+    var sides = n.Value();
     var phi = Math.PI / n.Value();
     var a = Math.cos(phi);
     var f1 = (x) => { return d.Value() - Math.cos(Math.PI / n.Value()) * Math.cosh(x / Math.cos(Math.PI / n.Value())) };
-    var fg1 = brd.create('functiongraph', [f1], { strokeColor: '#4181CA', strokeWidth: 1 });
+    fg1 = brd.create('functiongraph', [f1], { strokeColor: '#4181CA', strokeWidth: 1, visible: true });
     // calculate cosh invert of d/a    
     var p = Math.cos(Math.PI / n.Value()) * Math.acosh(d.Value() / Math.cos(Math.PI / n.Value()));
     var f2 = (x) => { return f1(x - 2 * Math.cos(Math.PI / n.Value()) * Math.acosh(d.Value() / Math.cos(Math.PI / n.Value())) * Math.floor((x + Math.cos(Math.PI / n.Value()) * Math.acosh(d.Value() / Math.cos(Math.PI / n.Value()))) / (2 * Math.cos(Math.PI / n.Value()) * Math.acosh(d.Value() / Math.cos(Math.PI / n.Value()))))) };
-    var fg2 = brd.create('functiongraph', [f2], { strokeColor: '#4181CA', strokeWidth: 2 });
+    fg2 = brd.create('functiongraph', [f2], { strokeColor: '#4181CA', strokeWidth: 2 });
     // create line crossing y = 1
-    var q = brd.create('line', [[0, function () { return d.Value() }], [1, function () { return d.Value() }]], { strokeColor: '#FF5CFF', strokeWidth: 3 });
-    var A = brd.create('point', [function () { return k.Value() }, function () { return d.Value() }], { name: 'A', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
-    var B = brd.create('point', [function () { return A.X(); }, function () { return f2(A.X()) }], { name: 'B', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
-    var g1 = brd.create('glider', [function () { return B.X() }, function () { return B.Y() }, fg2]);
-    var tang1 = brd.create('tangent', [g1]);
-    var per1 = brd.create('perpendicular', [tang1, A]);
-    var C = brd.create('intersection', [per1, tang1, 0], { name: 'C', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
-    var C1 = brd.create('point', [function () { return A.X() + (C.X() - A.X()) * Math.cos(phi) - (C.Y() - A.Y()) * Math.sin(phi); }, function () { return A.Y() + (C.X() - A.X()) * Math.sin(phi) + (C.Y() - A.Y()) * Math.cos(phi); }], { name: 'C1', size: 2, visible: false });
-    var lAC1 = brd.create('line', [A, C1], { strokeColor: 'black', strokeWidth: 1 });
-    var D = brd.create('intersection', [lAC1, tang1, 0], { name: 'D', strokeColor: 'black', size: 2 });
+    q = brd.create('line', [[0, function () { return d.Value() }], [1, function () { return d.Value() }]], { strokeColor: '#FF5CFF', strokeWidth: 3 });
+    A = brd.create('point', [function () { return k.Value() }, function () { return d.Value() }], { name: 'A', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+    B = brd.create('point', [function () { return A.X(); }, function () { return f2(A.X()) }], { name: 'B', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+    g1 = brd.create('glider', [function () { return B.X() }, function () { return B.Y() }, fg2]);
+    tang1 = brd.create('tangent', [g1], { visible: true });
+    per1 = brd.create('perpendicular', [tang1, A], { visible: true });
+    C = brd.create('intersection', [per1, tang1, 0], { name: 'C', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+    C1 = brd.create('point', [function () { return A.X() + (C.X() - A.X()) * Math.cos(phi) - (C.Y() - A.Y()) * Math.sin(phi); }, function () { return A.Y() + (C.X() - A.X()) * Math.sin(phi) + (C.Y() - A.Y()) * Math.cos(phi); }], { name: 'C1', size: 2, visible: true });
+    lAC1 = brd.create('line', [A, C1], { strokeColor: 'black', strokeWidth: 1, visible: true });
+    D = brd.create('intersection', [lAC1, tang1, 0], { name: 'D', strokeColor: 'black', size: 2 });
+    D1 = brd.create('reflection', [D, per1], { name: 'D1', size: 2 });
+    polygon = brd.create('regularpolygon', [D1, D, n.Value()]);
     brd.clickRightArrow();
     brd.clickRightArrow();
     brd.clickRightArrow();
@@ -76,7 +159,7 @@ class JSXGraphComponent extends Component {
                 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
                 <div >
                     <h2>
-                        선분의 삼등분 점 작도
+                        회전
                     </h2>
                 </div>
                 <JXGBoard
