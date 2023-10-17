@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
 import JXGBoard from 'jsxgraph-react-js'
-import JXG from 'jsxgraph'
-import { phi } from 'mathjs';
+// import JXG from 'jsxgraph'
+// import { phi } from 'mathjs';
 
 let logicJS = (brd) => {
     brd.suspendUpdate();
@@ -125,7 +125,7 @@ let logicJS = (brd) => {
         seg2 = brd.create('segment', [O, Q], { visible: true, strokeColor: 'blue', strokeWidth: 1 });
         circum = brd.create('arc', [O, P, Q], { dash: 2, strokeWidth: 0.5, strokeColor: 'blue', size: 1 });
         var angle = brd.create('angle', [P, O, Q], {name:'θ', radius: 2, fillColor: 'green', fillOpacity: 0, strokeColor: 'green', strokeWidth: 2, 
-        label: { fontSize: 25, strokeColor: 'green', cssStyle: '' }, });
+        label: { fontSize: 25, strokeColor: 'green', cssStyle: ''}, });
         oriImage = brd.create('image',
             [urlOriImg, [P.X(), P.Y()], [-4, -6]],
         );
