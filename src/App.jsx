@@ -21,6 +21,7 @@ import JSXGraphReact14 from './components/Objects/2D/JSXGraphReact14.jsx'
 import JSXGraphReact15 from './components/Objects/2D/JSXGraphReact15.jsx'
 import JSXGraphReact16 from './components/Objects/2D/JSXGraphReact16.jsx'
 import JSXGraphReact17 from './components/Objects/2D/JSXGraphReact17.jsx'
+import JSXGraphReact18 from './components/Objects/2D/JSXGraphReact18.jsx'
 import JSXGraphComponent from './components/Objects/2D/JSXGraphComponent.jsx'
 import Box3D from './components/Objects/3D/Box3D.jsx'
 
@@ -50,6 +51,7 @@ const App = () => {
         <Route path="/vr-demo/2D/15" Component={JSXGraphReact15} />
         <Route path="/vr-demo/2D/16" Component={JSXGraphReact16} />
         <Route path="/vr-demo/2D/17" Component={JSXGraphReact17} />
+        <Route path="/vr-demo/2D/18" Component={JSXGraphReact18} />
         {/* You can define more routes here */}
       </Routes>
     </Router>

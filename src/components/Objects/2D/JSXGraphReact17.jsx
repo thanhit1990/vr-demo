@@ -61,7 +61,7 @@ class JSXGraphComponent extends Component {
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{
-                        boundingBox: [-12, 12, 12, -12], axis: true,
+                        boundingBox: [-12, 12, 12, -12],
                         zoomX: 0.5,
                         zoomY: 0.5
                     }}
