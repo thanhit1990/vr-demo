@@ -18,7 +18,7 @@ import { XR } from "@react-three/xr";
 
 function useAnimationControls() {
     const { percentage } = useControls({
-        percentage: { value: 0, min: 0, max: 1, step: 0.01 },
+        percentage: { value: 0.01, min: 0.01, max: 0.99, step: 0.01 },
     });
 
     return percentage;
@@ -30,13 +30,15 @@ const models = [
     "../box3d1.gltf",
     "../box3d2.gltf",
     "../dagiac1.gltf",
-    "../_source Cylinder2 100fps.glb"]
+    "../Cone_solid  BAKED 100fps.glb",
+    "../Cylinder_solid_BAKED_100fps.glb",]
 const button_positions = [
     [3.8, 0.2, 2.5],
     [0.1, 0.2, 2.5],
     [0.1, 0.2, 2.8],
-    [0.1, 0.2, 3.8],
+    [-0.1, 0.2, 3.8],
     [0.1, 0.2, 2.8],
+    [2, 0.2, 2.8],
 ]
 
 

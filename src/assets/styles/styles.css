@@ -50,3 +50,10 @@ h2 {
     left: -0.1em;
     font-size: 1.2em;
 }
+
+#percentage {
+    display:none;
+}
+.leva-c-PJLV > div:nth-child(2) {
+    display: none;
+}
