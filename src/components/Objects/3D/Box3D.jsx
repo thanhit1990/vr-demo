@@ -75,7 +75,8 @@ export default function Box3D() {
             box_idx = 0
         }
     } else {
-        box_idx += 2
+        // box_idx += 2
+        box_idx = 3
     }
     
     // Get model and button position from the list

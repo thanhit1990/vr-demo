@@ -45,7 +45,7 @@ const App = () => {
         <Route path="/vr-demo/2D/7" Component={JSXGraphReact7} />
         <Route path="/vr-demo/2D/8" Component={JSXGraphReact8} />
         <Route path="/vr-demo/2D/9" Component={JSXGraphReact9} />        
-        <Route path="/vr-demo/2D/10" Component={JSXGraphReact10} />
+        {/* <Route path="/vr-demo/2D/10" Component={JSXGraphReact10} />
         <Route path="/vr-demo/2D/11" Component={JSXGraphReact11} />
         <Route path="/vr-demo/2D/12" Component={JSXGraphReact12} />
         <Route path="/vr-demo/2D/13" Component={JSXGraphReact13} />
@@ -55,7 +55,7 @@ const App = () => {
         <Route path="/vr-demo/2D/17" Component={JSXGraphReact17} />
         <Route path="/vr-demo/2D/18" Component={JSXGraphReact18} />
         <Route path="/vr-demo/2D/19" Component={JSXGraphReact19} />
-        <Route path="/vr-demo/2D/20" Component={JSXGraphReact20} />
+        <Route path="/vr-demo/2D/20" Component={JSXGraphReact20} /> */}
         {/* You can define more routes here */}
       </Routes>
     </Router>
