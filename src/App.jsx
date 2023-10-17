@@ -1,6 +1,6 @@
 // App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, useParams  } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom'
 import Home from './components/Home.jsx';
 import VRApp from './VRApp.jsx'
 import JSXGraphReact from './components/Objects/2D/JSXGraphReact.jsx'
@@ -32,31 +32,59 @@ const App = () => {
   return (
     <Router>
       <Routes>
-      <Route exact path="/vr-demo" element={<VRApp />} />
-        <Route exact path="/vr-demo/3D/:box_id" element={<Box3D />} />
+        <Route exact path="/vr-demo" element={<VRApp />} />
+        
         <Route exact path="/vr-demo/VRApp" element={<VRApp />} />
-        <Route path="/vr-demo/2D/0" Component={JSXGraphReact} />
-        <Route path="/vr-demo/2D/1" Component={JSXGraphReact1} />
-        <Route path="/vr-demo/2D/2" Component={JSXGraphReact2} />
-        <Route path="/vr-demo/2D/3" Component={JSXGraphReact3} />
-        <Route path="/vr-demo/2D/4" Component={JSXGraphReact4} />
-        <Route path="/vr-demo/2D/5" Component={JSXGraphReact5} />
-        <Route path="/vr-demo/2D/6" Component={JSXGraphReact6} />
-        <Route path="/vr-demo/2D/7" Component={JSXGraphReact7} />
-        <Route path="/vr-demo/2D/8" Component={JSXGraphReact8} />
-        <Route path="/vr-demo/2D/9" Component={JSXGraphReact9} />        
-        {/* <Route path="/vr-demo/2D/10" Component={JSXGraphReact10} />
-        <Route path="/vr-demo/2D/11" Component={JSXGraphReact11} />
-        <Route path="/vr-demo/2D/12" Component={JSXGraphReact12} />
-        <Route path="/vr-demo/2D/13" Component={JSXGraphReact13} />
-        <Route path="/vr-demo/2D/14" Component={JSXGraphReact14} />
-        <Route path="/vr-demo/2D/15" Component={JSXGraphReact15} />
-        <Route path="/vr-demo/2D/16" Component={JSXGraphReact16} />
-        <Route path="/vr-demo/2D/17" Component={JSXGraphReact17} />
-        <Route path="/vr-demo/2D/18" Component={JSXGraphReact18} />
-        <Route path="/vr-demo/2D/19" Component={JSXGraphReact19} />
-        <Route path="/vr-demo/2D/20" Component={JSXGraphReact20} /> */}
-        {/* You can define more routes here */}
+        
+        {/* 입체도형 01 */}
+        <Route exact path="/vr-demo/Geometry/:box_id" element={<Box3D />} />
+
+        {/* 작도 01 */}
+        {/* <Route path="/vr-demo/2D/Construction/1" Component={JSXGraphReact} /> */}
+        {/* 작도 02 */}
+        <Route path="/vr-demo/Construction/2" Component={JSXGraphReact1} />
+        {/* 작도 03 */}
+        {/* <Route path="/vr-demo/2D/Construction/3" Component={JSXGraphReact2} /> */}
+        {/* 작도 04 */}
+        <Route path="/vr-demo/Construction/4" Component={JSXGraphReact3} />
+        {/* 작도 05 */}
+        {/* <Route path="/vr-demo/2D/Construction/5" Component={JSXGraphReact9} /> */}
+        {/* 작도 06 */}
+        {/* <Route path="/vr-demo/2D/Construction/6" Component={JSXGraphReact10} /> */}
+        {/* 작도 07 */}
+        {/* <Route path="/vr-demo/2D/Construction/7" Component={JSXGraphReact16} /> */}
+        {/* 작도 08 */}
+        {/* <Route path="/vr-demo/2D/Construction/8" Component={JSXGraphReact17} /> */}
+        {/* 작도 09 */}
+        {/* <Route path="/vr-demo/2D/Construction/9" Component={JSXGraphReact18} /> */}
+        {/* 작도 10 */}
+        {/* <Route path="/vr-demo/2D/Construction/10" Component={JSXGraphReact14} /> */}
+
+        {/* 삼각비 05 */}
+        <Route path="/vr-demo/Trigonometry/5" Component={JSXGraphReact4} />
+        {/* 삼각비 06 */}
+        <Route path="/vr-demo/Trigonometry/6" Component={JSXGraphReact5} />
+
+        {/* 벡터 01*/}
+        <Route path="/vr-demo/Vector/1" Component={JSXGraphReact11} />
+        {/* 벡터 02*/}
+        {/* <Route path="/vr-demo/2D/Vector/2" Component={JSXGraphReact12} /> */}
+        {/* 벡터 03*/}
+        <Route path="/vr-demo/Vector/3" Component={JSXGraphReact13} />
+        {/* 벡터 06*/}
+        {/* <Route path="/vr-demo/2D/Vector/6" Component={JSXGraphReact6} /> */}
+        {/* 벡터 07*/}
+        {/* <Route path="/vr-demo/2D/Vector/7" Component={JSXGraphReact8} /> */}
+
+        {/* 도형변환 05 */}
+        <Route path="/vr-demo/Transformation/5" Component={JSXGraphReact19} />
+        {/* 도형변환 08 */}
+        {/* <Route path="/vr-demo/2D/Transformation/8" Component={JSXGraphReact20} /> */}
+        {/* 도형변환 09 */}
+        {/* <Route path="/vr-demo/2D/Transformation/9" Component={JSXGraphReact7} /> */}
+        {/* 도형변환 10 */}
+        <Route path="/vr-demo/Transformation/10" Component={JSXGraphReact15} />
+        
       </Routes>
     </Router>
   );
