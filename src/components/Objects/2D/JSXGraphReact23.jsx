@@ -110,7 +110,7 @@ let logicJS = (brd) => {
         { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
     // create a point with x is 0 and y coordinate is the value of the slider * 2
     var D = brd.create('point', [0, function () { return s.Value() * 2; }],
-        { name: 'D', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
     // create a polygon with points O, C, A and D
     // var poly = brd.create('polygon', [O, C, A, D], { fillColor: 'pink', fillOpacity: 1 });
     // create a segment between A and C
