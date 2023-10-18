@@ -69,7 +69,7 @@ let logicJS = (brd) => {
     var A = brd.create('point', [function () { return s.Value() * 2; }, function () { return s.Value() * 2; }],
         { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
     var B = brd.create('point', [-5, -5],
-        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5, highlight: true, highlightStrokeColor: 'red', highlightStrokeWidth: 3 });
     // create a segment between A and B
     var AB = brd.create('segment', [A, B], { visible: false });
     // create a middle point between A and B
@@ -116,11 +116,11 @@ let logicJS = (brd) => {
 
 
     var BE, BF, EF, HD2, D2B, GC2, C2B, HG;
-    HD2 = brd.create('segment', [H, D2], { strokeColor: 'blue', strokeWidth: 3, visible: true });
-    D2B = brd.create('segment', [D2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true });
-    C2B = brd.create('segment', [C2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true });
-    GC2 = brd.create('segment', [G, C2], { strokeColor: 'blue', strokeWidth: 3, visible: true });
-    HG = brd.create('segment', [H, G], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+    HD2 = brd.create('segment', [H, D2], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    D2B = brd.create('segment', [D2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    C2B = brd.create('segment', [C2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    GC2 = brd.create('segment', [G, C2], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    HG = brd.create('segment', [H, G], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
 
     B.on('drag', function () {
         brd.removeObject(E);
@@ -181,44 +181,44 @@ let logicJS = (brd) => {
         if (B.X() <= A.X() && B.Y() <= A.Y()) {
             if (E.X() >= 0) {
                 // create a segment from B to E
-                BE = brd.create('segment', [B, E], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                BE = brd.create('segment', [B, E], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
             }
             if (F.Y() >= 0) {
                 // create a segment from B to F
-                BF = brd.create('segment', [B, F], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                BF = brd.create('segment', [B, F], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
             }
 
             if (E.X() >= 0 && F.Y() >= 0) {
                 // create a segment from E to F
-                EF = brd.create('segment', [E, F], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                EF = brd.create('segment', [E, F], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
             } else {
                 if (E.X() < 0) {
                     // create a segment from H to D2
-                    HD2 = brd.create('segment', [H, D2], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                    HD2 = brd.create('segment', [H, D2], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
                     // create a segment from D2 to B
-                    D2B = brd.create('segment', [D2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                    D2B = brd.create('segment', [D2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
                 }
                 if (F.Y() < 0) {
                     // create a segment from G to C2
-                    GC2 = brd.create('segment', [G, C2], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                    GC2 = brd.create('segment', [G, C2], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
                     // create a segment from C2 to B
-                    C2B = brd.create('segment', [C2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                    C2B = brd.create('segment', [C2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
                 }
                 if (E.X() > 0 && F.Y() < 0) {
                     // create a segment from E to G
-                    HG = brd.create('segment', [E, G], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                    HG = brd.create('segment', [E, G], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
                 }
                 if (E.X() < 0 && F.Y() > 0) {
                     // create a segment from F to H
-                    HG = brd.create('segment', [F, H], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                    HG = brd.create('segment', [F, H], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
                 }
             }
 
             if (E.X() < 0 && F.Y() < 0) {
                 // create a segment from H to G
-                HG = brd.create('segment', [H, G], { strokeColor: 'blue', strokeWidth: 3, visible: true });
+                HG = brd.create('segment', [H, G], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
             }
-        }
+        } 
     });
 
     brd.resizeContainer(800, 800);
