@@ -75,7 +75,7 @@ let logicJS = (brd) => {
     // create a middle point between A and B
     var M = brd.create('midpoint', [A, B], { visible: false });
     // create a perpendicular with AB and point B
-    var perAB = brd.create('perpendicular', [AB, M], { visible: false});
+    var perAB = brd.create('perpendicular', [AB, M], { visible: false });
     // create a point with x coordinate is the value of the slider * 2 and y is 0
     var C = brd.create('point', [function () { return s.Value() * 2; }, 0],
         { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
@@ -233,7 +233,7 @@ class JSXGraphComponent extends Component {
             <>
                 <div >
                     <h2>
-                        Dilation
+                        선대칭 도형 대칭축 찾기
                     </h2>
                 </div>
                 <JXGBoard
