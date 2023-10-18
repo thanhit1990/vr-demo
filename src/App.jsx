@@ -28,6 +28,7 @@ import JSXGraphReact21 from './components/Objects/2D/JSXGraphReact21.jsx'
 import JSXGraphReact22 from './components/Objects/2D/JSXGraphReact22.jsx'
 import JSXGraphReact23 from './components/Objects/2D/JSXGraphReact23.jsx'
 import JSXGraphReact24 from './components/Objects/2D/JSXGraphReact24.jsx'
+import JSXGraphReact25 from './components/Objects/2D/JSXGraphReact25.jsx'
 import JSXGraphComponent from './components/Objects/2D/JSXGraphComponent.jsx'
 import Box3D from './components/Objects/3D/Box3D.jsx'
 
@@ -66,6 +67,8 @@ const App = () => {
 
         {/* 삼각비 01 */}
         <Route path="/vr-demo/Trigonometry/1" Component={JSXGraphReact21} />
+        {/* 삼각비 02 */}
+        <Route path="/vr-demo/Trigonometry/2" Component={JSXGraphReact25} />
         {/* 삼각비 05 */}
         <Route path="/vr-demo/Trigonometry/5" Component={JSXGraphReact4} />
         {/* 삼각비 06 */}
