@@ -75,12 +75,12 @@ let logicJS = (brd) => {
 
     var curve = brd.create('functiongraph', [function (t) {
         return brd.select('B').Y() * t * t * 0.25;
-    }, -20, 20], { strokeColor: 'black', strokeWidth: 1 });
+    }, -20, 20], { strokeColor: 'black', strokeWidth: 1, highlightStrokeColor: 'black', highlightStrokeWidth: 1 });
 
     // create a point on the parabola
-    var C = brd.create('glider', [2, 2, curve], { name: 'C', size: 2, color: 'green' });
+    var C = brd.create('glider', [2, 2, curve], { name: 'C', size: 2, color: 'green', highlightFillColor: 'green', highlightStrokeColor: 'green' });
     // create a tangent line at point C
-    var tangent = brd.create('tangent', [C], { strokeColor: 'red', strokeWidth: 1 });
+    var tangent = brd.create('tangent', [C], { strokeColor: 'red', strokeWidth: 1, highlightStrokeColor: 'red', highlightStrokeWidth: 1 });
     // create a vector from O to C
     var param = {
         headWidth: 2, // multiple of stroke width
@@ -117,7 +117,7 @@ let logicJS = (brd) => {
 
         var dataX = [NaN, vecStart[0], vecEnd[0], vecLeft[0], vecIndent[0], vecRight[0], vecEnd[0], NaN];
         var dataY = [NaN, vecStart[1], vecEnd[1], vecLeft[1], vecIndent[1], vecRight[1], vecEnd[1], NaN];
-        cArrow = brd.create('curve', [dataX, dataY], { strokeColor: "black", fillColor: "black" });
+        cArrow = brd.create('curve', [dataX, dataY], { strokeColor: "black", fillColor: "black", highlightStrokeColor: "black", highlightFillColor: "black", highlightStrokeWidth: 1 });
     }
 
 
