@@ -17,9 +17,6 @@ function calculate_angle(a, b, c) {
     return Math.round(angle * 180 / Math.PI);
 }
 
-
-
-
 var isLeft = function (C, G, H) {
     // Calculate the slope (m)
     var x1 = G.X();
@@ -66,32 +63,6 @@ let logicJS = (brd) => {
             baseline: { strokeColor: 'green', strokeWidth: 3, opacity: 0.4 },
             highline: { strokeColor: 'green', strokeWidth: 5 },
         });
-
-    // // create a slide with values from - slider value to slider value and initial value is slider value
-    // var s1 = brd.create('slider', [[5, 20], [15, 20], [-10, -5, 10]],
-    //     {
-    //         name: 'x',
-    //         fillColor: 'white',
-    //         strokeColor: 'red',
-    //         postLabel: '',
-    //         precision: 1,
-    //         label: { fontSize: 20, strokeColor: 'red', cssStyle: 'margin-left: 15px; margin-top: 10px;' },
-    //         baseline: { strokeColor: 'red', strokeWidth: 3, opacity: 0.4 },
-    //         highline: { strokeColor: 'red', strokeWidth: 5 },
-    //     });
-
-    // var s2 = brd.create('slider', [[5, 17.5], [15, 17.5], [-10, -5, 10]],
-    //     {
-    //         name: 'y',
-    //         fillColor: 'white',
-    //         strokeColor: 'red',
-    //         postLabel: '',
-    //         precision: 1,
-    //         label: { fontSize: 20, strokeColor: 'red', cssStyle: 'margin-left: 15px; margin-top: 10px;' },
-    //         baseline: { strokeColor: 'red', strokeWidth: 3, opacity: 0.4 },
-    //         highline: { strokeColor: 'red', strokeWidth: 5 },
-    //     });
-
     // create a point at coordinates (0, 0)    
     var O = brd.create('point', [0.0, 0.0], { name: '', visible: false });
     // create a point with x coordinate is the value of the slider * 2 and y coordinate is the value of the slider * 2
