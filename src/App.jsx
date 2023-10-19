@@ -38,7 +38,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route exact path="/vr-demo" element={<VRApp />} />
+        <Route exact path="/vr-demo" element={<Box3D />} />
 
         <Route exact path="/vr-demo/VRApp" element={<VRApp />} />
 
