@@ -48,8 +48,7 @@ export default function Box3D() {
     // if value is undefined, set it to 0
     let box_idx = 0
     // Get value from parameters using useParams hook
-    // const model_idx = useParams().box_id
-    const model_idx = 0
+    const model_idx = useParams().box_id
     // if value is undefined, set it to 0
     if (model_idx === undefined) {
         box_idx = 0
