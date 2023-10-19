@@ -30,6 +30,7 @@ import JSXGraphReact23 from './components/Objects/2D/JSXGraphReact23.jsx'
 import JSXGraphReact24 from './components/Objects/2D/JSXGraphReact24.jsx'
 import JSXGraphReact25 from './components/Objects/2D/JSXGraphReact25.jsx'
 import JSXGraphReact26 from './components/Objects/2D/JSXGraphReact26.jsx'
+import JSXGraphReact27 from './components/Objects/2D/JSXGraphReact27.jsx'
 import JSXGraphComponent from './components/Objects/2D/JSXGraphComponent.jsx'
 import Box3D from './components/Objects/3D/Box3D.jsx'
 
@@ -69,13 +70,16 @@ const App = () => {
         {/* 삼각비 01 */}
         <Route path="/vr-demo/Trigonometry/1" Component={JSXGraphReact21} />
         {/* 삼각비 02 */}
-        <Route path="/vr-demo/Trigonometry/2" Component={JSXGraphReact25} />
+        {/* <Route path="/vr-demo/Trigonometry/2" Component={JSXGraphReact25} /> */}
         {/* 삼각비 04 */}
-        <Route path="/vr-demo/Trigonometry/4" Component={JSXGraphReact26} />
+        {/* <Route path="/vr-demo/Trigonometry/4" Component={JSXGraphReact26} /> */}
         {/* 삼각비 05 */}
         <Route path="/vr-demo/Trigonometry/5" Component={JSXGraphReact4} />
         {/* 삼각비 06 */}
-        <Route path="/vr-demo/Trigonometry/6" Component={JSXGraphReact5} />
+        {/* <Route path="/vr-demo/Trigonometry/6" Component={JSXGraphReact5} /> */}
+        {/* 삼각비 07 */}
+        <Route path="/vr-demo/Trigonometry/7" Component={JSXGraphReact27} />
+        {/* 삼각비 08 */}
 
 
         {/* 벡터 01*/}
@@ -88,21 +92,21 @@ const App = () => {
         {/* <Route path="/vr-demo/2D/Vector/6" Component={JSXGraphReact6} /> */}
         {/* 벡터 07*/}
         {/* <Route path="/vr-demo/2D/Vector/7" Component={JSXGraphReact8} /> */}
-        벡터 08
-        <Route path="/vr-demo/Vector/8" Component={JSXGraphReact24} />
+        {/* 벡터 08 */}
+        {/* <Route path="/vr-demo/Vector/8" Component={JSXGraphReact24} /> */}
 
         {/* 도형변환 03 */}
-        <Route path="/vr-demo/Transformation/3" Component={JSXGraphReact22} />
+        {/* <Route path="/vr-demo/Transformation/3" Component={JSXGraphReact22} /> */}
         {/* 도형변환 04 */}
-        <Route path="/vr-demo/Transformation/4" Component={JSXGraphReact23} />
+        {/* <Route path="/vr-demo/Transformation/4" Component={JSXGraphReact23} /> */}
         {/* 도형변환 05 */}
         <Route path="/vr-demo/Transformation/5" Component={JSXGraphReact19} />
         {/* 도형변환 08 */}
-        {/* <Route path="/vr-demo/2D/Transformation/8" Component={JSXGraphReact20} /> */}
+        <Route path="/vr-demo/Transformation/8" Component={JSXGraphReact20} />
         {/* 도형변환 09 */}
-        {/* <Route path="/vr-demo/2D/Transformation/9" Component={JSXGraphReact7} /> */}
+        {/* <Route path="/vr-demo/Transformation/9" Component={JSXGraphReact7} /> */}
         {/* 도형변환 10 */}
-        <Route path="/vr-demo/Transformation/10" Component={JSXGraphReact15} />
+        {/* <Route path="/vr-demo/Transformation/10" Component={JSXGraphReact15} /> */}
 
 
       </Routes>
