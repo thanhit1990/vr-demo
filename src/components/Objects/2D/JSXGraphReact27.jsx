@@ -100,7 +100,7 @@ class JSXGraphComponent extends Component {
             <>
                 <div >
                     <h2>
-                        삼각함수 탄젠트함수X
+                        삼각함수 탄젠트함수
                     </h2>
                 </div>
                 <JXGBoard
