@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
 import JXGBoard from 'jsxgraph-react-js'
-import { is } from '@react-spring/shared';
-import { max } from 'mathjs';
 
 let logicJS = (brd) => {
     brd.suspendUpdate();
