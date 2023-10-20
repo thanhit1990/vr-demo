@@ -47,6 +47,8 @@ const App = () => {
 
         {/* 입체도형 01 */}
         <Route exact path="/vr-demo/Geometry/:box_id" element={<Box3D />} />
+        {/* 입체도형 02 */}
+
 
         {/* 작도 01 */}
         {/* <Route path="/vr-demo/2D/Construction/1" Component={JSXGraphReact} /> */}
@@ -73,6 +75,8 @@ const App = () => {
         <Route path="/vr-demo/Trigonometry/1" Component={JSXGraphReact21} />
         {/* 삼각비 02 */}
         {/* <Route path="/vr-demo/Trigonometry/2" Component={JSXGraphReact25} /> */}
+        {/* 삼각비 03 */}
+        
         {/* 삼각비 04 */}
         {/* <Route path="/vr-demo/Trigonometry/4" Component={JSXGraphReact26} /> */}
         {/* 삼각비 05 */}
@@ -85,6 +89,7 @@ const App = () => {
         <Route path="/vr-demo/Trigonometry/8" Component={JSXGraphReact29} />
         {/* 삼각비 09 */}
         <Route path="/vr-demo/Trigonometry/9" Component={JSXGraphReact28} />
+        {/* 삼각비 10 */}
 
 
 
@@ -94,19 +99,27 @@ const App = () => {
         {/* <Route path="/vr-demo/2D/Vector/2" Component={JSXGraphReact12} /> */}
         {/* 벡터 03*/}
         <Route path="/vr-demo/Vector/3" Component={JSXGraphReact13} />
+        {/* 벡터 04*/}
+        {/* 벡터 05*/}
         {/* 벡터 06*/}
         {/* <Route path="/vr-demo/2D/Vector/6" Component={JSXGraphReact6} /> */}
         {/* 벡터 07*/}
         {/* <Route path="/vr-demo/2D/Vector/7" Component={JSXGraphReact8} /> */}
         {/* 벡터 08 */}
         {/* <Route path="/vr-demo/Vector/8" Component={JSXGraphReact24} /> */}
+        {/* 벡터 09 */}
+        {/* 벡터 10 */}
 
+        {/* 도형변환 01 */}
+        {/* 도형변환 02 */}
         {/* 도형변환 03 */}
         {/* <Route path="/vr-demo/Transformation/3" Component={JSXGraphReact22} /> */}
         {/* 도형변환 04 */}
         {/* <Route path="/vr-demo/Transformation/4" Component={JSXGraphReact23} /> */}
         {/* 도형변환 05 */}
         <Route path="/vr-demo/Transformation/5" Component={JSXGraphReact19} />
+        {/* 도형변환 06 */}
+        {/* 도형변환 07 */}
         {/* 도형변환 08 */}
         <Route path="/vr-demo/Transformation/8" Component={JSXGraphReact20} />
         {/* 도형변환 09 */}

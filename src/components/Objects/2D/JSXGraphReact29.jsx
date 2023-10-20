@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 
 import JXGBoard from 'jsxgraph-react-js'
 import { is } from '@react-spring/shared';
+import { max } from 'mathjs';
 
 let logicJS = (brd) => {
     brd.suspendUpdate();
 
     // create a slider with name "a" from 1 to 10 with initial value 1
-    var slider = brd.create('slider', [[2, 10], [5, 10], [0, 0, 10]],
+    var slider = brd.create('slider', [[2, 15], [5, 15], [0, 1, 4]],
         {
             name: 'n',
             snapWidth: 1,
@@ -23,37 +24,33 @@ let logicJS = (brd) => {
         });
 
     // create a point at (2.5, 2.5) with name "A"
-    var A = brd.create('point', [2.5, 2.5], { visible: false, name: "A", size: 2, color: 'black', fixed: true });
+    var A = brd.create('point', [2.5, 2.5], { visible: true, name: "A", size: 2, color: 'black', fixed: true });
     // create a point at (-2.5, 2.5) with name "B" 
-    var B = brd.create('point', [-2.5, 2.5], { visible: false, name: "B", size: 2, color: 'black', fixed: true });
+    var B = brd.create('point', [-2.5, 2.5], { visible: true, name: "B", size: 2, color: 'black', fixed: true });
     // create a point at (-2.5, -2.5) with name "C"
-    var C = brd.create('point', [-2.5, -2.5], { visible: false, name: "C", size: 2, color: 'black', fixed: true });
+    var C = brd.create('point', [-2.5, -2.5], { visible: true, name: "C", size: 2, color: 'black', fixed: true });
     // create a point at (2.5, -2.5) with name "D"
-    var D = brd.create('point', [2.5, -2.5], { visible: false, name: "D", size: 2, color: 'black', fixed: true });
-    // create a point at (2.5, 2.5) with name "A"
-    var A1 = brd.create('point', [2.5, 2.5], { visible: false, name: "A1", size: 2, color: 'black', fixed: true });
-    // create a point at (-2.5, 2.5) with name "B" 
-    var B1 = brd.create('point', [-2.5, 2.5], { visible: false, name: "B1", size: 2, color: 'black', fixed: true });
-    // create a point at (-2.5, -2.5) with name "C"
-    var C1 = brd.create('point', [-2.5, -2.5], { visible: false, name: "C1", size: 2, color: 'black', fixed: true });
-    // create a point at (2.5, -2.5) with name "D"
-    var D1 = brd.create('point', [2.5, -2.5], { visible: false, name: "D1", size: 2, color: 'black', fixed: true });
+    var D = brd.create('point', [2.5, -2.5], { visible: true, name: "D", size: 2, color: 'black', fixed: true });
     // create a polygon with vertices A, B, C, D
     var poly = brd.create('polygon', [A, B, C, D], {
         fillColor: 'red', fillOpacity: 1, strokeColor: 'red', strokeWidth: 2,
         borders: { strokeColor: 'red', strokeWidth: 2, highlightStrokeColor: 'red', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 }
     });
     var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
-    var leftFunction = (n) => {
-        if (n == 0) {
+    var drawnObjects = [];
+    var drawTree = (A, B, C, D, depth, maxDepth) => {
+        if (depth > maxDepth) {
             return;
         }
         // create a cỉrcle with center A and cross B
         var circle = brd.create('circle', [C, A], { visible: false, strokeColor: 'blue', strokeWidth: 2, dash: 2 });
+        drawnObjects.push(circle);
         // create a circle with center D and cross B
         var circle1 = brd.create('circle', [D, B], { visible: false, strokeColor: 'blue', strokeWidth: 2, dash: 2 });
+        drawnObjects.push(circle1);
         // point of intersection of circle and circle1
         var E = brd.create('intersection', [circle, circle1, 1], { visible: false, name: 'E', size: 2, color: 'black', fixed: true });
+        drawnObjects.push(E);
         // create a regular polygon with with point A and E
         // random a color value
         color = '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -61,6 +58,7 @@ let logicJS = (brd) => {
             fillColor: color, fillOpacity: 1, strokeColor: 'yellow', strokeWidth: 2,
             vertices: { visible: false }
         });
+        drawnObjects.push(leftPoly);
         color = '#' + Math.floor(Math.random() * 16777215).toString(16);
         var rightPoly = brd.create('regularpolygon', [B, E, 4], {
             fillColor: color, fillOpacity: 1, strokeColor: 'yellow', strokeWidth: 2,
@@ -70,63 +68,20 @@ let logicJS = (brd) => {
         D = leftPoly.vertices[1];
         A = leftPoly.vertices[2];
         B = leftPoly.vertices[3];
-        leftFunction(n - 1);
-    }
-
-    var rightFunction = (n) => {
-        if (n == 0) {
-            return;
-        }
-        // create a cỉrcle with center A and cross B
-        var circle = brd.create('circle', [C1, A1], { visible: false, strokeColor: 'blue', strokeWidth: 2, dash: 2 });
-        // create a circle with center D and cross B
-        var circle1 = brd.create('circle', [D1, B1], { visible: false, strokeColor: 'blue', strokeWidth: 2, dash: 2 });
-        // point of intersection of circle and circle1
-        var E1 = brd.create('intersection', [circle, circle1, 1], { visible: false, name: 'E', size: 2, color: 'black', fixed: true });
-        // create a regular polygon with with point B and E
-        color = '#' + Math.floor(Math.random() * 16777215).toString(16);
-        var poly1 = brd.create('regularpolygon', [E1, A1, 4], {
-            fillColor: color, fillOpacity: 1, strokeColor: 'yellow', strokeWidth: 2,
-            vertices: { visible: false }
-        });
-        color = '#' + Math.floor(Math.random() * 16777215).toString(16);
-        var poly1 = brd.create('regularpolygon', [E1, A1, 4], {
-            fillColor: color, fillOpacity: 1, strokeColor: 'yellow', strokeWidth: 2,
-            vertices: { visible: false }
-        });
-        var poly2 = brd.create('regularpolygon', [B1, E1, 4], {
-            fillColor: color, fillOpacity: 1, strokeColor: 'yellow', strokeWidth: 2,
-            vertices: { visible: false }
-        });
-        C1 = poly2.vertices[0];
-        D1 = poly2.vertices[1];
-        A1 = poly2.vertices[2];
-        B1 = poly2.vertices[3];
-        rightFunction(n - 1)
-    }
-
-    var leftF = () => {
-        var leftPoly = leftFunction();
-        C = leftPoly[0];
-        D = leftPoly[1];
-        A = leftPoly[2];
-        B = leftPoly[3];
-    }
-
-    var rightF = () => {
-        var rightPoly = rightFunction();
-        C1 = rightPoly[0];
-        D1 = rightPoly[1];
-        A1 = rightPoly[2];
-        B1 = rightPoly[3];
+        drawTree(A, B, C, D, depth + 1, maxDepth);
+        C = rightPoly.vertices[0];
+        D = rightPoly.vertices[1];
+        A = rightPoly.vertices[2];
+        B = rightPoly.vertices[3];
+        drawTree(A, B, C, D, depth + 1, maxDepth);
     }
 
     slider.on('drag', function () {
-        // leftF();
-        // rightF();
-        leftFunction(slider.Value());
-        rightFunction(slider.Value());
-
+        for (var i = 0; i < drawnObjects.length; i++) {
+            brd.removeObject(drawnObjects[i]);
+        }
+        drawnObjects = [];
+        drawTree(A, B, C, D, 1, slider.Value());
     });
 
     brd.resizeContainer(800, 800);
