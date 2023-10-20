@@ -6,7 +6,7 @@ let logicJS = (brd) => {
     brd.suspendUpdate();
 
     // create a slider with name "a" from 1 to 10 with initial value 1
-    var slider = brd.create('slider', [[2, 15], [5, 15], [0, 1, 4]],
+    var slider = brd.create('slider', [[5, -2.5], [10, -2.5], [0, 0, 6]],
         {
             name: 'n',
             snapWidth: 1,
@@ -40,15 +40,29 @@ let logicJS = (brd) => {
         if (depth > maxDepth) {
             return;
         }
-        // create a cỉrcle with center A and cross B
-        var circle = brd.create('circle', [C, A], { visible: false, strokeColor: 'blue', strokeWidth: 2, dash: 2 });
-        drawnObjects.push(circle);
-        // create a circle with center D and cross B
-        var circle1 = brd.create('circle', [D, B], { visible: false, strokeColor: 'blue', strokeWidth: 2, dash: 2 });
-        drawnObjects.push(circle1);
-        // point of intersection of circle and circle1
-        var E = brd.create('intersection', [circle, circle1, 1], { visible: false, name: 'E', size: 2, color: 'black', fixed: true });
+        // create middle point of AB
+        var midAB = [(A.X() + B.X()) / 2, (A.Y() + B.Y()) / 2]
+        // create a circle with center is middle point of AB and cross A
+        var cirAB = brd.create('circle', [midAB, B], { visible: false, strokeColor: 'blue', strokeWidth: 2, dash: 2 });
+        drawnObjects.push(cirAB);
+        // create a segment cross A and B
+        var segAB = brd.create('segment', [A, B], { visible: false, name: 'segAB', size: 2, color: 'black', fixed: true });
+        drawnObjects.push(segAB);
+        // create perpendicular line with AB at middle point of AB
+        var perpAB = brd.create('perpendicular', [midAB, segAB], { visible: false, name: 'perpAB', size: 2, color: 'black', fixed: true });
+        drawnObjects.push(perpAB);
+        // point of intersection of perpAB and segAB
+        var E = brd.create('intersection', [perpAB, cirAB, 0], { visible: false, name: 'F', size: 2, color: 'black', fixed: true });
         drawnObjects.push(E);
+        // create a cỉrcle with center A and cross B
+        // var circle = brd.create('circle', [C, A], { visible: false, strokeColor: 'blue', strokeWidth: 2, dash: 2 });
+        // drawnObjects.push(circle);
+        // // create a circle with center D and cross B
+        // var circle1 = brd.create('circle', [D, B], { visible: false, strokeColor: 'blue', strokeWidth: 2, dash: 2 });
+        // drawnObjects.push(circle1);
+        // // point of intersection of circle and circle1
+        // var E = brd.create('intersection', [circle, circle1, 1], { visible: false, name: 'E', size: 2, color: 'black', fixed: true });
+        // drawnObjects.push(E);
         // create a regular polygon with with point A and E
         // random a color value
         color = '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -73,6 +87,7 @@ let logicJS = (brd) => {
         B = rightPoly.vertices[3];
         drawTree(A, B, C, D, depth + 1, maxDepth);
     }
+    drawTree(A, B, C, D, 1, slider.Value());
 
     slider.on('drag', function () {
         for (var i = 0; i < drawnObjects.length; i++) {
