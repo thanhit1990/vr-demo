@@ -19,7 +19,7 @@ let logicJS = (brd) => {
             highlightStrokeColor: 'green',
             postLabel: '°',
             precision: 0,
-            label: { fontSize: 15, strokeColor: 'green', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
+            label: { visible: false, fontSize: 15, strokeColor: 'green', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
             baseline: { strokeColor: 'green', highlightStrokeColor: 'green', highlightStrokeOpacity: 0.4, strokeWidth: 3, opacity: 0.4 },
             highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 5 },
         });
