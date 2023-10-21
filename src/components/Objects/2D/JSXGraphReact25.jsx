@@ -24,11 +24,13 @@ let logicJS = (brd) => {
 
 
     // create a point with name "A" at coordinates (-20,0)
-    var A = brd.create('point', [-20, 0], { name: "A", size: 2, color: 'blue', visible: false });
+    var A = brd.create('point', [-20, 0], { name: "A", size: 2, color: 'red', visible: false });
     // create a point with name "B" at coordinates (19,0)
-    var B = brd.create('point', [-15, 0], { name: "B", size: 2, color: 'blue', visible: false });
-    // create a line with two points A and B
-    var l = brd.create('line', [A, B], { strokeColor: 'blue', strokeWidth: 1, highlightStrokeColor: 'blue', highlightStrokeWidth: 1, fixed: true });
+    var B = brd.create('point', [-15, 0], { name: "B", size: 2, color: 'red', visible: false });
+
+    // create a line through A and B
+    var line = brd.create('line', [[-20, 0], [-15, 0]], { strokeColor: 'black', strokeWidth: 1, fixed: true });
+
     var pol = brd.create('regularpolygon', [A, B, 3],
         {
             fillColor: 'red',
@@ -37,60 +39,49 @@ let logicJS = (brd) => {
             strokeWidth: 2,
             vertices:
             {
-                strokeColor: 'black', fillColor: 'red', strokeOpacity: 0.3
+                strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
             }
         });
-    var C, D, E, F, l1, pol1;
-    var f = () => {
-        console.log("hello");
-        // create a circle at center B and crossing A
-        if (C) {
-            brd.removeObject(C);
-        }
-        var C = brd.create('circle', [B, A], { visible: false, strokeColor: 'blue', strokeWidth: 1, highlightStrokeColor: 'blue', highlightStrokeWidth: 1 });
-        // point D is intersection of line l and circle C
-        D = brd.create('intersection', [l, C, 0], { visible: false, name: "D", size: 2, color: 'blue' });
-        // create a glider at point A to point D on circle C
-        var E = brd.create('point', [function () { return 5 * slider.Value() - 25 }, 0], { visible: false, name: "E", size: 2, color: 'blue' });
-        // create perpendicular line from point E to line l
-        l1 = brd.create('perpendicular', [E, l], { strokeColor: 'blue', visible: false, strokeWidth: 1, highlightStrokeColor: 'blue', highlightStrokeWidth: 1 });
-        // point F is intersection of line l1 and circle C
-        F = brd.create('intersection', [l1, C, 1], { name: "F", size: 2, color: 'blue', visible: false });
-        // create a regular polygon with 3 vertices at point B, F
-        pol1 = brd.create('regularpolygon', [F, B, 3],
+    var E = brd.create('point', [pol.vertices[2].X(), pol.vertices[2].Y()], { name: "E", size: 2, color: 'green', visible: false });
+    var previousA = brd.create('point', [E.X(), E.Y()], { name: "A", size: 2, color: 'red', visible: false });
+    var A1 = brd.create('point', [A.X(), A.Y()], { name: "A1", size: 2, color: 'red', visible: false });
+    var B1 = brd.create('point', [B.X(), B.Y()], { name: "B1", size: 2, color: 'red', visible: false });
+    var arc = brd.create('arc', [B, E, previousA], { visible: true, strokeColor: 'red', strokeWidth: 2, fixed: true });
+    // create a regular polygon with A, B, and 3 vertices
+    var pol3 = brd.create('regularpolygon', [A1, B1, 3],
+        {
+            fillColor: 'red',
+            fillOpacity: 0.3,
+            strokeColor: 'red',
+            strokeWidth: 2,
+            vertices:
             {
-                fillColor: 'red',
-                fillOpacity: 0.3,
-                strokeColor: 'red',
-                strokeWidth: 2,
-                vertices:
-                {
-                    strokeColor: 'black', fillColor: 'red', strokeOpacity: 0.3
-                }
-            });
-    };
+                strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
+            }
+        });
 
-    f();
-    var loop01 = false;
-    var loop02 = false;
-    var currentSliderValue = 5 * slider.Value();
-    console.log(currentSliderValue);
-    var first = false;
-    var previousF = brd.create('point', [F.X(), F.Y()], { visible: false, name: "PF", size: 2, color: 'blue' });
-    var previousB = brd.create('point', [B.X(), B.Y()], { visible: false, name: "PF", size: 2, color: 'blue' });
+    // rotate B around A an angle of slider value
+    // Define the rotation angle in radians (e.g., 30 degrees)
+    // convert slider value to radians
+    var rotateObject = function (pivotPoint, rotationPoint, angle) {
+        // rotate rotationPoint around A an angle of slider value
+        rotationPoint.moveTo([pivotPoint.X() + (rotationPoint.X() - pivotPoint.X()) * Math.cos(angle) - (rotationPoint.Y() - pivotPoint.Y()) * Math.sin(angle),
+        pivotPoint.Y() + (rotationPoint.X() - pivotPoint.X()) * Math.sin(angle) + (rotationPoint.Y() - pivotPoint.Y()) * Math.cos(angle)]);
+        brd.update();
+    }; ``
+    // get current slider value
+    var val = slider.Value();
+
     slider.on('drag', function () {
-        var newSliderValue = 5 * slider.Value();
-        var x = newSliderValue - currentSliderValue;
-        if (x == 7.5 && !first) {
-            A = B;
-            B = D;
-            // brd.removeObject(pol1);
-            f();
-            currentSliderValue = newSliderValue;
-            first = true;
-            previousF = brd.create('point', [F.X(), F.Y()], { visible: false, name: "PF", size: 2, color: 'blue' });
-            previousB = brd.create('point', [B.X(), B.Y()], { visible: false, name: "PF", size: 2, color: 'blue' });
-            var pol2 = brd.create('regularpolygon', [previousB, previousF, 3],
+        // get current slider value
+        var new_val = slider.Value();
+        // convert slider value to radians
+        var angle = (val - new_val) * 120 * Math.PI / 180;
+        val = new_val;
+        rotateObject(B, A, angle);
+        if (slider.Value() % 2 == 0) {
+            // create new regular polygon with A, B, and 3 vertices
+            var pol1 = brd.create('regularpolygon', [A, B, 3],
                 {
                     fillColor: 'red',
                     fillOpacity: 0.3,
@@ -98,22 +89,37 @@ let logicJS = (brd) => {
                     strokeWidth: 2,
                     vertices:
                     {
-                        visible: false,
+                        strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
+                    }
+                });
+            var polyVertices = pol.vertices;
+            for (var i = 0; i < polyVertices.length; i++) {
+                console.log(polyVertices[i].X(), polyVertices[i].Y());
+            }
+            var previousA1 = brd.create('point', [previousA.X(), previousA.Y()], { name: "A", size: 2, color: 'red', visible: false });
+            previousA = brd.create('point', [A.X(), A.Y()], { name: "A", size: 2, color: 'red', visible: false });
+            A = brd.create('point', [B.X(), B.Y()], { name: "A", size: 2, color: 'red', visible: false });
+            B = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 2, color: 'red', visible: false });
+            var A1 = brd.create('point', [A.X(), A.Y()], { name: "A1", size: 2, color: 'red', visible: false });
+            var B1 = brd.create('point', [B.X(), B.Y()], { name: "B1", size: 2, color: 'red', visible: false });
+
+            var arc2 = brd.create('arc', [A1, B1, previousA1], { visible: true, strokeColor: 'red', strokeWidth: 2, fixed: true });
+            brd.removeObject(pol);
+            pol = brd.create('regularpolygon', [A, B, 3],
+                {
+                    fillColor: 'red',
+                    fillOpacity: 0.3,
+                    strokeColor: 'red',
+                    strokeWidth: 2,
+                    vertices:
+                    {
+                        strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
                     }
                 });
 
-        }
-        if (first) {
-            if (x == 5) {
-                // console.log(z);
-                A = B;
-                B = D;
-                // brd.removeObject(pol1);
-                f();
-                currentSliderValue = newSliderValue;
-                previousF = brd.create('point', [F.X(), F.Y()], { visible: false, name: "PF", size: 2, color: 'blue' });
-                previousB = brd.create('point', [B.X(), B.Y()], { visible: false, name: "PF", size: 2, color: 'blue' });
-                var pol3 = brd.create('regularpolygon', [previousB, previousF, 3],
+        } else
+            if ((Number.isInteger(slider.Value()))) {
+                var pol2 = brd.create('regularpolygon', [A, B, 3],
                     {
                         fillColor: 'red',
                         fillOpacity: 0.3,
@@ -121,42 +127,43 @@ let logicJS = (brd) => {
                         strokeWidth: 2,
                         vertices:
                         {
-                            strokeColor: 'black', fillColor: 'red', strokeOpacity: 0.3
+                            strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
                         }
                     });
-
+                var polyVertices = pol.vertices;
+                for (var i = 0; i < polyVertices.length; i++) {
+                    console.log(polyVertices[i].X(), polyVertices[i].Y());
+                }
+                var previousA1 = brd.create('point', [previousA.X(), previousA.Y()], { name: "A", size: 2, color: 'red', visible: false });
+                previousA = brd.create('point', [A.X(), A.Y()], { name: "A", size: 2, color: 'red', visible: false });
+                A = brd.create('point', [B.X(), B.Y()], { name: "A", size: 2, color: 'red', visible: false });
+                B = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 2, color: 'red', visible: false });
+                var A1 = brd.create('point', [A.X(), A.Y()], { name: "A1", size: 2, color: 'red', visible: false });
+                var B1 = brd.create('point', [B.X(), B.Y()], { name: "B1", size: 2, color: 'red', visible: false });
+                var arc2 = brd.create('arc', [A1, B1, previousA1], { visible: true, strokeColor: 'red', strokeWidth: 2, fixed: true });
+                brd.removeObject(pol);
+                pol = brd.create('regularpolygon', [A, B, 3],
+                    {
+                        fillColor: 'red',
+                        fillOpacity: 0.3,
+                        strokeColor: 'red',
+                        strokeWidth: 2,
+                        vertices:
+                        {
+                            strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
+                        }
+                    });
+            } else {
+                // draw an arc with center A and crossing B
+                // create a new point at [polyVertices[2].X(), polyVertices[2].Y()]
+                brd.removeObject(E);
+                // brd.removeObject(arc);
+                E = brd.create('point', [pol.vertices[2].X(), pol.vertices[2].Y()], { name: "E", size: 2, color: 'green', visible: false });
+                var arc2 = brd.create('arc', [B, E, previousA], { visible: true, strokeColor: 'red', strokeWidth: 2, fixed: true });
             }
-        }
-        // var y = x * 10;
-        // var z = currentSliderValue - y;
 
-        // if (Math.abs(z) < 6 && !loop01) {
-        //     console.log(z);
-        //     A = B;
-        //     B = D;
-        //     // brd.removeObject(pol1);
-        //     f();
-        //     loop01 = true
-        // } else {
-        //     loop01 = false
-        // }
-        // if ((Number(slider.Value()) - 1.5) % 1 && !loop01) {
-        //     A = B;
-        //     B = D;
-        //     // brd.removeObject(pol1);
-        //     f();
-        //     loop01 = true
-        // } else {
-        //     loop01 = false
-        // }
-        // if (Number(slider.Value()) > 3.5 && !loop02) {
-        //     A = B;
-        //     B = D;
-        //     // brd.removeObject(pol1);
-        //     f();
-        //     loop02 = true
-        // }
     });
+
 
     brd.resizeContainer(800, 800);
     brd.unsuspendUpdate();
@@ -176,7 +183,7 @@ class JSXGraphComponent extends Component {
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{
-                        boundingBox: [-12, 12, 12, -12], axis: true,
+                        boundingBox: [-12, 12, 12, -12], axis: false,
                         zoomX: 0.5,
                         zoomY: 0.5
                     }}

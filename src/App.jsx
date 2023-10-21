@@ -75,21 +75,21 @@ const App = () => {
         {/* 삼각비 01 */}
         <Route path="/vr-demo/Trigonometry/1" Component={JSXGraphReact21} />
         {/* 삼각비 02 */}
-        {/* <Route path="/vr-demo/Trigonometry/2" Component={JSXGraphReact25} /> */}
+        <Route path="/vr-demo/Trigonometry/2" Component={JSXGraphReact25} />
         {/* 삼각비 03 */}
-        <Route path="/vr-demo/Trigonometry/3" Component={JSXGraphReact30} />        
+        {/* <Route path="/vr-demo/Trigonometry/3" Component={JSXGraphReact30} />         */}
         {/* 삼각비 04 */}
         {/* <Route path="/vr-demo/Trigonometry/4" Component={JSXGraphReact26} /> */}
         {/* 삼각비 05 */}
-        <Route path="/vr-demo/Trigonometry/5" Component={JSXGraphReact4} />
+        {/* <Route path="/vr-demo/Trigonometry/5" Component={JSXGraphReact4} /> */}
         {/* 삼각비 06 */}
         {/* <Route path="/vr-demo/Trigonometry/6" Component={JSXGraphReact5} /> */}
         {/* 삼각비 07 */}
-        <Route path="/vr-demo/Trigonometry/7" Component={JSXGraphReact27} />
+        {/* <Route path="/vr-demo/Trigonometry/7" Component={JSXGraphReact27} /> */}
         {/* 삼각비 08 */}
-        <Route path="/vr-demo/Trigonometry/8" Component={JSXGraphReact29} />
+        {/* <Route path="/vr-demo/Trigonometry/8" Component={JSXGraphReact29} /> */}
         {/* 삼각비 09 */}
-        <Route path="/vr-demo/Trigonometry/9" Component={JSXGraphReact28} />
+        {/* <Route path="/vr-demo/Trigonometry/9" Component={JSXGraphReact28} /> */}
         {/* 삼각비 10 */}
 
 
