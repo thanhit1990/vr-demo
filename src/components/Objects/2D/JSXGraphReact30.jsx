@@ -117,7 +117,7 @@ let logicJS = (brd) => {
 
     // current value of slider
     var curSlider = slider.Value();
-    slider.on('drag', function () {
+    var sliderChangeFunction = () => {
         // rotate polygon with angle slider
 
         var angleInRadians = degrees_to_radians(curSlider - slider.Value());
@@ -151,9 +151,17 @@ let logicJS = (brd) => {
         });
 
         curSlider = slider.Value();
+    };
+    slider.on('drag', function () {
+        sliderChangeFunction();
+    });
+
+    slider.coords.on('update', function () {
+        sliderChangeFunction();
     });
 
     F.on('drag', function () {
+        slider.setValue(0);
         // create a polygon with vertices B, F, G, C color #FF7F00
         brd.removeObject(poly1);
         poly1 = brd.create('polygon', [B, F, G, C], {
