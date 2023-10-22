@@ -34,7 +34,8 @@ import JSXGraphReact27 from './components/Objects/2D/JSXGraphReact27.jsx'
 import JSXGraphReact28 from './components/Objects/2D/JSXGraphReact28.jsx'
 import JSXGraphReact29 from './components/Objects/2D/JSXGraphReact29.jsx'
 import JSXGraphReact30 from './components/Objects/2D/JSXGraphReact30.jsx'
-import JSXGraphComponent from './components/Objects/2D/JSXGraphComponent.jsx'
+import JSXGraphReact31 from './components/Objects/2D/JSXGraphReact31.jsx'
+import Transformation1 from './components/Objects/3D/Transformation1.jsx'
 import Box3D from './components/Objects/3D/Box3D.jsx'
 
 
@@ -47,8 +48,8 @@ const App = () => {
         <Route exact path="/vr-demo/VRApp" element={<VRApp />} />
 
         {/* 입체도형 01 */}
-        <Route exact path="/vr-demo/Geometry/:box_id" element={<Box3D />} />
-        {/* 입체도형 02 */}
+        <Route exact path="/vr-demo/Geometry/:box_id" element={<Box3D />} />        
+        {/* 입체도형 02 */}        
 
 
         {/* 작도 01 */}
@@ -112,6 +113,7 @@ const App = () => {
         {/* 벡터 10 */}
 
         {/* 도형변환 01 */}
+        <Route path="/vr-demo/Transformation/1" Component={JSXGraphReact31} />
         {/* 도형변환 02 */}
         {/* 도형변환 03 */}
         {/* <Route path="/vr-demo/Transformation/3" Component={JSXGraphReact22} /> */}
