@@ -4,18 +4,49 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vr-demo/vite.svg" />
-  <script type="text/javascript" src="https://jsxgraph.uni-bayreuth.de/distrib/jsxgraphcore.js"></script>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js" async></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css">
+  <!-- <script type="text/javascript" src="https://jsxgraph.uni-bayreuth.de/~alfred/jsxgraph/distrib/jsxgraphsrc.js"></script> -->
+  <!-- <link rel="stylesheet" type="text/css" href="https://jsxgraph.uni-bayreuth.de/~alfred/jsxgraph/distrib/jsxgraph.css"> -->
+  <!-- <script src="https://jsxgraph.uni-bayreuth.de/~alfred/jsxdev/3D/prism.js" data-manual=""></script> -->
+  <!-- <link rel="stylesheet" href="https://jsxgraph.uni-bayreuth.de/~alfred/jsxdev/3D/prism.css"> -->
+  <!-- <script>
+    "use strict";
+    Prism.plugins.NormalizeWhitespace.setDefaults({
+      'remove-trailing': true,
+      'remove-indent': true,
+      'left-trim': true,
+      'right-trim': true,
+      'break-lines': 96,
+      'indent': 2,
+      /*
+          'remove-initial-line-feed': false,
+          'tabs-to-spaces': 4,
+          'spaces-to-tabs': 4*/
+    });
+    var nw = Prism.plugins.NormalizeWhitespace;
+    var showCode = function (from, to) {
+      var txt = document.getElementById(from).textContent;
+
+      txt = txt.replace(/</g, '&lts;');
+      document.getElementById(to).innerHTML = Prism.highlight(
+        nw.normalize(txt),
+        Prism.languages.js);
+
+    };
+  </script> -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VR Room</title>
-  <script type="module" crossorigin src="/vr-demo/assets/index-ba344627.js"></script>
+  <script type="module" crossorigin src="/vr-demo/assets/index-a31dcd0c.js"></script>
   <link rel="stylesheet" href="/vr-demo/assets/index-71232152.css">
 </head>
 
 <body>
   <div id="root"></div>
-  
-</body>
+    
+  </body>
 
 </html>

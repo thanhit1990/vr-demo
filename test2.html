@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Testing page</title>
+    <style>
+        #JSXBoard {
+            border-style: solid;
+            border-width: 1px;
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ffffff;
+            white-space: nowrap;
+            text-overflow: clip;
+        }
+
+        #JSXBoard button {
+            padding: 0px;
+            margin-top: 0px;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test mouse control</h1>
+
+    <script type='text/javascript' charset='UTF-8'
+        src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' />
+    </script>
+    <div class='jxgbox' id='JSXBoard'> </div>
+    <script>
+        const board = JXG.JSXGraph.initBoard('JSXBoard', {
+            boundingbox: [-8, 8, 8, -8],
+            keepaspectratio: false,
+            axis: false
+        });
+
+        var view = board.create('view3d',
+            [
+                [-6, -3],
+                [8, 8], // 2D box of view
+                [
+                    [-5, 5],
+                    [-5, 5],
+                    [-5, 5]
+                ]
+            ], // 3D bounding cube
+            {});
+        view.D3.az_slide.setValue(2.0); // 0 .. 2*Math.PI
+        view.D3.el_slide.setValue(0.1); // 0 .. Math.PI / 2
+        board.update();
+
+    </script>
+</body>
+
+</html>

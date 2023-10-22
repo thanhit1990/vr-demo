@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Testing page</title>
+    <style>
+        #JSXBoard {
+            border-style: solid;
+            border-width: 1px;
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ffffff;
+            white-space: nowrap;
+            text-overflow: clip;
+        }
+
+        #JSXBoard button {
+            padding: 0px;
+            margin-top: 0px;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test mouse control</h1>
+
+    <script type='text/javascript' charset='UTF-8'
+        src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' />
+    </script>
+    <div class='jxgbox' id='JSXBoard'> </div>
+    <script>
+        (function () {
+            var JSXBoard_b = JXG.JSXGraph.initBoard('JSXBoard', {
+                boundingbox: [-8, 8, 8, -8],
+                originX: 4, originY: 4,
+                zoomX: 1, zoomY: 1,
+                keepaspectratio: false, axis: false,
+                showCopyright: false, showNavigation: false,
+                grid: false
+            });
+
+            /* Write your jsxgraph code here */
+
+            az = JSXBoard_b.createElement('slider', [[-7, -7], [5, -7], [0, 0.54, 2 * Math.PI]], { style: 6, name: 'az', visible: false });
+            el = JSXBoard_b.createElement('slider', [[-7, 0], [-7, 6], [0, 0.44, Math.PI / 2]], { style: 6, name: 'el', visible: false });
+            kierto = JSXBoard_b.create('transform', [function () { return 0.5 * Math.PI - az.Value(); }], { type: 'rotate' });
+            muunnos = JSXBoard_b.create('transform', [1, 0, 0, 0, -1, 0, 0, 0, -1], { type: 'generic' });
+            skaalaus = JSXBoard_b.create('transform', [1, 0, 0, 0, 1, 0, 0, 0, function () { return Math.sin(el.Value()); }], { type: 'generic' });
+
+            lev = 6; //parillinen luku
+            var alku = -lev;
+            var loppu = lev;
+            var ker = 4;
+            var n = (loppu - alku) * ker + 1;
+            var xs = [], xss = [];
+            for (var i = 0; i < n; i++) {
+                xs[2 * i] = JSXBoard_b.create('segment', [[alku + i / ker, alku], [alku + i / ker, loppu]], { visible: false });
+                xs[2 * i + 1] = JSXBoard_b.create('segment', [[alku, alku + i / ker], [loppu, alku + i / ker]], { visible: false });
+            }
+            for (var i = 0; i < 2 * n; i++) {
+                xss[i] = JSXBoard_b.create('segment', [xs[i], [kierto, muunnos, skaalaus]]);
+                if ((i - alku * ker) % (2 * ker) == 0 || (i - alku * ker) % (2 * ker) == 1) {
+                    xss[i].setAttribute({ strokeWidth: 1, strokeColor: 'black', showInfoBox: false, highlight: false, visible: true, size: 2 });
+                } else {
+                    xss[i].setAttribute({ visible: false });
+                }
+            }
+
+
+            a = JSXBoard_b.create('point', [0, 0], { name: 'A', showInfoBox: false, visible: true, size: 2 });
+            b = JSXBoard_b.create('point', [1, 1], { name: 'B', showInfoBox: false, visible: true, size: 2 });
+            s = JSXBoard_b.create('segment', [a, b], { strokeColor: 'red', showInfoBox: false, visible: true, size: 2 });
+
+
+            document.addEventListener('mousedown', e => {
+                x = e.offsetX;
+                y = e.offsetY;
+                isDrawing = true;
+            });
+
+            document.addEventListener('mousemove', e => {
+                if (isDrawing === true) {
+                    x = e.offsetX;
+                    y = e.offsetY;
+                    az.setValue([x / 100]);
+                    el.setValue([y / 100]);
+                    JSXBoard_b.update();
+                }
+            });
+
+            document.addEventListener('mouseup', e => {
+                if (isDrawing === true) {
+                    isDrawing = false;
+                }
+            });
+
+
+        })();
+    </script>
+</body>
+
+</html>
