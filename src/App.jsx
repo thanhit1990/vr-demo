@@ -78,7 +78,7 @@ const App = () => {
         {/* 삼각비 02 */}
         <Route path="/vr-demo/Trigonometry/2" Component={JSXGraphReact25} />
         {/* 삼각비 03 */}
-        {/* <Route path="/vr-demo/Trigonometry/3" Component={JSXGraphReact30} />         */}
+        {/* <Route path="/vr-demo/Trigonometry/3" Component={JSXGraphReact30} /> */}
         {/* 삼각비 04 */}
         {/* <Route path="/vr-demo/Trigonometry/4" Component={JSXGraphReact26} /> */}
         {/* 삼각비 05 */}
@@ -113,8 +113,9 @@ const App = () => {
         {/* 벡터 10 */}
 
         {/* 도형변환 01 */}
-        <Route path="/vr-demo/Transformation/1" Component={JSXGraphReact31} />
+        
         {/* 도형변환 02 */}
+        <Route path="/vr-demo/Transformation/2" Component={JSXGraphReact31} />
         {/* 도형변환 03 */}
         {/* <Route path="/vr-demo/Transformation/3" Component={JSXGraphReact22} /> */}
         {/* 도형변환 04 */}
