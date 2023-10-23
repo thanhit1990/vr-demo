@@ -76,7 +76,8 @@ let logicJS = (brd) => {
     var BM = brd.create('segment', [B, M], { strokeColor: 'black', strokeWidth: 2, fixed: true });
     // create a circle with center M and radius 2
     var C2 = brd.create('circle', [M, 1.2], { strokeColor: 'black', fillColor: 'white', fillOpacity: 0.5, highlightFillColor: 'black', highlightStrokeColor: 'black', highlightFillOpacity: 0.5, strokeWidth: 1, fixed: true });
-
+    // create a perpendicular line from M to BM
+    var perp2 = brd.create('perpendicular', [BM, M], { visible: true, strokeColor: 'black', strokeWidth: 1, dash: 2, fixed: true });
 
     brd.clickDownArrow();
     brd.clickDownArrow();
