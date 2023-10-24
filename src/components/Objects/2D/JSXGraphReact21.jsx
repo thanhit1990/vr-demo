@@ -18,8 +18,8 @@ function calculate_angle(a, b, c) {
 
 let logicJS = (brd) => {
     brd.suspendUpdate();
-    var urlOriImg = '../src/assets/images/fish.png';
-    var urlDogImg = '../src/assets/images/tekville_logo.png';
+    var urlOriImg = '../images/fish.png';
+    var urlDogImg = '../images/tekville_logo.png';
     // create a point at position [-20,0]
     var P = brd.create('point', [-20, 0], { name: '', fixed: true, visible: false });
     // create a point at position [0,10]

@@ -7,15 +7,15 @@ let logicJS = (brd) => {
     brd.suspendUpdate();
     // load image from file 
     // Create an image
-    // const img = brd.create('image', ['../src/assets/images/Flag_of_South_Korea_bars.png', [-13, -10], [26, 20]],
+    // const img = brd.create('image', ['../images/Flag_of_South_Korea_bars.png', [-13, -10], [26, 20]],
     //     { });
     // Calculate the center of the image
     // const centerX = 0;
     // const centerY = 0;
     // Create a slider to control rotation
 
-    var urlFlagImg = '../src/assets/images/Flag_of_South_Korea_bars.png';
-    var urlCenterImg = '../src/assets/images/Flag_of_South_Korea_center.png';
+    var urlFlagImg = '../images/Flag_of_South_Korea_bars.png';
+    var urlCenterImg = '../images/Flag_of_South_Korea_center.png';
     const flagSlider = brd.create('slider', [[-9, 20], [9, 20], [0, 0, 360]], {
         name: 'Rotation Flag',
         snapWidth: 1,

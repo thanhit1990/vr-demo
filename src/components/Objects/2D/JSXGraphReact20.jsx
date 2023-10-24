@@ -8,14 +8,14 @@ let logicJS = (brd) => {
     brd.suspendUpdate();
     // load image from file 
     // Create an image
-    // const img = brd.create('image', ['../src/assets/images/Flag_of_South_Korea_bars.png', [-13, -10], [26, 20]],
+    // const img = brd.create('image', ['../images/Flag_of_South_Korea_bars.png', [-13, -10], [26, 20]],
     //     { });
     // Calculate the center of the image
     // const centerX = 0;
     // const centerY = 0;
     // Create a slider to control rotation
 
-    var urlOriImg = '../src/assets/images/tekville_logo.png';
+    var urlOriImg = '../images/tekville_logo.png';
     const xSlider = brd.create('slider', [[-9, 20], [9, 20], [-5, -5, 5]], {
         name: 'x',
         snapWidth: 1,
