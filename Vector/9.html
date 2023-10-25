@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Testing page</title>
+    <style>
+        #JSXBoard {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            border-style: solid;
+            border-width: 1px;
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ffffff;
+            white-space: nowrap;
+            text-overflow: clip;
+        }
+
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #JSXBoard button {
+            padding: 0px;
+            margin-top: 0px;
+            background-color: #ffffff;
+
+        }
+
+        #JSXBoard_licenseText {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test mouse control</h1>
+
+    <script type='text/javascript' charset='UTF-8'
+        src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' />
+    </script>
+    <div class='jxgbox' id='JSXBoard'> </div>
+    <script>
+        const board = JXG.JSXGraph.initBoard('JSXBoard', {
+            boundingbox: [-10, 10, 10, -10],
+            keepaspectratio: false,
+            axis: false
+        });
+
+        // Given point A (x, y, z) and Yaw angle alpha (in radians)
+        function yawRotation(A, alpha) {
+            const x = A[0];
+            const y = A[1];
+            const z = A[2];
+
+            const cosAlpha = Math.cos(alpha);
+            const sinAlpha = Math.sin(alpha);
+
+            const newX = x * cosAlpha + z * sinAlpha;
+            const newZ = -x * sinAlpha + z * cosAlpha;
+
+            return [newX, y, newZ];
+        }
+
+        // Given point A (x, y, z) and Pitch angle alpha (in radians)
+        function pitchRotation(A, alpha) {
+            const x = A[0];
+            const y = A[1];
+            const z = A[2];
+
+            const cosAlpha = Math.cos(alpha);
+            const sinAlpha = Math.sin(alpha);
+
+            const newY = y * cosAlpha - z * sinAlpha;
+            const newZ = y * sinAlpha + z * cosAlpha;
+
+            return [x, newY, newZ];
+        }
+
+        // Given point A (x, y, z) and Roll angle alpha (in radians)
+        function rollRotation(A, alpha) {
+            const x = A[0];
+            const y = A[1];
+            const z = A[2];
+
+            const cosAlpha = Math.cos(alpha);
+            const sinAlpha = Math.sin(alpha);
+
+            const newX = x * cosAlpha - y * sinAlpha;
+            const newY = x * sinAlpha + y * cosAlpha;
+
+            return [newX, newY, z];
+        }
+
+        var view = board.create('view3d',
+            [
+                [-6, -3],
+                [10, 10], // 2D box of view
+                [
+                    [-5, 5],
+                    [-5, 5],
+                    [-5, 5]
+                ]
+            ], // 3D bounding cube
+            {});
+
+        var slider1 = board.create('slider', [[-7, -6], [5, -6], [0, 0, 360]], {
+            name: '&alpha;',
+            snapWidth: 1,
+            fillColor: 'white',
+            strokeColor: 'green',
+            highlightFillColor: 'white',
+            highlightStrokeColor: 'green',
+            postLabel: '',
+            precision: 0,
+            label: { visible: true, fontSize: 15, strokeColor: 'green', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
+            baseline: { strokeColor: 'green', highlightStrokeColor: 'green', highlightStrokeOpacity: 0.4, strokeWidth: 3, opacity: 0.4 },
+            highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 5 },
+        });
+        var slider2 = board.create('slider', [[-7, -7], [5, -7], [-90, 0, 90]], {
+            name: '&beta;',
+            snapWidth: 1,
+            fillColor: 'white',
+            strokeColor: 'green',
+            highlightFillColor: 'white',
+            highlightStrokeColor: 'green',
+            postLabel: '',
+            precision: 0,
+            label: { visible: true, fontSize: 15, strokeColor: 'green', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
+            baseline: { strokeColor: 'green', highlightStrokeColor: 'green', highlightStrokeOpacity: 0.4, strokeWidth: 3, opacity: 0.4 },
+            highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 5 },
+        });
+        var slider3 = board.create('slider', [[-7, -8], [5, -8], [0, 0, 360]], {
+            name: '&gamma;',
+            snapWidth: 1,
+            fillColor: 'white',
+            strokeColor: 'green',
+            highlightFillColor: 'white',
+            highlightStrokeColor: 'green',
+            postLabel: '',
+            precision: 0,
+            label: { visible: true, fontSize: 15, strokeColor: 'green', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
+            baseline: { strokeColor: 'green', highlightStrokeColor: 'green', highlightStrokeOpacity: 0.4, strokeWidth: 3, opacity: 0.4 },
+            highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 5 },
+        });
+        var pA = [3, -2, 0.5];
+        var pB = [3, 2, 0.5];
+        var pC = [3, 2, -0.5];
+        var pD = [3, -2, -0.5];
+        var pE = [-3, -2, 0.5];
+        var pF = [-3, 2, 0.5];
+        var pG = [-3, 2, -0.5];
+        var pH = [-3, -2, -0.5];
+        var A = view.create('point3d', pA, { visible: false });
+        var B = view.create('point3d', pB, { visible: false });
+        var C = view.create('point3d', pC, { visible: false });
+        var D = view.create('point3d', pD, { visible: false });
+        var E = view.create('point3d', pE, { visible: false });
+        var F = view.create('point3d', pF, { visible: false });
+        var G = view.create('point3d', pG, { visible: false });
+        var H = view.create('point3d', pH, { visible: false });
+
+        // create a parabola curve
+        var curve = view.create('curve3d', [
+            (t) => t,
+            (t) => 0,
+            (t) => 0.5 * Math.pow(Math.E, t),
+            [-2.3, 2.7]
+        ], { strokeWidth: 2 });
+
+        // create segment between points A and B
+        var AB = view.create('line3d', [A, B], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var BC = view.create('line3d', [B, C], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var CD = view.create('line3d', [C, D], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var DA = view.create('line3d', [D, A], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var EF = view.create('line3d', [E, F], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var FG = view.create('line3d', [F, G], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var GH = view.create('line3d', [G, H], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var HE = view.create('line3d', [H, E], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var AE = view.create('line3d', [A, E], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var BF = view.create('line3d', [B, F], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var CG = view.create('line3d', [C, G], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+        var DH = view.create('line3d', [D, H], { visible: false, strokeColor: 'gray', strokeWidth: 2, highlightStrokeColor: 'gray' });
+
+        var rotateObject = () => {
+            var alpha = slider1.Value() * Math.PI / 180;
+            var beta = slider2.Value() * Math.PI / 180;
+            var gamma = slider3.Value() * Math.PI / 180;
+
+            A.setPosition(rotatePoint(pA, alpha, beta, gamma));
+            B.setPosition(rotatePoint(pB, alpha, beta, gamma));
+            C.setPosition(rotatePoint(pC, alpha, beta, gamma));
+            D.setPosition(rotatePoint(pD, alpha, beta, gamma));
+            E.setPosition(rotatePoint(pE, alpha, beta, gamma));
+            F.setPosition(rotatePoint(pF, alpha, beta, gamma));
+            G.setPosition(rotatePoint(pG, alpha, beta, gamma));
+            H.setPosition(rotatePoint(pH, alpha, beta, gamma));
+
+            board.update();
+        }
+        slider1.on('drag', rotateObject);
+        slider2.on('drag', rotateObject);
+        slider3.on('drag', rotateObject);
+        function rotatePoint(point, yaw, pitch, roll) {
+            var cosYaw = Math.cos(yaw);
+            var sinYaw = Math.sin(yaw);
+            var cosPitch = Math.cos(pitch);
+            var sinPitch = Math.sin(pitch);
+            var cosRoll = Math.cos(roll);
+            var sinRoll = Math.sin(roll);
+
+            var x = point[0];
+            var y = point[1];
+            var z = point[2];
+
+            var x1 = cosYaw * cosPitch;
+            var x2 = cosYaw * sinPitch * sinRoll - sinYaw * cosRoll;
+            var x3 = cosYaw * sinPitch * cosRoll + sinYaw * sinRoll;
+
+            var y1 = sinYaw * cosPitch;
+            var y2 = sinYaw * sinPitch * sinRoll + cosYaw * cosRoll;
+            var y3 = sinYaw * sinPitch * cosRoll - cosYaw * sinRoll;
+
+            var z1 = -sinPitch;
+            var z2 = cosPitch * sinRoll;
+            var z3 = cosPitch * cosRoll;
+
+            var xRot = x * x1 + y * x2 + z * x3;
+            var yRot = x * y1 + y * y2 + z * y3;
+            var zRot = x * z1 + y * z2 + z * z3;
+
+            return [xRot, yRot, zRot];
+        }
+        board.update();
+
+    </script>
+</body>
+
+</html>
