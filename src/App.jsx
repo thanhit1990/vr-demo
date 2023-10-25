@@ -40,6 +40,14 @@ import Box3D from './components/Objects/3D/Box3D.jsx'
 
 
 const App = () => {
+  const Transformation_1 = () => {
+    window.location.href = "./1.html";
+    return <></>;
+  };
+  const Vector_4 = () => {
+    window.location.href = "./4.html";
+    return <></>;
+  };
   return (
     <Router>
       <Routes>
@@ -48,8 +56,8 @@ const App = () => {
         <Route exact path="/VRApp" element={<VRApp />} />
 
         {/* 입체도형 01 */}
-        <Route exact path="/Geometry/:box_id" element={<Box3D />} />        
-        {/* 입체도형 02 */}        
+        <Route exact path="/Geometry/:box_id" element={<Box3D />} />
+        {/* 입체도형 02 */}
 
 
         {/* 작도 01 */}
@@ -102,9 +110,10 @@ const App = () => {
         {/* 벡터 03*/}
         <Route path="/Vector/3" Component={JSXGraphReact13} />
         {/* 벡터 04*/}
+        {/* <Route path="/Vector/4" element={<Vector_4 />} /> */}
         {/* 벡터 05*/}
         {/* 벡터 06*/}
-        {/* <Route path="Vector/6" Component={JSXGraphReact6} /> */}
+        {/* <Route path="/Vector/6" Component={JSXGraphReact6} /> */}
         {/* 벡터 07*/}
         {/* <Route path="/Vector/7" Component={JSXGraphReact8} /> */}
         {/* 벡터 08 */}
@@ -112,8 +121,9 @@ const App = () => {
         {/* 벡터 09 */}
         {/* 벡터 10 */}
 
+
         {/* 도형변환 01 */}
-        
+        <Route path="/Transformation/1" element={<Transformation_1 />} />
         {/* 도형변환 02 */}
         {/* <Route path="/Transformation/2" Component={JSXGraphReact31} /> */}
         {/* 도형변환 03 */}
