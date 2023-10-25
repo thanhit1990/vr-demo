@@ -16,6 +16,13 @@
             transform: translateX(-45%);
             color: black;
         }
+
+        #for-rotation-slider {
+            margin-bottom: 10px;
+            position: absolute;
+            width: 100px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 
@@ -33,7 +40,7 @@
 
     <div id="slider-container">
         <input type="range" id="rotation-slider" min="0" max="360" value="0" step="1">
-        <!-- <label for="rotation-slider">Rotation Angle: <span id="angle-value">0</span> degrees</label> -->
+        <label for="rotation-slider" id="for-rotation-slider">θ = <span id="angle-value">0</span>°</label>
     </div>
 
     <script type="module">
@@ -89,6 +96,7 @@
 
         // Function to update the curve based on the slider value
         const updateCurve = (angle) => {
+            document.getElementById("angle-value").textContent = angle;
             curve.rotation.y = (angle * Math.PI) / 180;
             // if the angle is bigger than a value in the array of angles, set the flag to true        
             // if the angle is smaller than the value in the array of angles, set the flag to false            
