@@ -44,8 +44,16 @@ const App = () => {
     window.location.href = "./1.html";
     return <></>;
   };
+  const Transformation_6 = () => {
+    window.location.href = "./6.html";
+    return <></>;
+  };
   const Vector_4 = () => {
     window.location.href = "./4.html";
+    return <></>;
+  };
+  const Vector_9 = () => {
+    window.location.href = "./9.html";
     return <></>;
   };
   return (
@@ -119,6 +127,7 @@ const App = () => {
         {/* 벡터 08 */}
         {/* <Route path="/Vector/8" Component={JSXGraphReact24} /> */}
         {/* 벡터 09 */}
+        <Route path="/Vector/9" element={<Vector_9 />} />
         {/* 벡터 10 */}
 
 
@@ -133,6 +142,7 @@ const App = () => {
         {/* 도형변환 05 */}
         <Route path="/Transformation/5" Component={JSXGraphReact19} />
         {/* 도형변환 06 */}
+        <Route path="/Transformation/6" element={<Transformation_6 />} />
         {/* 도형변환 07 */}
         {/* 도형변환 08 */}
         <Route path="/Transformation/8" Component={JSXGraphReact20} />
