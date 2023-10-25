@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Three.js 3D Curve Example</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #slider-container {
+            position: absolute;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-45%);
+            color: black;
+        }
+
+        #for-rotation-slider {
+            margin-bottom: 10px;
+            position: absolute;
+            width: 100px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.149/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.149/examples/jsm/"
+            }
+        }
+      </script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script> -->
+    <div id="container"></div>
+
+    <div id="slider-container">
+        <input type="range" id="rotation-slider" min="0" max="360" value="0" step="1">
+        <label for="rotation-slider" id="for-rotation-slider">θ = <span id="angle-value">0</span>°</label>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { TransformControls } from 'three/addons/controls/TransformControls.js';
+
+        let container;
+        let camera, scene, renderer, curve;
+
+
+        // Define the curve points based on the function
+        const numPoints = 30;
+        const curveData = [];
+
+        let minT = -2.3; // Initial minimum value of t
+        let maxT = 2.7; // Initial maximum value of t
+        const raycaster = new THREE.Raycaster();
+
+        const pointer = new THREE.Vector2();
+        const onUpPosition = new THREE.Vector2();
+        const onDownPosition = new THREE.Vector2();
+
+        let transformControl;
+        const ARC_SEGMENTS = 200;
+
+        const params = {
+            rotationAngle: 0,
+        };
+        const updateCurveData = () => {
+            curveData.length = 0;
+            var v1 = new THREE.Vector3(0, 2, 0);
+            var v2 = new THREE.Vector3(2, 0, 0);
+            var v3 = new THREE.Vector3(3, 4, 0);
+            curveData.push(v1);
+            curveData.push(v2);
+            curveData.push(v3);
+        };
+
+        let createNewCurve = false;
+        // create an array of angles each 10 degrees from 0 to 360 to snap to when rotating the curve each 10 degrees
+        const angles = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90,
+            100, 110, 120, 130, 140, 150, 160, 170, 180,
+            190, 200, 210, 220, 230, 240, 250, 260, 270,
+            280, 290, 300, 310, 320, 330, 340, 350, 360];
+        // create an array of status of drawing the curve at each angle
+        const anglesStatus = [false, false, false, false, false, false, false, false, false];
+        // create an array of curve geometries at each angle
+        const curves = [];
+        const point_curves = [];
+        let line1, line2, line3, line4;
+
+        // Function to update the curve based on the slider value
+        const updateCurve = (angle) => {
+            document.getElementById("angle-value").textContent = angle;
+            curve.rotation.x = (angle * Math.PI) / 180;
+            // if the angle is bigger than a value in the array of angles, set the flag to true        
+            // if the angle is smaller than the value in the array of angles, set the flag to false            
+            for (let i = 0; i < angles.length; i++) {
+                if (angle >= angles[i]) {
+                    anglesStatus[i] = true;
+                } else {
+                    anglesStatus[i] = false;
+                }
+            }
+            let new_curve_data = [];
+            for (let i = 0; i < curveData.length; i++) {
+                const x = curveData[i].x;
+                const y = curveData[i].y;
+                const z = curveData[i].z;
+                const new_y = y * Math.cos(((angle) * Math.PI) / 180) - z * Math.sin(((angle) * Math.PI) / 180);
+                const new_z = y * Math.sin(((angle) * Math.PI) / 180) + z * Math.cos(((angle) * Math.PI) / 180);
+                new_curve_data.push(new THREE.Vector3(x, new_y, new_z));
+            }
+
+            for (let i = 0; i < anglesStatus.length; i++) {
+                if (anglesStatus[i]) {
+                    // if the curve is not created yet, create it
+                    if (!curves[i]) {
+                        // create a new curve geometry
+                        // apply the rotation to all points of the curve
+
+                        if (!point_curves[i]) {
+                            point_curves[i] = new_curve_data;
+                        }
+                        let vertices = new Float32Array([
+                            point_curves[i][0].x, point_curves[i][0].y, point_curves[i][0].z,    // vertex 1
+                            point_curves[i][1].x, point_curves[i][1].y, point_curves[i][1].z,     // vertex 2
+                            point_curves[i][2].x, point_curves[i][2].y, point_curves[i][2].z,      // vertex 3
+                        ]);
+
+                        const geometry = new THREE.BufferGeometry();
+                        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+                        const material = new THREE.MeshBasicMaterial({ color: '#802B00', side: THREE.DoubleSide, wireframe: true });
+                        curves[i] = new THREE.Mesh(geometry, material);
+                        scene.add(curves[i]);
+                    }
+                } else {
+                    // if the curve is created, remove it
+                    if (curves[i]) {
+                        scene.remove(curves[i]);
+                        curves[i] = null;
+                    }
+                    if (point_curves[i]) {
+                        point_curves[i] = null;
+                    }
+
+                }
+            }
+
+
+            renderer.render(scene, camera);
+        };
+
+        init();
+
+        function init() {
+
+            container = document.getElementById('container');
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f0f0);
+
+            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+            camera.position.set(6.414899007914741, 7.059146722678172, 5.830963045498018);
+            scene.add(camera);
+
+            scene.add(new THREE.AmbientLight(0xf0f0f0, 3));
+            const light = new THREE.SpotLight(0xffffff, 4.5);
+            light.position.set(0, 1500, 200);
+            light.angle = Math.PI * 0.2;
+            light.decay = 0;
+            light.castShadow = true;
+            light.shadow.camera.near = 200;
+            light.shadow.camera.far = 2000;
+            light.shadow.bias = - 0.000222;
+            light.shadow.mapSize.width = 1024;
+            light.shadow.mapSize.height = 1024;
+            scene.add(light);
+
+            const planeGeometry = new THREE.PlaneGeometry(30, 30);
+            planeGeometry.rotateX(- Math.PI / 2);
+            const planeMaterial = new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.2 });
+
+            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            plane.position.y = -5
+            plane.receiveShadow = true;
+            scene.add(plane);
+
+            const helper = new THREE.GridHelper(30, 30);
+            helper.position.y = -5;
+            helper.material.opacity = 0.5;
+            helper.material.transparent = true;
+            scene.add(helper);
+
+            // Create the X, Y, Z axes
+            const axesHelper = new THREE.AxesHelper(5);
+            scene.add(axesHelper);
+
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+            // Controls
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.damping = 0.2;
+            controls.addEventListener('change', render);
+
+            transformControl = new TransformControls(camera, renderer.domElement);
+            transformControl.addEventListener('change', render);
+            transformControl.addEventListener('dragging-changed', function (event) {
+
+                controls.enabled = !event.value;
+
+            });
+            scene.add(transformControl);
+
+            transformControl.addEventListener('objectChange', function () {
+
+                updateSplineOutline();
+
+            });
+
+            document.addEventListener('pointerdown', onPointerDown);
+            document.addEventListener('pointerup', onPointerUp);
+            document.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('resize', onWindowResize);
+
+            updateCurveData();
+
+            // Get the rotation slider element
+            const slider = document.getElementById("rotation-slider");
+
+            // Listen for slider changes and update the curve
+            slider.addEventListener("input", () => {
+                const angle = parseFloat(slider.value);
+                updateCurve(angle);
+            });
+
+            // Create a curve geometry and add the points
+            const curveGeometry = new THREE.BufferGeometry().setFromPoints(curveData);
+
+            // Create a material for the curve
+            const curveMaterial = new THREE.LineBasicMaterial({ color: 0x802B00 });
+
+            // Create the curve mesh
+            curve = new THREE.Line(curveGeometry, curveMaterial);
+
+            // Add the curve to the scene
+            scene.add(curve);
+
+            // Position the camera
+            camera.position.set(6.414899007914741, 7.059146722678172, 5.830963045498018);
+            camera.lookAt(0, 0, 0);
+
+        }
+
+        updateCurve(0);
+        function render() {
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        function onPointerDown(event) {
+
+            onDownPosition.x = event.clientX;
+            onDownPosition.y = event.clientY;
+
+        }
+
+        function onPointerUp(event) {
+
+            onUpPosition.x = event.clientX;
+            onUpPosition.y = event.clientY;
+
+            if (onDownPosition.distanceTo(onUpPosition) === 0) {
+
+                transformControl.detach();
+                render();
+
+            }
+
+        }
+
+        function onPointerMove(event) {
+
+            pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+            pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(pointer, camera);
+        }
+
+        function onWindowResize() {
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            render();
+
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>
