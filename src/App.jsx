@@ -139,7 +139,7 @@ const App = () => {
         {/* 벡터 08 */}
         {/* <Route path="/Vector/8" Component={JSXGraphReact24} /> */}
         {/* 벡터 09 */}
-        {/* <Route path="/Vector/9" element={<Vector_9 />} /> */}
+        <Route path="/Vector/9" element={<Vector_9 />} />
         {/* 벡터 10 */}
 
 
