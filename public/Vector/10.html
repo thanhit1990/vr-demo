@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>벡터 AQ
+    </title>
+    <style>
+        #JSXBoard {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            border-style: solid;
+            border-width: 1px;
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ffffff;
+            white-space: nowrap;
+            text-overflow: clip;
+        }
+
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #JSXBoard button {
+            padding: 0px;
+            margin-top: 0px;
+            background-color: #ffffff;
+
+        }
+
+        #JSXBoard_licenseText {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>벡터 AQ</h1>
+
+    <script type='text/javascript' charset='UTF-8'
+        src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' />
+    </script>
+    <div class='jxgbox' id='JSXBoard'> </div>
+    <script>
+        const board = JXG.JSXGraph.initBoard('JSXBoard', {
+            boundingbox: [-10, 10, 10, -10],
+            keepaspectratio: false,
+            axis: false
+        });
+
+        var view = board.create('view3d',
+            [[-6, -3], [10, 10],
+            [[-5, 5], [-5, 5], [-5, 5]]],
+            {
+                xPlaneRear: { visible: false },
+                yPlaneRear: { visible: false },
+                zPlaneRear: { fillColor: 'blue' },
+                xAxis: { visible: false },
+                yAxis: { visible: false },
+                zAxis: {
+                    yAxis: { visible: false },
+
+                }
+            });
+
+
+
+        var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 10, fixed: true } },
+            // Cube
+            p = [], // Vertices of the cube
+            faces = [],
+            lines = [],
+
+            // Icosahedron
+            i, j,
+            phi = (1 + Math.sqrt(25)) * 0.5,
+            pol_attr = {
+                borders: { strokeWidth: 2, strokeColor: '#904018' },
+                fillColor: '#904018', fixed: true
+            },
+
+            q = [],
+            f = [];
+        if (true) {
+            // Cube
+
+            var O = view.create('point3d', [2, 0, 0], point_attr);
+            var I = view.create('point3d', [4, 0, 0], point_attr);
+            // Horizontal circle
+            var circ1 = view.create('curve3d', [
+                (t) => 2 + 2 * Math.sin(t),
+                (t) => 2 * Math.cos(t),
+                (t) => 0,
+                [0, 2 * Math.PI]
+            ], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+
+            var circ2 = view.create('curve3d', [
+                (t) => 2 + 2 * Math.sin(t),
+                (t) => 2 * Math.cos(t),
+                (t) => 3 + Math.sin(90) * Math.sin(t),
+                [0, 2 * Math.PI]
+            ], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+
+            var v11 = [0, 1, 0],
+                v12 = [2, 1, 1],
+                v00 = [0, 0, 0],
+                v01 = [1, 1, 0];
+
+            var plane1 = view.create('plane3d', [[1, -1, 2.5], v11, v12], {
+                fillColor: '#0d7296', strokeColor: '#0d7296', strokeOpacity: 0.8, mesh3d: { visible: true }
+            });
+
+            var plane2 = view.create('plane3d', [[1, -1, 0], v11, v01], {
+                fillColor: '#0d7296', strokeColor: '#0d7296', strokeOpacity: 0.8, mesh3d: { visible: true }
+            });
+
+            // create a point3d at 0, 0, 3
+            var p1 = view.create('point3d', [0, 0, 2.05], point_attr);
+            var p2 = view.create('point3d', [2, 0, 3.05], point_attr);
+            // create a line between p1 and p2
+            var linep1p2 = board.create('line', [p1.element2D, p2.element2D], { strokeColor: 'black', strokeWidth: 1, strokeOpacity: 1 });
+            // create a segment between p1 and p2
+            var segp1p2 = board.create('segment', [p1.element2D, p2.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1, dash: 2 });
+            var segp2O = board.create('segment', [p2.element2D, O.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+            var segpOI = board.create('line', [O.element2D, I.element2D], { strokeColor: 'black', strokeWidth: 1, strokeOpacity: 1 });
+            // create a line z = 0
+            var line1 = view.create('curve3d', [
+                (t) => 2,
+                (t) => 0,
+                (t) => t,
+                [-100, 100]
+            ], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1, dash: 2 });
+
+            // create segement OI
+            var seg1 = board.create('segment', [O.element2D, I.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+
+            // create a point3d at 0, -3, 3
+            var p3 = view.create('point3d', [2, -2, 0], point_attr);
+            // create segment p2, p3
+            var segp2p3 = board.create('arrow', [p2.element2D, p3.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+            // create segment p3, O
+            var segp3O = board.create('arrow', [ O.element2D, p3.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+
+
+            var s = view.az_slide._smin;
+            var e = view.az_slide._smax;
+            var az_slider_diff = e - s;
+            view.az_slide.position = 2.12 / az_slider_diff;
+            s = view.el_slide._smin;
+            e = view.el_slide._smax;
+            var el_slider_diff = e - s;
+            view.el_slide.position = 0.21 / el_slider_diff;
+
+            board.update();
+        }        
+    </script>
+</body>
+
+</html>

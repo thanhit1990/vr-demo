@@ -66,6 +66,11 @@ const App = () => {
     window.location.href = "./9.html";
     return <></>;
   };
+  const Vector_10 = () => {
+    window.location.href = "./10.html";
+    return <></>;
+  }
+
   return (
     <Router>
       <Routes>
@@ -139,8 +144,9 @@ const App = () => {
         {/* 벡터 08 */}
         {/* <Route path="/Vector/8" Component={JSXGraphReact24} /> */}
         {/* 벡터 09 */}
-        <Route path="/Vector/9" element={<Vector_9 />} />
+        {/* <Route path="/Vector/9" element={<Vector_9 />} /> */}
         {/* 벡터 10 */}
+        {/* <Route path="/Vector/10" element={<Vector_10 />} /> */}
 
 
         {/* 도형변환 01 */}
