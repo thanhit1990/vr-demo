@@ -122,12 +122,12 @@ const App = () => {
         {/* 벡터 03*/}
         <Route path="/Vector/3" Component={JSXGraphReact13} />
         {/* 벡터 04*/}
-        <Route path="/Vector/4" element={<Vector_4 />} />
+        {/* <Route path="/Vector/4" element={<Vector_4 />} /> */}
         {/* 벡터 05*/}
+        {/* <Route path="/Vector/5" Component={JSXGraphReact6} /> */}
         {/* 벡터 06*/}
-        {/* <Route path="/Vector/6" Component={JSXGraphReact6} /> */}
+        {/* <Route path="/Vector/6" Component={JSXGraphReact8} /> */}
         {/* 벡터 07*/}
-        {/* <Route path="/Vector/7" Component={JSXGraphReact8} /> */}
         {/* 벡터 08 */}
         {/* <Route path="/Vector/8" Component={JSXGraphReact24} /> */}
         {/* 벡터 09 */}
