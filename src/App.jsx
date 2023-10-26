@@ -57,6 +57,11 @@ const App = () => {
     window.location.href = "./4.html";
     return <></>;
   };
+  // vector_8
+  const Vector_7 = () => {
+    window.location.href = "./7.html";
+    return <></>;
+  };
   const Vector_9 = () => {
     window.location.href = "./9.html";
     return <></>;
@@ -130,6 +135,7 @@ const App = () => {
         {/* 벡터 06*/}
         {/* <Route path="/Vector/6" Component={JSXGraphReact8} /> */}
         {/* 벡터 07*/}
+        {/* <Route path="/Vector/7" element={<Vector_7 />} /> */}
         {/* 벡터 08 */}
         {/* <Route path="/Vector/8" Component={JSXGraphReact24} /> */}
         {/* 벡터 09 */}
