@@ -2,367 +2,183 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>Three.js 3D Curve Example</title>
+    <title>기하와 벡터
+    </title>
     <style>
-        body {
-            margin: 0;
+        #JSXBoard {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            border-style: solid;
+            border-width: 1px;
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ffffff;
+            white-space: nowrap;
+            text-overflow: clip;
         }
 
-        #slider-container {
-            position: absolute;
-            bottom: 150px;
-            left: 50%;
-            transform: translateX(-45%);
-            color: black;
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #JSXBoard button {
+            padding: 0px;
+            margin-top: 0px;
+            background-color: #ffffff;
+
+        }
+
+        #JSXBoard_licenseText {
+            display: none;
         }
     </style>
 </head>
 
 <body>
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.149/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.149/examples/jsm/"
-            }
-        }
-      </script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script> -->
-    <div id="container"></div>
+    <h1>기하와 벡터</h1>
 
-    <div id="slider-container">
-        <input type="range" id="rotation-slider" min="0" max="360" value="0" step="1">
-        <!-- <label for="rotation-slider">Rotation Angle: <span id="angle-value">0</span> degrees</label> -->
-    </div>
+    <script type='text/javascript' charset='UTF-8'
+        src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' />
+    </script>
+    <div class='jxgbox' id='JSXBoard'> </div>
+    <script>
+        const board = JXG.JSXGraph.initBoard('JSXBoard', {
+            boundingbox: [-10, 10, 10, -10],
+            keepaspectratio: false,
+            axis: false
+        });
 
-    <script type="module">
-        import * as THREE from 'three';
-        import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        import { TransformControls } from 'three/addons/controls/TransformControls.js';
-
-        let container;
-        let camera, scene, renderer, curve;
-
-
-        // Define the curve points based on the function
-        const numPoints = 30;
-        const curveData = [];
-
-        let minT = -2.3; // Initial minimum value of t
-        let maxT = 2.7; // Initial maximum value of t
-        const raycaster = new THREE.Raycaster();
-
-        const pointer = new THREE.Vector2();
-        const onUpPosition = new THREE.Vector2();
-        const onDownPosition = new THREE.Vector2();
-
-        let transformControl;
-        const ARC_SEGMENTS = 200;
-
-        const params = {
-            rotationAngle: 0,
-        };
-        const updateCurveData = () => {
-            curveData.length = 0;
-            for (let i = 0; i < numPoints; i++) {
-                const t = minT + (i / (numPoints - 1)) * (maxT - minT);
-                const x = t;
-                const y = 0.5 * Math.pow(Math.E, t);
-                curveData.push(new THREE.Vector3(x, y, 0));
-            }
-        };
-
-        let createNewCurve = false;
-        // create an array of angles each 10 degrees from 0 to 360 to snap to when rotating the curve each 10 degrees
-        const angles = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90,
-            100, 110, 120, 130, 140, 150, 160, 170, 180,
-            190, 200, 210, 220, 230, 240, 250, 260, 270,
-            280, 290, 300, 310, 320, 330, 340, 350, 360];
-        // create an array of status of drawing the curve at each angle
-        const anglesStatus = [false, false, false, false, false, false, false, false, false];
-        // create an array of curve geometries at each angle
-        const curves = [];
-        const point_curves = [];
-        let line1, line2, line3, line4;
-
-        // Function to update the curve based on the slider value
-        const updateCurve = (angle) => {
-            curve.rotation.y = (angle * Math.PI) / 180;
-            // if the angle is bigger than a value in the array of angles, set the flag to true        
-            // if the angle is smaller than the value in the array of angles, set the flag to false            
-            for (let i = 0; i < angles.length; i++) {
-                if (angle >= angles[i]) {
-                    anglesStatus[i] = true;
-                } else {
-                    anglesStatus[i] = false;
+        var view = board.create('view3d',
+            [[-6, -3], [10, 10],
+            [[-5, 5], [-5, 5], [-5, 5]]],
+            {
+                xPlaneRear: { visible: false },
+                yPlaneRear: { visible: false },
+                zPlaneRear: { fillColor: 'blue' },
+                xAxis: { visible: false },
+                yAxis: { visible: false },
+                zAxis: {
+                    visible: false
                 }
-            }
-            let new_curve_data = [];
-            for (let i = 0; i < curveData.length; i++) {
-                const x = curveData[i].x;
-                const y = curveData[i].y;
-                const z = curveData[i].z;
-                const new_x = x * Math.cos(((360 - angle) * Math.PI) / 180) - z * Math.sin(((360 - angle) * Math.PI) / 180);
-                const new_z = x * Math.sin(((360 - angle) * Math.PI) / 180) + z * Math.cos(((360 - angle) * Math.PI) / 180);
-                new_curve_data.push(new THREE.Vector3(new_x, y, new_z));
-            }
-
-            for (let i = 0; i < anglesStatus.length; i++) {
-                if (anglesStatus[i]) {
-                    // if the curve is not created yet, create it
-                    if (!curves[i]) {
-                        // create a new curve geometry
-                        // apply the rotation to all points of the curve
-
-                        if (!point_curves[i]) {
-                            point_curves[i] = new_curve_data;
-                        }
-                        const curveGeometry = new THREE.BufferGeometry().setFromPoints(new_curve_data);
-                        const curveMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
-                        let new_curve = new THREE.Line(curveGeometry, curveMaterial);
-                        curves[i] = new_curve;
-                        scene.add(curves[i]);
-                    }
-                } else {
-                    // if the curve is created, remove it
-                    if (curves[i]) {
-                        scene.remove(curves[i]);
-                        curves[i] = null;
-                    }
-                    if (point_curves[i]) {
-                        point_curves[i] = null;
-                    }
-
-                }
-            }
-
-            // for the point_curves array and get the first point of each point_curve
-            // create a new curve geometry from the points
-
-            let point_curve_data_line_1 = [];
-            let point_curve_data_line_2 = [];
-            let point_curve_data_line_3 = [];
-            let point_curve_data_line_4 = [];
-
-            for (let i = 0; i < point_curves.length; i++) {
-                if (point_curves[i]) {
-                    point_curve_data_line_1.push(point_curves[i][0]);
-                    point_curve_data_line_2.push(point_curves[i][point_curves[i].length - 1]);
-                    point_curve_data_line_3.push(point_curves[i][3]);
-                    point_curve_data_line_4.push(point_curves[i][point_curves[i].length - 4]);
-                }
-            }
-            point_curve_data_line_1.push(new_curve_data[0]);
-            point_curve_data_line_2.push(new_curve_data[new_curve_data.length - 1]);
-            point_curve_data_line_3.push(new_curve_data[3]);
-            point_curve_data_line_4.push(new_curve_data[new_curve_data.length - 4]);
-            if (point_curve_data_line_1.length > 1) {
-                const point_curve_geometry_line1 = new THREE.BufferGeometry().setFromPoints(point_curve_data_line_1);
-                const point_curve_geometry_line2 = new THREE.BufferGeometry().setFromPoints(point_curve_data_line_2);
-                const point_curve_geometry_line3 = new THREE.BufferGeometry().setFromPoints(point_curve_data_line_3);
-                const point_curve_geometry_line4 = new THREE.BufferGeometry().setFromPoints(point_curve_data_line_4);
-                const point_curve_material_line1 = new THREE.LineBasicMaterial({ color: 0x0000ff });
-                const point_curve_material_line2 = new THREE.LineBasicMaterial({ color: 0x0000ff });
-                const point_curve_material_line3 = new THREE.LineBasicMaterial({ color: 0x0000ff });
-                const point_curve_material_line4 = new THREE.LineBasicMaterial({ color: 0x0000ff });
-
-                if (line1) {
-                    scene.remove(line1);
-                }
-                if (line2) {
-                    scene.remove(line2);
-                }
-                if (line3) {
-                    scene.remove(line3);
-                }
-                if (line4) {
-                    scene.remove(line4);
-                }
-                line1 = new THREE.Line(point_curve_geometry_line1, point_curve_material_line1);
-                line2 = new THREE.Line(point_curve_geometry_line2, point_curve_material_line2);
-                line3 = new THREE.Line(point_curve_geometry_line3, point_curve_material_line3);
-                line4 = new THREE.Line(point_curve_geometry_line4, point_curve_material_line4);
-
-                scene.add(line1);
-                scene.add(line2);
-                scene.add(line3);
-                scene.add(line4);
-
-            } else {
-                if (line1) {
-                    scene.remove(line1);
-                }
-                if (line2) {
-                    scene.remove(line2);
-                }
-                if (line3) {
-                    scene.remove(line3);
-                }
-                if (line4) {
-                    scene.remove(line4);
-                }
-            }
-
-            renderer.render(scene, camera);
-        };
-
-        init();
-
-        function init() {
-
-            container = document.getElementById('container');
-
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf0f0f0);
-
-            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
-            camera.position.set(6.414899007914741, 7.059146722678172, 5.830963045498018);
-            scene.add(camera);
-
-            scene.add(new THREE.AmbientLight(0xf0f0f0, 3));
-            const light = new THREE.SpotLight(0xffffff, 4.5);
-            light.position.set(0, 1500, 200);
-            light.angle = Math.PI * 0.2;
-            light.decay = 0;
-            light.castShadow = true;
-            light.shadow.camera.near = 200;
-            light.shadow.camera.far = 2000;
-            light.shadow.bias = - 0.000222;
-            light.shadow.mapSize.width = 1024;
-            light.shadow.mapSize.height = 1024;
-            scene.add(light);
-
-            const planeGeometry = new THREE.PlaneGeometry(30, 30);
-            planeGeometry.rotateX(- Math.PI / 2);
-            const planeMaterial = new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.2 });
-
-            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-            plane.position.y = 0
-            plane.receiveShadow = true;
-            scene.add(plane);
-
-            const helper = new THREE.GridHelper(30, 30);
-            helper.position.y = 0;
-            helper.material.opacity = 0.5;
-            helper.material.transparent = true;
-            scene.add(helper);
-
-            // Create the X, Y, Z axes
-            const axesHelper = new THREE.AxesHelper(5);
-            scene.add(axesHelper);
-
-
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.shadowMap.enabled = true;
-            container.appendChild(renderer.domElement);
-            // Controls
-            const controls = new OrbitControls(camera, renderer.domElement);
-            controls.damping = 0.2;
-            controls.addEventListener('change', render);
-
-            transformControl = new TransformControls(camera, renderer.domElement);
-            transformControl.addEventListener('change', render);
-            transformControl.addEventListener('dragging-changed', function (event) {
-
-                controls.enabled = !event.value;
-
-            });
-            scene.add(transformControl);
-
-            transformControl.addEventListener('objectChange', function () {
-
-                updateSplineOutline();
-
             });
 
-            document.addEventListener('pointerdown', onPointerDown);
-            document.addEventListener('pointerup', onPointerUp);
-            document.addEventListener('pointermove', onPointerMove);
-            window.addEventListener('resize', onWindowResize);
 
-            updateCurveData();
 
-            // Get the rotation slider element
-            const slider = document.getElementById("rotation-slider");
+        var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 20 } },
+            // Cube
+            p = [], // Vertices of the cube
+            faces = [],
+            lines = [],
 
-            // Listen for slider changes and update the curve
-            slider.addEventListener("input", () => {
-                const angle = parseFloat(slider.value);
-                updateCurve(angle);
-            });
+            // Icosahedron
+            i, j,
+            phi = (1 + Math.sqrt(25)) * 0.5,
+            pol_attr = {
+                borders: { strokeWidth: 2, strokeColor: '#904018' },
+                fillColor: '#904018', fixed: true
+            },
 
-            // Create a curve geometry and add the points
-            const curveGeometry = new THREE.BufferGeometry().setFromPoints(curveData);
-
-            // Create a material for the curve
-            const curveMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
-
-            // Create the curve mesh
-            curve = new THREE.Line(curveGeometry, curveMaterial);
-
-            // Add the curve to the scene
-            scene.add(curve);
-
-            // Position the camera
-            camera.position.set(6.414899007914741, 7.059146722678172, 5.830963045498018);
-            camera.lookAt(0, 0, 0);
-
-        }
-
-        updateCurve(0);
-        function render() {
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-
-        function onPointerDown(event) {
-
-            onDownPosition.x = event.clientX;
-            onDownPosition.y = event.clientY;
-
-        }
-
-        function onPointerUp(event) {
-
-            onUpPosition.x = event.clientX;
-            onUpPosition.y = event.clientY;
-
-            if (onDownPosition.distanceTo(onUpPosition) === 0) {
-
-                transformControl.detach();
-                render();
-
+            q = [],
+            f = [],
+            scale = 5.5,
+            radius = 5.5;
+        if (true) {
+            // Cube
+            i = phi;
+            p.push(view.create('point3d', [0, 0, 6], { name: '0', strokeColor: 'red', fillColor: 'red' }));
+            for (var i = 0; i < 3; i++) {
+                var angle = (i / 3) * Math.PI * 2;
+                var x = radius * Math.cos(angle);
+                var y = radius * Math.sin(angle);
+                var z = -3; // The base is at z = 0
+                // create a new point3d with name is i
+                p.push(view.create('point3d', [x, y, z], { name: (i + 1).toString(), size: 4, strokeColor: 'black', strokeWidth: 0.1, fillColor: 'red' }));
             }
 
-        }
+            lines.push(view.create('line3d', [p[0], p[1]], { strokeWidth: 2, strokeColor: '#904018' }));
+            lines.push(view.create('line3d', [p[0], p[2]], { strokeWidth: 2, strokeColor: '#904018' }));
+            lines.push(view.create('line3d', [p[0], p[3]], { strokeWidth: 2, strokeColor: '#904018' }));
+            lines.push(view.create('line3d', [p[1], p[2]], { strokeWidth: 2, strokeColor: '#904018' }));
+            lines.push(view.create('line3d', [p[1], p[3]], { strokeWidth: 2, strokeColor: '#904018' }));
+            lines.push(view.create('line3d', [p[2], p[3]], { strokeWidth: 2, strokeColor: '#904018' }));
 
-        function onPointerMove(event) {
+            function calculateMiddlePoint(point1, point2, name) {
+                var x = (point1.X() + point2.X()) / 2;
+                var y = (point1.Y() + point2.Y()) / 2;
+                var z = (point1.Z() + point2.Z()) / 2;
+                return view.create('point3d', [x, y, z], { visible: false });
+            }
 
-            pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-            pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+            var c12 = calculateMiddlePoint(p[1], p[2], 'c12');
+            var c23 = calculateMiddlePoint(p[2], p[3], 'c23');
+            var c31 = calculateMiddlePoint(p[3], p[1], 'c31');
+            var c01 = calculateMiddlePoint(p[0], p[1], 'c01');
+            var c02 = calculateMiddlePoint(p[0], p[2], 'c02');
+            var c03 = calculateMiddlePoint(p[0], p[3], 'c03');
 
-            raycaster.setFromCamera(pointer, camera);
-        }
+            // create line3d from p[0] to center12
+            var line0c12 = view.create('line3d', [p[0], c12], { visible: false }).element2D;
+            var line0c23 = view.create('line3d', [p[0], c23], { visible: false }).element2D;
+            var line0c31 = view.create('line3d', [p[0], c31], { visible: false }).element2D;
 
-        function onWindowResize() {
+            var line1c02 = view.create('line3d', [p[1], c02], { visible: false }).element2D;
+            var line1c03 = view.create('line3d', [p[1], c03], { visible: false }).element2D;
+            var line1c23 = view.create('line3d', [p[1], c23], { visible: false }).element2D;
 
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
+            var line3c01 = view.create('line3d', [p[3], c01], { visible: false }).element2D;
+            var line3c02 = view.create('line3d', [p[3], c02], { visible: false }).element2D;
+            var line3c12 = view.create('line3d', [p[3], c12], { visible: false }).element2D;
 
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            var line2c01 = view.create('line3d', [p[2], c01], { visible: false }).element2D;
+            var line2c03 = view.create('line3d', [p[2], c03], { visible: false }).element2D;
+            var line2c31 = view.create('line3d', [p[2], c31], { visible: false }).element2D;
 
-            render();
+            // point A is the intersection of line0c12 and line1c02
+            var pointA = board.create('intersection', [line0c12, line1c02, 0], { strokeWidth: 2, size: 4, strokeColor: 'black' });
+            var pointB = board.create('intersection', [line0c23, line2c03, 0], { strokeWidth: 2, size: 4, strokeColor: 'black' });
+            var pointC = board.create('intersection', [line0c31, line3c01, 0], { strokeWidth: 2, size: 4, strokeColor: 'black' });
 
-        }
+            // create segment from pointA to pointB
+            var segmentAB = board.create('segment', [pointA, pointB], { strokeWidth: 2, strokeColor: 'black', dash: 2 });
+            // create segment from p[2] to pointC
+            var segmentC2 = board.create('segment', [p[2].element2D, pointC], { strokeWidth: 2, strokeColor: 'black', dash: 2 });
+            // create segment from p[3] to pointC
+            var segmentC3 = board.create('segment', [p[3].element2D, pointC], { strokeWidth: 2, strokeColor: 'black' });
 
-        animate();
+
+
+
+
+
+
+
+            faces.push(view.create('polygon', [p[0].element2D, p[1].element2D, p[2].element2D], pol_attr));
+            faces.push(view.create('polygon', [p[0].element2D, p[1].element2D, p[3].element2D], pol_attr));
+            faces.push(view.create('polygon', [p[0].element2D, p[2].element2D, p[3].element2D], pol_attr));
+            faces.push(view.create('polygon', [p[1].element2D, p[2].element2D, p[3].element2D], pol_attr));
+
+
+
+            var s = view.az_slide._smin;
+            var e = view.az_slide._smax;
+            var az_slider_diff = e - s;
+            view.az_slide.position = 1.76 / az_slider_diff;
+            s = view.el_slide._smin;
+            e = view.el_slide._smax;
+            var el_slider_diff = e - s;
+            view.el_slide.position = 0.21 / el_slider_diff;
+
+            board.update();
+        }        
     </script>
 </body>
 
