@@ -33,8 +33,7 @@ let logicJS = (brd) => {
     var line = brd.create('line', [[0, 0], [1, 0]], { visible: false });
     // create a circle with center O and crossing I
     var circle = brd.create('circle', [O, X], {
-        visible: true, strokeColor: 'black', strokeWidth: 2, fillColor: '#FFEFD5', highlightFillColor: '#FFEFD5',
-        fillColorOpacity: 0.5, highlightFillColorOpacity: 0.5, highlightStrokeColor: 'black', highlightStrokeWidth: 2
+        visible: true, strokeColor: 'black', strokeWidth: 2, fillColor: '#FFEFD5', highlightFillColor: '#FFEFD5', fillColorOpacity: 0.5,
     });
     // point O is the intersection of line and circle
     var O1 = brd.create('intersection', [line, circle, 0], { visible: false });
@@ -62,10 +61,12 @@ let logicJS = (brd) => {
             I.setAttribute({ visible: true });
             I.setAttribute({ trace: true });
             circle.setAttribute({ visible: false });
+            X.setAttribute({ visible: false });
         } else {
             I.setAttribute({ visible: false });
             I.setAttribute({ trace: false });
             circle.setAttribute({ visible: true });
+            X.setAttribute({ visible: true });
         }
         brd.removeObject(segment2);
         segment2 = brd.create('segment', [O, B], { strokeColor: '#800200', strokeWidth: 4, fixed: true });
@@ -89,7 +90,7 @@ class JSXGraphComponent extends Component {
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{
-                        boundingBox: [-12, 12, 12, -12], axis: true,
+                        boundingBox: [-12, 12, 12, -12], axis: false,
                         zoomX: 0.5,
                         zoomY: 0.5
                     }}
