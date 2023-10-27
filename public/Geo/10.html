@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>뿔의 부피
+
+    </title>
+    <style>
+        #JSXBoard {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            border-style: solid;
+            border-width: 1px;
+            width: 800px;
+            height: 800px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ffffff;
+            white-space: nowrap;
+            text-overflow: clip;
+        }
+
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #JSXBoard button {
+            padding: 0px;
+            margin-top: 0px;
+            background-color: #ffffff;
+
+        }
+
+        #JSXBoard_licenseText {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>뿔의 부피
+    </h1>
+
+    <script type='text/javascript' charset='UTF-8'
+        src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' />
+    </script>
+    <div class='jxgbox' id='JSXBoard'> </div>
+    <script>
+        const board = JXG.JSXGraph.initBoard('JSXBoard', {
+            boundingbox: [-25, 25, 25, -25],
+            keepaspectratio: false,
+            axis: true,
+        });
+
+        var view = board.create('view3d',
+            [[-20, -20], [40, 40],
+            [[-10, 10], [-10, 10], [-10, 10]]],
+            {
+                xPlaneRear: { visible: false },
+                yPlaneRear: { visible: false },
+                zPlaneRear: { fillColor: 'blue' },
+                xAxis: { strokeColor: 'red', strokeWidth: 2 },
+                yAxis: { strokeColor: 'green', strokeWidth: 2 },
+                zAxis: { strokeColor: 'blue', strokeWidth: 2, }
+            });
+
+        var slider_attr = {
+            name: '',
+            snapWidth: 1,
+            fillColor: 'white',
+            strokeColor: 'green',
+            highlightFillColor: 'white',
+            highlightStrokeColor: 'green',
+            postLabel: '',
+            precision: 0,
+            label: { visible: false },
+            baseline: { strokeColor: 'green', highlightStrokeColor: 'green', highlightStrokeOpacity: 0.4, strokeWidth: 5, opacity: 0.4 },
+            highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 7 },
+        };
+
+        var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 10, fixed: true } },
+            // Cube
+            p = [], // Vertices of the cube
+            p1s = [],
+            poly1s = [],
+            p2s = [],
+            poly2s = [],
+            p3s = [],
+            poly3s = [],
+            faces = [],
+            lines = [],
+            pol_attr = {
+                borders: { strokeWidth: 2, strokeColor: '#904018' },
+                fillColor: '#904018', fixed: true
+            };
+        var slider1 = board.create('slider', [[20, -10], [5, -10], [0, 0, 100]], slider_attr);
+        var slider2 = board.create('slider', [[-15, 5], [-15, 20], [0, 0, 100]], slider_attr);
+
+        slider2.setAttribute({
+            strokeColor: 'red', highlightStrokeColor: 'red',
+            baseline: { strokeColor: 'red', highlightStrokeColor: 'red' },
+            highline: { strokeColor: 'red', highlightStrokeColor: 'red' },
+        });
+
+        var slider3 = board.create('slider', [[20, 20], [5, 20], [0, 0, 100]], slider_attr);
+        slider3.setAttribute({
+            strokeColor: 'blue', highlightStrokeColor: 'blue',
+            baseline: { strokeColor: 'blue', highlightStrokeColor: 'blue' },
+            highline: { strokeColor: 'blue', highlightStrokeColor: 'blue' },
+        });
+
+
+        // create a point3d at 10, 0, 0
+
+        var p1 = view.create('point3d', [10, 0, 0], point_attr);
+        p1s.push(view.create('point3d', [5, 0, 0], point_attr));
+        p1s.push(view.create('point3d', [10, 5, 0], point_attr));
+        p1s.push(view.create('point3d', [10, 0, 5], point_attr));
+        p1s.push(view.create('point3d', [5, 5, 0], point_attr));
+
+        // create a polygon at p1, p1s[0], p1s[2]
+        poly1s.push(view.create('polygon', [p1.element2D, p1s[0].element2D, p1s[2].element2D], pol_attr));
+        // create a polygon at p1, p1s[1], p1s[2]
+        poly1s.push(view.create('polygon', [p1.element2D, p1s[1].element2D, p1s[2].element2D], pol_attr));
+        // create a polygon at p1s[3], p1s[0], p1s[2]
+        poly1s.push(view.create('polygon', [p1s[3].element2D, p1s[0].element2D, p1s[2].element2D], pol_attr));
+        // create a polygon at p1s[3], p1s[1], p1s[2]
+        poly1s.push(view.create('polygon', [p1s[3].element2D, p1s[1].element2D, p1s[2].element2D], pol_attr));
+        // create a polygon at p1s[0], p1s[1], p1s[3]
+        poly1s.push(view.create('polygon', [p1.element2D, p1s[1].element2D, p1s[3].element2D, p1s[0].element2D], pol_attr));
+
+
+
+        var p2 = view.create('point3d', [5, 10, 0], point_attr);
+        p2s.push(view.create('point3d', [5, 5, 5], point_attr));
+        p2s.push(view.create('point3d', [0, 10, 0], point_attr));
+        p2s.push(view.create('point3d', [5, 10, 5], point_attr));
+        p2s.push(view.create('point3d', [0, 10, 5], point_attr));
+
+
+        poly2s.push(view.create('polygon', [p2.element2D, p2s[0].element2D, p2s[1].element2D], pol_attr));
+        poly2s.push(view.create('polygon', [p2.element2D, p2s[0].element2D, p2s[2].element2D], pol_attr));
+        poly2s.push(view.create('polygon', [p2.element2D, p2s[2].element2D, p2s[3].element2D, p2s[1].element2D], pol_attr));
+        poly2s.push(view.create('polygon', [p2s[0].element2D, p2s[2].element2D, p2s[3].element2D], pol_attr));
+        poly2s.push(view.create('polygon', [p2s[1].element2D, p2s[0].element2D, p2s[3].element2D], pol_attr));
+
+
+        var p3 = view.create('point3d', [-5, 0, 0], point_attr);
+        p3s.push(view.create('point3d', [0, 0, 5], point_attr));
+        p3s.push(view.create('point3d', [-5, 5, 0], point_attr));
+        p3s.push(view.create('point3d', [-5, 0, 5], point_attr));
+        p3s.push(view.create('point3d', [-5, 5, 5], point_attr));
+
+        poly3s.push(view.create('polygon', [p3.element2D, p3s[0].element2D, p3s[1].element2D], pol_attr));
+        poly3s.push(view.create('polygon', [p3.element2D, p3s[0].element2D, p3s[2].element2D], pol_attr));
+        poly3s.push(view.create('polygon', [p3.element2D, p3s[2].element2D, p3s[3].element2D, p3s[1].element2D], pol_attr));
+        poly3s.push(view.create('polygon', [p3s[0].element2D, p3s[2].element2D, p3s[3].element2D], pol_attr));
+        poly3s.push(view.create('polygon', [p3s[1].element2D, p3s[0].element2D, p3s[3].element2D], pol_attr));
+
+        slider1.on('drag', function () {
+            board.removeObject(p2);
+            p2 = view.create('point3d', [5, 10 - slider1.Value() / 20, 0], point_attr);
+            for (var i = 0; i < p2s.length; i++) {
+                board.removeObject(p2s[i]);
+            }
+            p2s = [];
+            for (var i = 0; i < poly2s.length; i++) {
+                board.removeObject(poly2s[i]);
+            }
+            poly2s = [];
+            p2s.push(view.create('point3d', [5, 5 - slider1.Value() / 20, 5], point_attr));
+            p2s.push(view.create('point3d', [0, 10 - slider1.Value() / 20, 0], point_attr));
+            p2s.push(view.create('point3d', [5, 10 - slider1.Value() / 20, 5], point_attr));
+            p2s.push(view.create('point3d', [0, 10 - slider1.Value() / 20, 5], point_attr));
+
+            poly2s.push(view.create('polygon', [p2.element2D, p2s[0].element2D, p2s[1].element2D], pol_attr));
+            poly2s.push(view.create('polygon', [p2.element2D, p2s[0].element2D, p2s[2].element2D], pol_attr));
+            poly2s.push(view.create('polygon', [p2.element2D, p2s[2].element2D, p2s[3].element2D, p2s[1].element2D], pol_attr));
+            poly2s.push(view.create('polygon', [p2s[0].element2D, p2s[2].element2D, p2s[3].element2D], pol_attr));
+            poly2s.push(view.create('polygon', [p2s[1].element2D, p2s[0].element2D, p2s[3].element2D], pol_attr));
+            board.update();
+        });
+
+        slider2.on('drag', function () {
+            board.removeObject(p1);
+            for (var i = 0; i < p1s.length; i++) {
+                board.removeObject(p1s[i]);
+            }
+            p1s = [];
+            for (var i = 0; i < poly1s.length; i++) {
+                board.removeObject(poly1s[i]);
+            }
+            poly1s = [];
+
+
+            // create a new point at current p1 position and x value + slider 1 value
+            p1 = view.create('point3d', [10 - slider2.Value() / 20, 0, 0], point_attr);
+            p1s.push(view.create('point3d', [5 - slider2.Value() / 20, 0, 0], point_attr));
+            p1s.push(view.create('point3d', [10 - slider2.Value() / 20, 5, 0], point_attr));
+            p1s.push(view.create('point3d', [10 - slider2.Value() / 20, 0, 5], point_attr));
+            p1s.push(view.create('point3d', [5 - slider2.Value() / 20, 5, 0], point_attr));
+
+            // create a polygon at p1, p1s[0], p1s[2]
+            poly1s.push(view.create('polygon', [p1.element2D, p1s[0].element2D, p1s[2].element2D], pol_attr));
+            // create a polygon at p1, p1s[1], p1s[2]
+            poly1s.push(view.create('polygon', [p1.element2D, p1s[1].element2D, p1s[2].element2D], pol_attr));
+            // create a polygon at p1s[3], p1s[0], p1s[2]
+            poly1s.push(view.create('polygon', [p1s[3].element2D, p1s[0].element2D, p1s[2].element2D], pol_attr));
+            // create a polygon at p1s[3], p1s[1], p1s[2]
+            poly1s.push(view.create('polygon', [p1s[3].element2D, p1s[1].element2D, p1s[2].element2D], pol_attr));
+            // create a polygon at p1s[0], p1s[1], p1s[3]
+            poly1s.push(view.create('polygon', [p1.element2D, p1s[1].element2D, p1s[3].element2D, p1s[0].element2D], pol_attr));
+            board.update();
+        });
+
+        slider3.on('drag', function () {
+            board.removeObject(p3);
+            p3 = view.create('point3d', [-5 + slider3.Value() / 20, 0, 0], point_attr);
+            for (var i = 0; i < p3s.length; i++) {
+                board.removeObject(p3s[i]);
+            }
+            p3s = [];
+            for (var i = 0; i < poly3s.length; i++) {
+                board.removeObject(poly3s[i]);
+            }
+            poly3s = [];
+            p3s.push(view.create('point3d', [slider3.Value() / 20, 0, 5], point_attr));
+            p3s.push(view.create('point3d', [-5 + slider3.Value() / 20, 5, 0], point_attr));
+            p3s.push(view.create('point3d', [-5 + slider3.Value() / 20, 0, 5], point_attr));
+            p3s.push(view.create('point3d', [-5 + slider3.Value() / 20, 5, 5], point_attr));
+
+            poly3s.push(view.create('polygon', [p3.element2D, p3s[0].element2D, p3s[1].element2D], pol_attr));
+            poly3s.push(view.create('polygon', [p3.element2D, p3s[0].element2D, p3s[2].element2D], pol_attr));
+            poly3s.push(view.create('polygon', [p3.element2D, p3s[2].element2D, p3s[3].element2D, p3s[1].element2D], pol_attr));
+            poly3s.push(view.create('polygon', [p3s[0].element2D, p3s[2].element2D, p3s[3].element2D], pol_attr));
+            poly3s.push(view.create('polygon', [p3s[1].element2D, p3s[0].element2D, p3s[3].element2D], pol_attr));
+            board.update();
+        });
+
+
+
+        var s = view.az_slide._smin;
+        var e = view.az_slide._smax;
+        var az_slider_diff = e - s;
+        view.az_slide.position = 1.31 / az_slider_diff;
+        s = view.el_slide._smin;
+        e = view.el_slide._smax;
+        var el_slider_diff = e - s;
+        view.el_slide.position = 0.24 / el_slider_diff;
+        board.update();
+    </script>
+</body>
+
+</html>
