@@ -54,7 +54,7 @@
         const board = JXG.JSXGraph.initBoard('JSXBoard', {
             boundingbox: [-10, 10, 10, -10],
             keepaspectratio: false,
-            axis: false
+            axis: false,
         });
 
         var view = board.create('view3d',
@@ -159,7 +159,8 @@
             e = view.el_slide._smax;
             var el_slider_diff = e - s;
             view.el_slide.position = 0.24 / el_slider_diff;
-
+            board.clickDownArrow();
+            board.clickDownArrow();
             board.update();
         }        
     </script>
