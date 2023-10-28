@@ -59,7 +59,7 @@
         const onDownPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is pressed
         let transformControl; // TransformControls object to enable dragging of points
         const ARC_SEGMENTS = 200; // Number of segments to use for the curve
-        let earthSphere, point1, point2, radius1, radius2, phi1, phi2, theta1, theta2, arcGeometry, lineGeometry;
+        let earthSphere, point1, point2, radius = 5, lineGeometry;
         // The Earth sphere
 
         init();
@@ -112,14 +112,14 @@
             scene.add(light);
 
             // Create a plane geometry to serve as the ground
-            const planeGeometry = new THREE.PlaneGeometry(30, 30);
-            planeGeometry.rotateX(- Math.PI / 2);
-            const planeMaterial = new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.2 });
+            const coordinatePlaneGeometry = new THREE.PlaneGeometry(30, 30);
+            coordinatePlaneGeometry.rotateX(- Math.PI / 2);
+            const coordinatePlaneMaterial = new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.2 });
             // Create a mesh with the plane geometry and add it to the scene
-            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-            plane.position.y = 0
-            plane.receiveShadow = true;
-            scene.add(plane);
+            const coordinatePlane = new THREE.Mesh(coordinatePlaneGeometry, coordinatePlaneMaterial);
+            coordinatePlane.position.y = 0
+            coordinatePlane.receiveShadow = true;
+            scene.add(coordinatePlane);
             // Create a grid helper
             const helper = new THREE.GridHelper(30, 30);
             helper.position.y = 0;
@@ -146,7 +146,7 @@
             });
 
             // Create a sphere geometry
-            const sphereGeometry = new THREE.SphereGeometry(5, 32, 32); // Radius, widthSegments, heightSegments
+            const sphereGeometry = new THREE.SphereGeometry(radius, 32, 32); // Radius, widthSegments, heightSegments
             // Load the Earth texture
             const textureLoader = new THREE.TextureLoader();
             const earthTexture = textureLoader.load('.././earth_texture.jpg'); // Replace with the actual URL of your Earth texture
@@ -174,8 +174,8 @@
             point2 = new THREE.Mesh(pointGeometry, pointMaterial);
 
             // Position the points initially on the sphere
-            point1.position.set(5, 0, 0);
-            point2.position.set(0, 5, 0);
+            point1.position.set(0.9186271035589554, 2.4265783606399958, 4.269674310649953);
+            point2.position.set(3.082231525683372, 3.9289611166297442, -0.16760032172800915);
 
             // Add the points to the scene
             scene.add(point1);
@@ -214,49 +214,38 @@
                 orbitControls.enabled = true;
 
             });
-
-            // Calculate the radius and angles for the points
-            radius1 = point1.position.distanceTo(earthSphere.position) + 0.02;
-            radius2 = point2.position.distanceTo(earthSphere.position) + 0.02;
-            phi1 = Math.atan2(point1.position.y - earthSphere.position.y, point1.position.x - earthSphere.position.x);
-            phi2 = Math.atan2(point2.position.y - earthSphere.position.y, point2.position.x - earthSphere.position.x);
-            theta1 = Math.acos((point1.position.z - earthSphere.position.z) / radius1);
-            theta2 = Math.acos((point2.position.z - earthSphere.position.z) / radius2);
-
-            const numPoints = 50;
-            const positions = new Float32Array(numPoints * 3);
-
-            const arcPoints = [];
-            positions[0] = point1.position.x;
-            positions[1] = point1.position.y;
-            positions[2] = point1.position.z;
-
-            for (let i = 1; i <= numPoints; i++) {
-                const alpha = theta1 + (theta2 - theta1) * (i / numPoints);
-                const beta = phi1 + (phi2 - phi1) * (i / numPoints);
-                const x = radius1 * Math.sin(alpha) * Math.cos(beta);
-                const y = radius1 * Math.sin(alpha) * Math.sin(beta);
-                const z = radius1 * Math.cos(alpha);
-
-                positions[i * 3] = x;
-                positions[i * 3 + 1] = y;
-                positions[i * 3 + 2] = z;
-            }
-            positions[numPoints * 3] = point2.position.x;
-            positions[numPoints * 3 + 1] = point2.position.y;
-            positions[numPoints * 3 + 2] = point2.position.z;
-
-            
-            lineGeometry = new LineGeometry();
-            lineGeometry.setPositions(positions);
-
             let matLine = new LineMaterial({
                 color: 0x52FF00,
                 linewidth: 0.005, // in world units with size attenuation, pixels otherwise
             });
 
-            let line = new Line2(lineGeometry, matLine);
-            scene.add(line);
+            // Create a Great Circle
+            const greatCirclePoints = [];
+            const newGreatCirclePoints = [];
+            const numGreatCirclePoints = 100;
+
+            for (let i = 0; i <= numGreatCirclePoints; i++) {
+                const angle = calculateAngleBetweenPoints(point1.position, point2.position);
+                const interpolationFactor = i / numGreatCirclePoints;
+                const greatCirclePoint = new THREE.Vector3().lerpVectors(point1.position, point2.position, interpolationFactor);
+                greatCirclePoint.normalize();
+                greatCirclePoint.multiplyScalar(radius + 0.02);
+                greatCirclePoints.push(greatCirclePoint);
+                newGreatCirclePoints[i * 3] = greatCirclePoint.x;
+                newGreatCirclePoints[i * 3 + 1] = greatCirclePoint.y;
+                newGreatCirclePoints[i * 3 + 2] = greatCirclePoint.z;
+
+            }
+            lineGeometry = new LineGeometry();
+            lineGeometry.setPositions(newGreatCirclePoints);
+
+            matLine = new LineMaterial({
+                color: 0x52FF00,
+                linewidth: 0.008, // in world units with size attenuation, pixels otherwise
+            });
+
+            let lineObject = new Line2(lineGeometry, matLine);
+            scene.add(lineObject);
 
             render();
         }
@@ -270,6 +259,13 @@
             requestAnimationFrame(animate);
             render();
         }
+        // Function to calculate the angle between two points
+        function calculateAngleBetweenPoints(pointA, pointB) {
+            const dotProduct = pointA.dot(pointB);
+            const magnitudeA = pointA.length();
+            const magnitudeB = pointB.length();
+            return Math.acos(dotProduct / (magnitudeA * magnitudeB));
+        }
         // Function to project a point onto the sphere's surface
         function projectPointToSphere(obj) {
             const sphere = earthSphere.geometry;
@@ -281,28 +277,21 @@
             obj.object.position.copy(pointOnSphere);
             obj.object.position.add(earthSphere.position);
 
-            phi1 = Math.atan2(point1.position.y - earthSphere.position.y, point1.position.x - earthSphere.position.x);
-            phi2 = Math.atan2(point2.position.y - earthSphere.position.y, point2.position.x - earthSphere.position.x);
-            theta1 = Math.acos((point1.position.z - earthSphere.position.z) / radius1);
-            theta2 = Math.acos((point2.position.z - earthSphere.position.z) / radius2);
+            const newGreatCirclePoints = [];
+            const numGreatCirclePoints = 100;
 
-            const numPoints = 50;
-            const positions = new Float32Array(numPoints * 3);
-
-            const arcPoints = [];
-            for (let i = 0; i <= numPoints; i++) {
-                const alpha = theta1 + (theta2 - theta1) * (i / numPoints);
-                const beta = phi1 + (phi2 - phi1) * (i / numPoints);
-                const x = radius1 * Math.sin(alpha) * Math.cos(beta);
-                const y = radius1 * Math.sin(alpha) * Math.sin(beta);
-                const z = radius1 * Math.cos(alpha);
-
-                positions[i * 3] = x;
-                positions[i * 3 + 1] = y;
-                positions[i * 3 + 2] = z;
+            for (let i = 0; i <= numGreatCirclePoints; i++) {
+                const angle = calculateAngleBetweenPoints(point1.position, point2.position);
+                const interpolationFactor = i / numGreatCirclePoints;
+                const greatCirclePoint = new THREE.Vector3().lerpVectors(point1.position, point2.position, interpolationFactor);
+                greatCirclePoint.normalize();
+                greatCirclePoint.multiplyScalar(radius + 0.02);
+                newGreatCirclePoints[i * 3] = greatCirclePoint.x;
+                newGreatCirclePoints[i * 3 + 1] = greatCirclePoint.y;
+                newGreatCirclePoints[i * 3 + 2] = greatCirclePoint.z;
             }
 
-            lineGeometry.setPositions(positions);
+            lineGeometry.setPositions(newGreatCirclePoints);
             lineGeometry.attributes.position.needsUpdate = true;
         }
 
