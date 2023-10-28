@@ -76,6 +76,11 @@ const App = () => {
     return <></>;
   }
 
+  const Geo_9 = () => {
+    window.location.href = "./9.html";
+    return <></>;
+  }
+
   return (
     <Router>
       <Routes>
@@ -87,6 +92,8 @@ const App = () => {
         <Route exact path="/Geometry/:box_id" element={<Box3D />} />
         {/* 입체도형 07 */}
         {/* <Route path ="/Geo/7" Component={JSXGraphReact32} /> */}
+        {/* 입체도형 09 */}
+        {<Route path ="/Geo/9" element={<Geo_9 />} />}
         {/* 입체도형 10 */}
         {/* <Route path ="/Geo/10" element={<Geo_10 />} /> */}
 
