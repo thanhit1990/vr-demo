@@ -59,7 +59,7 @@
         const onDownPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is pressed
         let transformControl; // TransformControls object to enable dragging of points
         const ARC_SEGMENTS = 200; // Number of segments to use for the curve
-        let earthSphere, point1, point2, radius = 5, lineGeometry;
+        let earthSphere, point1, point2, radius = 5, lineGeometry, radius2, phi, theta1, theta2;
         // The Earth sphere
 
         init();
@@ -167,10 +167,10 @@
 
             // Create a sphere for point placement
             const pointGeometry = new THREE.SphereGeometry(0.1, 32, 32);
-            const myMaterial = new THREE.MeshStandardMaterial({color: 'red', })
+            const myMaterial = new THREE.MeshStandardMaterial({ color: 'red', })
             myMaterial.metalness = 0
             myMaterial.roughness = 1
-            
+
             // Create two draggable points on the sphere
             point1 = new THREE.Mesh(pointGeometry, myMaterial);
             point2 = new THREE.Mesh(pointGeometry, myMaterial);
@@ -179,10 +179,10 @@
             point1.position.set(0.9186271035589554, 2.4265783606399958, 4.269674310649953);
             point2.position.set(3.082231525683372, 3.9289611166297442, -0.16760032172800915);
 
-            const radius2 = 5; // radius2 of the sphere
-            const phi = 45; // Replace with the desired phi angle in radians
-            const theta1 = Math.PI / 4; // Replace with the desired theta angle for point1 in radians
-            const theta2 = (Math.PI / 4) * 2; // Replace with the desired theta angle for point2 in radians
+            radius2 = 5; // radius2 of the sphere
+            phi = 45; // Replace with the desired phi angle in radians
+            theta1 = Math.PI / 4; // Replace with the desired theta angle for point1 in radians
+            theta2 = (Math.PI / 4) * 2; // Replace with the desired theta angle for point2 in radians
             point1.position.set(
                 radius2 * Math.sin(theta1) * Math.cos(phi),
                 radius2 * Math.sin(theta1) * Math.sin(phi),
@@ -193,7 +193,7 @@
                 radius2 * Math.sin(theta2) * Math.sin(phi),
                 radius2 * Math.cos(theta2)
             );
-               // Add the points to the scene
+            // Add the points to the scene
             scene.add(point1);
             scene.add(point2);
 
@@ -263,7 +263,6 @@
             let lineObject = new Line2(lineGeometry, matLine);
             scene.add(lineObject);
 
-
             render();
         }
         // Function to update the scene
@@ -272,16 +271,14 @@
         }
 
         function calculateHaversineDistance(point1, point2, radius) {
-            const phi1 = point1.phi;
-            const theta1 = point1.theta;
-            const phi2 = point2.phi;
-            const theta2 = point2.theta;
+            const phi1 = phi;
+            const phi2 = phi;
 
             // Convert angles from degrees to radians
-            const phi1Rad = THREE.Math.degToRad(phi1);
-            const theta1Rad = THREE.Math.degToRad(theta1);
-            const phi2Rad = THREE.Math.degToRad(phi2);
-            const theta2Rad = THREE.Math.degToRad(theta2);
+            const phi1Rad = (Math.PI / 180) * phi1;
+            const theta1Rad = (Math.PI / 180) * theta1;
+            const phi2Rad = (Math.PI / 180) * phi2;
+            const theta2Rad = (Math.PI / 180) * theta2;
 
             // Haversine formula
             const dPhi = phi2Rad - phi1Rad;
