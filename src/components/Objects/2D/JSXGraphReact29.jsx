@@ -97,6 +97,8 @@ let logicJS = (brd) => {
         drawTree(A, B, C, D, 1, slider.Value());
     });
 
+    brd.clickDownArrow();
+    brd.clickDownArrow();
     brd.resizeContainer(800, 800);
     brd.unsuspendUpdate();
 }
