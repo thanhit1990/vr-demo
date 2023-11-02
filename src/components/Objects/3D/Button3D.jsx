@@ -28,11 +28,7 @@ export default function Button3D(props) {
         <mesh
             ref={ref}
             onPointerDown={() => {
-                console.log('click')
-                if (window.opener) {
-                    // window.opener.location.href = '/tab-a';
-                    window.close(); // Close tab B
-                }
+                window.close(); // Close tab B
             }}
         >
             <Interactive onSelect={onSelect} onHover={() => setHover(true)} onBlur={() => setHover(false)}>
