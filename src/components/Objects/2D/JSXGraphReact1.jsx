@@ -71,7 +71,7 @@ var logicJS = (brd) => {
     // intersection of BE and CD
     var F = brd.create('intersection', [perAB, perBC, 0], { name: 'F', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 3, fillColor: 'black', highlightFillColor: 'black' });
     // create a circle with center F and cross A
-    var circle = brd.create('circle', [F, A], { name: '', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 2, size: 3, highlightFillColor: 'black' });
+    var circle = brd.create('circle', [F, A], { name: '', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 2, size: 3});
 
 
     slider1.on('drag', function () {
