@@ -88,18 +88,30 @@ const App = () => {
 
         <Route exact path="/VRApp" element={<VRApp />} />
 
-        {/* 입체도형 01 */}
-        <Route exact path="/Geometry/:box_id" element={<Box3D />} />
-        {/* 입체도형 07 */}
-        {/* <Route path ="/Geo/7" Component={JSXGraphReact32} /> */}
-        {/* 입체도형 09 */}
-        {/* {<Route path ="/Geo/9" element={<Geo_9 />} />} */}
-        {/* 입체도형 10 */}
-        {/* <Route path ="/Geo/10" element={<Geo_10 />} /> */}
+        {/* 1.도형변환 */}
+        {/* 도형변환 01 */}
+        <Route path="/Transformation/1" element={<Transformation_1 />} />
+        {/* 도형변환 02 */}
+        {/* <Route path="/Transformation/2" Component={JSXGraphReact31} /> */}
+        {/* 도형변환 03 */}
+        <Route path="/Transformation/3" Component={JSXGraphReact22} />
+        {/* 도형변환 04 */}
+        {/* <Route path="/Transformation/4" Component={JSXGraphReact23} /> */}
+        {/* 도형변환 05 */}
+        <Route path="/Transformation/5" Component={JSXGraphReact19} />
+        {/* 도형변환 06 */}
+        <Route path="/Transformation/6" element={<Transformation_6 />} />
+        {/* 도형변환 07 */}
+        {/* <Route path="/Transformation/7" element={<Transformation_7 />} /> */}
+        {/* 도형변환 08 */}
+        <Route path="/Transformation/8" Component={JSXGraphReact20} />
+        {/* 도형변환 09 */}
+        {/* <Route path="/Transformation/9" Component={JSXGraphReact7} /> */}
+        {/* 도형변환 10 */}
+        {/* <Route path="/Transformation/10" Component={JSXGraphReact15} /> */}
 
-        {/* 입체도형 01 */}
 
-
+        {/* 2. 작도 */}
         {/* 작도 01 */}
         <Route path="/Construction/1" Component={JSXGraphReact} />
         {/* 작도 02 */}
@@ -121,28 +133,20 @@ const App = () => {
         {/* 작도 10 */}
         <Route path="/Construction/10" Component={JSXGraphReact14} />
 
-        {/* 삼각비 01 */}
-        <Route path="/Trigonometry/1" Component={JSXGraphReact21} />
-        {/* 삼각비 02 */}
-        {/* <Route path="/Trigonometry/2" Component={JSXGraphReact25} /> */}
-        {/* 삼각비 03 */}
-        {/* <Route path="/Trigonometry/3" Component={JSXGraphReact30} /> */}
-        {/* 삼각비 04 */}
-        {/* <Route path="/Trigonometry/4" Component={JSXGraphReact26} /> */}
-        {/* 삼각비 05 */}
-        <Route path="/Trigonometry/5" Component={JSXGraphReact4} />
-        {/* 삼각비 06 */}
-        {/* <Route path="/Trigonometry/6" Component={JSXGraphReact5} /> */}
-        {/* 삼각비 07 */}
-        {/* <Route path="/Trigonometry/7" Component={JSXGraphReact27} /> */}
-        {/* 삼각비 08 */}
-        <Route path="/Trigonometry/8" Component={JSXGraphReact29} />
-        {/* 삼각비 09 */}
-        {/* <Route path="/Trigonometry/9" Component={JSXGraphReact28} /> */}
-        {/* 삼각비 10 */}
+        {/* 3. 입체도형 */}
+        {/* 입체도형 01 */}
+        <Route exact path="/Geometry/:box_id" element={<Box3D />} />
+        {/* 입체도형 07 */}
+        {/* <Route path ="/Geo/7" Component={JSXGraphReact32} /> */}
+        {/* 입체도형 09 */}
+        {/* {<Route path ="/Geo/9" element={<Geo_9 />} />} */}
+        {/* 입체도형 10 */}
+        {/* <Route path ="/Geo/10" element={<Geo_10 />} /> */}
+
+        {/* 입체도형 01 */}
 
 
-
+        {/* 4. 벡터 */}
         {/* 벡터 01*/}
         <Route path="/Vector/1" Component={JSXGraphReact11} />
         {/* 벡터 02*/}
@@ -164,27 +168,28 @@ const App = () => {
         {/* 벡터 10 */}
         {/* <Route path="/Vector/10" element={<Vector_10 />} /> */}
 
+        {/* 5. 삼각비 */}
+        {/* 삼각비 01 */}
+        <Route path="/Trigonometry/1" Component={JSXGraphReact21} />
+        {/* 삼각비 02 */}
+        {/* <Route path="/Trigonometry/2" Component={JSXGraphReact25} /> */}
+        {/* 삼각비 03 */}
+        {/* <Route path="/Trigonometry/3" Component={JSXGraphReact30} /> */}
+        {/* 삼각비 04 */}
+        {/* <Route path="/Trigonometry/4" Component={JSXGraphReact26} /> */}
+        {/* 삼각비 05 */}
+        <Route path="/Trigonometry/5" Component={JSXGraphReact4} />
+        {/* 삼각비 06 */}
+        {/* <Route path="/Trigonometry/6" Component={JSXGraphReact5} /> */}
+        {/* 삼각비 07 */}
+        {/* <Route path="/Trigonometry/7" Component={JSXGraphReact27} /> */}
+        {/* 삼각비 08 */}
+        <Route path="/Trigonometry/8" Component={JSXGraphReact29} />
+        {/* 삼각비 09 */}
+        {/* <Route path="/Trigonometry/9" Component={JSXGraphReact28} /> */}
+        {/* 삼각비 10 */}
 
-        {/* 도형변환 01 */}
-        <Route path="/Transformation/1" element={<Transformation_1 />} />
-        {/* 도형변환 02 */}
-        {/* <Route path="/Transformation/2" Component={JSXGraphReact31} /> */}
-        {/* 도형변환 03 */}
-        {/* <Route path="/Transformation/3" Component={JSXGraphReact22} /> */}
-        {/* 도형변환 04 */}
-        {/* <Route path="/Transformation/4" Component={JSXGraphReact23} /> */}
-        {/* 도형변환 05 */}
-        <Route path="/Transformation/5" Component={JSXGraphReact19} />
-        {/* 도형변환 06 */}
-        <Route path="/Transformation/6" element={<Transformation_6 />} />
-        {/* 도형변환 07 */}
-        {/* <Route path="/Transformation/7" element={<Transformation_7 />} /> */}
-        {/* 도형변환 08 */}
-        <Route path="/Transformation/8" Component={JSXGraphReact20} />
-        {/* 도형변환 09 */}
-        {/* <Route path="/Transformation/9" Component={JSXGraphReact7} /> */}
-        {/* 도형변환 10 */}
-        {/* <Route path="/Transformation/10" Component={JSXGraphReact15} /> */}
+
 
 
       </Routes>
