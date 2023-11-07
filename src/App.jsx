@@ -154,10 +154,9 @@ const App = () => {
         {/* 벡터 03*/}
         <Route path="/Vector/3" Component={JSXGraphReact13} />
         {/* 벡터 04*/}
-        <Route path="/Vector/4" Component={JSXGraphReact24} />
-        {/* <Route path="/Vector/5" element={<Vector_4 />} /> */}
+        <Route path="/Vector/4" Component={JSXGraphReact24} />        
         {/* 벡터 05*/}
-        
+        <Route path="/Vector/5" element={<Vector_4 />} />
         {/* 벡터 06*/}
         <Route path="/Vector/6" Component={JSXGraphReact6} />        
         {/* 벡터 07*/}
