@@ -42,7 +42,7 @@
 </head>
 
 <body>
-    <h1>스마트폰의 3차원 가속도 센서</h1>
+    <h1 style="text-align: center; padding-top: 20px">스마트폰의 3차원 가속도 센서</h1>
 
     <script type='text/javascript' charset='UTF-8'
         src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
@@ -111,7 +111,17 @@
                     [-5, 5]
                 ]
             ], // 3D bounding cube
-            {});
+            {
+                xPlaneRear: { visible: false },
+                yPlaneRear: { visible: false },
+                zPlaneRear: { fillColor: 'blue' },
+                xAxis: { strokeColor: 'red', strokeWidth: 2 },
+                yAxis: { strokeColor: 'green', strokeWidth: 2 },
+                zAxis: { strokeColor: 'blue', strokeWidth: 2, },
+                azimuth: { visible: false },
+            });
+        view.az_slide.hide();
+        view.el_slide.hide();
 
         var slider1 = board.create('slider', [[-7, -6], [5, -6], [0, 0, 360]], {
             name: '&alpha;',
@@ -154,7 +164,7 @@
         });
 
         var A = view.create('point3d', [3, -2, 0.5], { visible: false });
-        var B = view.create('point3d', [3, 2, 0.5], { visible: false});
+        var B = view.create('point3d', [3, 2, 0.5], { visible: false });
         var C = view.create('point3d', [3, 2, -0.5], { visible: false });
         var D = view.create('point3d', [3, -2, -0.5], { visible: false });
         var E = view.create('point3d', [-3, -2, 0.5], { visible: false });
@@ -225,7 +235,44 @@
 
             return [xRot, yRot, zRot];
         }
-        
+
+        var isDrawing;
+        var s = view.az_slide._smin;
+        var e = view.az_slide._smax;
+        var az_slider_diff = e - s;
+
+        s = view.el_slide._smin;
+        e = view.el_slide._smax;
+        var el_slider_diff = e - s;
+
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+
+
+        document.addEventListener('mousedown', e => {
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            isDrawing = true;
+        });
+
+
+        document.addEventListener('mousemove', e => {
+            if (isDrawing === true) {
+                const deltaX = e.clientX - lastMouseX;
+                const deltaY = e.clientY - lastMouseY;
+                view.az_slide.position += (deltaX / 100) / az_slider_diff;
+                view.el_slide.position += (deltaY / 100) / el_slider_diff;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                board.update();
+            }
+        });
+
+        document.addEventListener('mouseup', e => {
+            if (isDrawing === true) {
+                isDrawing = false;
+            }
+        });
         board.update();
 
     </script>
