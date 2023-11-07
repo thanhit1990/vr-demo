@@ -67,9 +67,9 @@ let logicJS = (brd) => {
     var O = brd.create('point', [0.0, 0.0], { name: '', visible: false });
     // create a point with x coordinate is the value of the slider * 2 and y coordinate is the value of the slider * 2
     var A = brd.create('point', [function () { return s.Value() * 2; }, function () { return s.Value() * 2; }],
-        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 3 });
     var B = brd.create('point', [-5, -5],
-        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5, highlight: true, highlightStrokeColor: 'red', highlightStrokeWidth: 3 });
+        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 8, highlight: true, highlightStrokeColor: 'red', highlightStrokeWidth: 3 });
     // create a segment between A and B
     var AB = brd.create('segment', [A, B], { visible: false });
     // create a middle point between A and B
@@ -78,49 +78,57 @@ let logicJS = (brd) => {
     var perAB = brd.create('perpendicular', [AB, M], { visible: false });
     // create a point with x coordinate is the value of the slider * 2 and y is 0
     var C = brd.create('point', [function () { return s.Value() * 2; }, 0],
-        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 3 });
     // create a point with x is 0 and y coordinate is the value of the slider * 2
     var D = brd.create('point', [0, function () { return s.Value() * 2; }],
-        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+        { name: '', visible: true, strokeColor: 'black', strokeWidth: 1, size: 3 });
     // create a polygon with points O, C, A and D
-    // var poly = brd.create('polygon', [O, C, A, D], { fillColor: 'pink', fillOpacity: 1 });
+    // brd.create('polygon', [O, C, A, D], { fillColor: 'pink', fillOpacity: 1 });
     // create a segment between A and C
-    var AC = brd.create('segment', [A, C], { strokeColor: 'black', strokeWidth: 3, visible: true });
+    var AC = brd.create('segment', [A, C], { strokeColor: 'black', strokeWidth: 2, visible: true });
     // create a segment between A and D
-    var AD = brd.create('segment', [A, D], { strokeColor: 'black', strokeWidth: 3, visible: true });
+    var AD = brd.create('segment', [A, D], { strokeColor: 'black', strokeWidth: 2, visible: true });
     // create a segment between O and D
-    var OD = brd.create('segment', [O, D], { strokeColor: 'black', strokeWidth: 3, visible: true });
+    var OD = brd.create('segment', [O, D], { strokeColor: 'black', strokeWidth: 2, visible: true });
     // create a segment between O and C
-    var OC = brd.create('segment', [O, C], { strokeColor: 'black', strokeWidth: 3, visible: true });
+    var OC = brd.create('segment', [O, C], { strokeColor: 'black', strokeWidth: 2, visible: true });
+
+
 
     // point E is the intersection of the perpendicular and AD
-    var E = brd.create('intersection', [perAB, AD, 0], { visible: false });
+    var E = brd.create('intersection', [perAB, AD, 0], { name: '', visible: false });
     // point F is the intersection of the perpendicular and AC
-    var F = brd.create('intersection', [perAB, AC, 0], { visible: false });
+    var F = brd.create('intersection', [perAB, AC, 0], { name: '', visible: false });
     // point G is the intersection of the perpendicular and OC
-    var G = brd.create('intersection', [perAB, OC, 0], { visible: false });
+    var G = brd.create('intersection', [perAB, OC, 0], { name: '', visible: false });
     // point H is the intersection of the perpendicular and OD
-    var H = brd.create('intersection', [perAB, OD, 0], { visible: false });
+    var H = brd.create('intersection', [perAB, OD, 0], { name: '', visible: false });
     // point D1 is the perpendicular point of the point D and the line perAB
     var D1 = brd.create('perpendicularpoint', [D, perAB], { visible: false });
     // point D2 is the parallel point of the point D and the line perAB
-    var D2 = brd.create('reflection', [D, perAB], { name: 'D2', withLabel: true, visible: false });
+    var D2 = brd.create('reflection', [D, perAB], { name: '', withLabel: false, visible: false });
     // point C1 is the perpendicular point of the point C and the line perAB
     var C1 = brd.create('perpendicularpoint', [C, perAB], { visible: false });
     // point C2 is the parallel point of the point C and the line perAB
-    var C2 = brd.create('reflection', [C, perAB], { name: 'C2', withLabel: true, visible: false });
+    var C2 = brd.create('reflection', [C, perAB], { name: '', withLabel: false, visible: false });
     // point O1 is the perpendicular point of the point O and the line perAB
     var O1 = brd.create('perpendicularpoint', [O, perAB], { visible: false });
     // point O2 is the parallel point of the point O and the line perAB
-    var O2 = brd.create('reflection', [O, perAB], { name: 'O2', withLabel: true, visible: false });
-
+    var O2 = brd.create('reflection', [O, perAB], { name: '', withLabel: false, visible: false });
+    brd.create('polygon', [B, D2, H, G, C2], {
+        fillColor: '#FF6699', fillOpacity: 5,
+        borders: { visible: false }, highlightFillColor: '#FF6699', highlightFillOpacity: 1
+    });
 
     var BE, BF, EF, HD2, D2B, GC2, C2B, HG;
-    HD2 = brd.create('segment', [H, D2], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
-    D2B = brd.create('segment', [D2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
-    C2B = brd.create('segment', [C2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
-    GC2 = brd.create('segment', [G, C2], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
-    HG = brd.create('segment', [H, G], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    var DE, FC, DO, CO, HO, GO;
+    HD2 = brd.create('segment', [H, D2], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    D2B = brd.create('segment', [D2, B], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    C2B = brd.create('segment', [C2, B], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    GC2 = brd.create('segment', [G, C2], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    HG = brd.create('segment', [H, G], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    HO = brd.create('segment', [H, O], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+    GO = brd.create('segment', [G, O], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
 
     B.on('drag', function () {
         brd.removeObject(E);
@@ -157,68 +165,144 @@ let logicJS = (brd) => {
         if (HG) {
             brd.removeObject(HG);
         }
+        if (DE) {
+            brd.removeObject(DE);
+        }
+        if (FC) {
+            brd.removeObject(FC);
+        }
+        if (DO) {
+            brd.removeObject(DO);
+        }
+        if (CO) {
+            brd.removeObject(CO);
+        }
+        if (HO) {
+            brd.removeObject(HO);
+        }
+
+
         // point E is the intersection of the perpendicular and AD
-        E = brd.create('intersection', [perAB, AD, 0], { visible: false });
+        E = brd.create('intersection', [perAB, AD, 0], { name: '', visible: false });
         // point F is the intersection of the perpendicular and AC
-        F = brd.create('intersection', [perAB, AC, 0], { visible: false });
+        F = brd.create('intersection', [perAB, AC, 0], { name: '', visible: false });
         // point G is the intersection of the perpendicular and OC
-        G = brd.create('intersection', [perAB, OC, 0], { visible: false });
+        G = brd.create('intersection', [perAB, OC, 0], { name: '', visible: false });
         // point H is the intersection of the perpendicular and OD
-        H = brd.create('intersection', [perAB, OD, 0], { visible: false });
+        H = brd.create('intersection', [perAB, OD, 0], { name: '', visible: false });
 
         // point D1 is the perpendicular point of the point D and the line perAB
         D1 = brd.create('perpendicularpoint', [D, perAB], { visible: false });
         // point D2 is the parallel point of the point D and the line perAB
-        D2 = brd.create('reflection', [D, perAB], { visible: false });
+        D2 = brd.create('reflection', [D, perAB], { name: '', visible: false });
         // point C1 is the perpendicular point of the point C and the line perAB
-        C1 = brd.create('perpendicularpoint', [C, perAB], { visible: false });
+        C1 = brd.create('perpendicularpoint', [C, perAB], { name: '', visible: false });
         // point C2 is the parallel point of the point C and the line perAB
-        C2 = brd.create('reflection', [C, perAB], { visible: false });
+        C2 = brd.create('reflection', [C, perAB], { name: '', visible: false });
         // point O1 is the perpendicular point of the point O and the line perAB
-        O1 = brd.create('perpendicularpoint', [O, perAB], { visible: false });
+        O1 = brd.create('perpendicularpoint', [O, perAB], { name: 'O1', visible: false });
         // point O2 is the parallel point of the point O and the line perAB
-        O2 = brd.create('reflection', [O, perAB], { visible: false });
+        O2 = brd.create('reflection', [O, perAB], { name: '', visible: false });
         if (B.X() <= A.X() && B.Y() <= A.Y()) {
             if (E.X() >= 0) {
                 // create a segment from B to E
-                BE = brd.create('segment', [B, E], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                BE = brd.create('segment', [B, E], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                // create a segment from D to E
+                DE = brd.create('segment', [D, E], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                // create a segment from D to O
+                DO = brd.create('segment', [D, O], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                // create a polygon with points O, D, E
+                brd.create('polygon', [O, D, E], {
+                    fillColor: 'pink', fillOpacity: 1,
+                    borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: 'pink'
+                });
+                // create a polygon with O, E, C
             }
             if (F.Y() >= 0) {
                 // create a segment from B to F
-                BF = brd.create('segment', [B, F], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                BF = brd.create('segment', [B, F], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                FC = brd.create('segment', [F, C], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                CO = brd.create('segment', [C, O], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                brd.create('polygon', [O, F, C], {
+                    fillColor: 'pink', fillOpacity: 1,
+                    borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: 'pink'
+                });
             }
 
             if (E.X() >= 0 && F.Y() >= 0) {
                 // create a segment from E to F
-                EF = brd.create('segment', [E, F], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                EF = brd.create('segment', [E, F], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                brd.create('polygon', [O, F, E], {
+                    fillColor: 'pink', fillOpacity: 1,
+                    borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: 'pink'
+                });
+                brd.create('polygon', [B, F, E], {
+                    fillColor: '#FF6699', fillOpacity: 1,
+                    borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: '#FF6699'
+                });
             } else {
-                if (E.X() < 0) {
-                    // create a segment from H to D2
-                    HD2 = brd.create('segment', [H, D2], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
-                    // create a segment from D2 to B
-                    D2B = brd.create('segment', [D2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
-                }
-                if (F.Y() < 0) {
-                    // create a segment from G to C2
-                    GC2 = brd.create('segment', [G, C2], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
-                    // create a segment from C2 to B
-                    C2B = brd.create('segment', [C2, B], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                if (E.X() < 0 && F.Y() > 0) {
+                    // create a segment from F to H
+                    HG = brd.create('segment', [F, H], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                    HO = brd.create('segment', [H, O], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                    brd.create('polygon', [O, H, F], {
+                        fillColor: 'pink', fillOpacity: 1,
+                        borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: 'pink'
+                    });
+                    brd.create('polygon', [B, H, F], {
+                        fillColor: '#FF6699', fillOpacity: 1,
+                        borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: '#FF6699'
+                    });
                 }
                 if (E.X() > 0 && F.Y() < 0) {
                     // create a segment from E to G
-                    HG = brd.create('segment', [E, G], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                    HG = brd.create('segment', [E, G], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                    GO = brd.create('segment', [G, O], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                    brd.create('polygon', [O, E, G], {
+                        fillColor: 'pink', fillOpacity: 1,
+                        borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: 'pink'
+                    });
+                    brd.create('polygon', [B, E, G], {
+                        fillColor: '#FF6699', fillOpacity: 1,
+                        borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: '#FF6699'
+                    });
+
                 }
-                if (E.X() < 0 && F.Y() > 0) {
-                    // create a segment from F to H
-                    HG = brd.create('segment', [F, H], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                if (E.X() < 0) {
+                    // create a segment from H to D2
+                    HD2 = brd.create('segment', [H, D2], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                    // create a segment from D2 to B
+                    D2B = brd.create('segment', [D2, B], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                    brd.create('polygon', [B, D2, H], {
+                        fillColor: '#FF6699', fillOpacity: 1,
+                        borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: '#FF6699'
+                    });
                 }
+                if (F.Y() < 0) {
+                    // create a segment from G to C2
+                    GC2 = brd.create('segment', [G, C2], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                    // create a segment from C2 to B
+                    C2B = brd.create('segment', [C2, B], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                    brd.create('polygon', [B, C2, G], {
+                        fillColor: '#FF6699', fillOpacity: 1,
+                        borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: '#FF6699'
+                    });
+                }
+
+
             }
 
             if (E.X() < 0 && F.Y() < 0) {
                 // create a segment from H to G
-                HG = brd.create('segment', [H, G], { strokeColor: 'blue', strokeWidth: 3, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                HG = brd.create('segment', [H, G], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                HO = brd.create('segment', [H, O], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                GO = brd.create('segment', [G, O], { strokeColor: 'blue', strokeWidth: 2, visible: true, highlight: true, highlightStrokeColor: 'blue' });
+                brd.create('polygon', [B, H, G], {
+                    fillColor: '#FF6699', fillOpacity: 1,
+                    borders: { visible: false }, highlightFillOpacity: 1, highlightFillColor: '#FF6699'
+                });
             }
-        } 
+        }
     });
 
     brd.resizeContainer(800, 800);
