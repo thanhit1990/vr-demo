@@ -9,8 +9,8 @@ function degrees_to_radians(degrees) {
 
 let logicJS = (brd) => {
     brd.suspendUpdate();
-    var A = brd.create('point', [-20, 0], { name: 'A', withLabel: true, visible: true, fillColor: 'yellow', strokeColor: 'black', strokeWidth: 1, size: 3, label: {color: 'yellow' }});
-    var B = brd.create('point', [6, 0], { name: 'B', withLabel: true, visible: true, fillColor: 'yellow', strokeColor: 'black', highlightStrokeColor: 'blue', label: {color: 'yellow' }, highlightFillColor: 'blue', highlightStrokeWidth: 4, strokeWidth: 1, size: 3 });
+    var A = brd.create('point', [-20, 0], { name: 'A', withLabel: true, visible: true, fillColor: 'yellow', strokeColor: 'black', strokeWidth: 1, size: 3, label: { color: 'yellow' } });
+    var B = brd.create('point', [6, 0], { name: 'B', withLabel: true, visible: true, fillColor: 'yellow', strokeColor: 'black', highlightStrokeColor: 'blue', label: { color: 'yellow' }, highlightFillColor: 'blue', highlightStrokeWidth: 4, strokeWidth: 1, size: 3 });
     var C = brd.create('point', [13, -3], {
         name: 'C', withLabel: true, visible: false, fillColor: 'blue', strokeColor: 'black', highlightStrokeColor: 'blue', highlightFillColor: 'blue', highlightStrokeWidth: 4, strokeWidth: 1, size: 0,
     });
@@ -19,13 +19,13 @@ let logicJS = (brd) => {
     // var c1 = brd.create('circle', [[0, 0], [10, 0]]);
     // var p1 = brd.create('point', [-20, -8], { name: 'A', withLabel: true, visible: true, fillColor: 'gray', strokeColor: 'black', strokeWidth: 1, size: 3, fixed: true });
     var g1 = brd.create('glider', [9, 10, e1], {
-        name: 'C', withLabel: true, visible: true, fillColor: '#00FFFF', strokeColor: '#00FFFF', highlightStrokeColor: '#00FFFF', highlightFillColor: '#00FFFF', highlightStrokeWidth: 4, strokeWidth: 1, size: 5,
-        trace: true, label: {color: 'yellow' },
+        name: 'C', withLabel: true, visible: true, fillColor: '#00FFFF', strokeColor: '#00FFFF', highlightStrokeColor: '#00FFFF', highlightFillColor: '#00FFFF', highlightStrokeWidth: 4, strokeWidth: 1,
+        trace: true, label: { color: 'yellow' },
         size: 1,
         traceAttributes: {
             color: 'blue',
             face: 'o',
-            
+
         }
     });
     var s1 = brd.create('segment', [g1, A], { strokeColor: 'yellow', strokeWidth: 1 });
