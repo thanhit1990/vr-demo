@@ -127,9 +127,9 @@ const App = () => {
         {/* 작도 07 */}
         <Route path="/Construction/7" Component={JSXGraphReact16} />
         {/* 작도 08 */}
-        {/* <Route path="/Construction/8" Component={JSXGraphReact17} /> */}
+        <Route path="/Construction/8" Component={JSXGraphReact17} />
         {/* 작도 09 */}
-        {/* <Route path="/Construction/9" Component={JSXGraphReact18} /> */}
+        <Route path="/Construction/9" Component={JSXGraphReact18} />
         {/* 작도 10 */}
         <Route path="/Construction/10" Component={JSXGraphReact14} />
 
