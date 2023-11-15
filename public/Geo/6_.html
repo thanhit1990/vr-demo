@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>뿔의 부피
+
+    </title>
+    <style>
+        #JSXBoard {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            border-style: solid;
+            border-width: 1px;
+            width: 800px;
+            height: 800px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ffffff;
+            white-space: nowrap;
+            text-overflow: clip;
+        }
+
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #JSXBoard button {
+            padding: 0px;
+            margin-top: 0px;
+            background-color: #ffffff;
+
+        }
+
+        #JSXBoard_licenseText {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>뿔의 부피
+    </h1>
+
+    <script type='text/javascript' charset='UTF-8'
+        src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' />
+    </script>
+    <div class='jxgbox' id='JSXBoard'> </div>
+    <script>
+        // read data from json file
+        var triangles_data = [];
+        const jsonUrl = '.././triangle_data.json'; // Replace with your JSON file URL
+        fetch(jsonUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                triangles_data = [];
+                triangles_data = data;
+                console.log(triangles_data);
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+
+        const board = JXG.JSXGraph.initBoard('JSXBoard', {
+            boundingbox: [-25, 25, 25, -25],
+            keepaspectratio: false,
+            axis: false,
+        });
+
+        var view = board.create('view3d',
+            [[-20, -20], [40, 40],
+            [[-10, 10], [-10, 10], [-10, 10]]],
+            {
+                xPlaneRear: { visible: false },
+                yPlaneRear: { visible: false },
+                zPlaneRear: { fillColor: 'blue' },
+                xAxis: { visible: false, strokeColor: 'red', strokeWidth: 2 },
+                yAxis: { visible: false, strokeColor: 'green', strokeWidth: 2 },
+                zAxis: { visible: false, strokeColor: 'blue', strokeWidth: 2, }
+            });
+
+        view.az_slide.hide();
+        view.el_slide.hide();
+
+        var slider_attr = {
+            name: 'n',
+            snapWidth: 2,
+            fillColor: 'white',
+            strokeColor: 'green',
+            highlightFillColor: 'white',
+            highlightStrokeColor: 'green',
+            postLabel: '',
+            precision: 0,
+            label: { visible: true },
+            baseline: { strokeColor: 'green', highlightStrokeColor: 'green', highlightStrokeOpacity: 0.4, strokeWidth: 5, opacity: 0.4 },
+            highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 7 },
+        };
+
+        var point_attr = { withLabel: true, size: 2, label: { offset: [5, 5], fontSize: 10, fixed: true } },
+            // Cube
+            p = [],
+            top_points = [],
+            bottom_points = [],
+            triangles = [],
+            pol_attr = {
+                borders: { strokeWidth: 2, strokeColor: 'black', highlightStrokeColor: 'black', highlightStrokeOpacity: 0.4, opacity: 0.4 },
+                fillColor: 'white', fixed: true, highlightFillColor: 'white', highlightFillOpacity: 0.4, fillOpacity: 0.4
+            };
+        var slider1 = board.create('slider', [[5, 20], [20, 20], [4, 4, 94]], slider_attr);
+        var drawTriangle = function (p1, p2, p3) {
+            var triangle = view.create('polygon', [p1.element2D, p2.element2D, p3.element2D]);
+            triangle.setAttribute({ fixed: true });
+            triangles.push(triangle);
+            return triangle;
+        }
+
+        var cir_radius = 5;
+        var circ1 = view.create('curve3d', [
+            (t) => 5 * Math.sin(t),
+            (t) => 5 * -Math.cos(t),
+            (t) => -5,
+            [0, 2 * Math.PI]
+        ], { strokeColor: 'red', strokeWidth: 2, strokeOpacity: 1 });
+        var circ2 = view.create('curve3d', [
+            (t) => 5 * Math.sin(t),
+            (t) => 5 * -Math.cos(t),
+            (t) => 5,
+            [0, 2 * Math.PI]
+        ], { strokeColor: 'red', strokeWidth: 2, strokeOpacity: 1 });
+        var bottom_center = view.create('point3d', [0, 0, -5], { size: 2, name: '', point_attr });
+        var top_center = view.create('point3d', [0, 0, 5], { size: 2, name: '', point_attr });
+        // create a line between two points top_center and bottom_center
+        var line = view.create('line3d', [top_center, bottom_center], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+
+        // Create vertices on the circle
+        var n = 4;
+        for (var i = 0; i < n; i++) {
+            var angle = (2 * Math.PI * i) / n;
+            var x = cir_radius * Math.cos(angle);
+            var y = cir_radius * Math.sin(angle);
+            var top_vertex = view.create('point3d', [x, y, 5], { size: 2, name: '', point_attr });
+            top_vertex.setAttribute({ fixed: true });
+            var bottom_vertex = view.create('point3d', [x, y, -5], { size: 2, name: '', point_attr });
+            bottom_vertex.setAttribute({ fixed: true });
+            p.push(top_vertex);
+            p.push(bottom_vertex);
+            p.push(view.create('line3d', [[x, y, 5], [0, 0, 5]], { size: 2, name: '', point_attr }));
+            p.push(view.create('line3d', [[x, y, -5], [0, 0, -5]], { size: 2, name: '', point_attr }));
+        }
+
+
+        // pol_attr.fillColor = 'red'
+        // n = 7;
+        // for (var i = 0; i < n; i += 2) {
+        //     if (i == n - 1) {
+        //         drawTriangle(bottom_center, p[n], p[1]);
+        //     } else {
+        //         drawTriangle(p[i + 1], p[i + 3], bottom_center);
+        //     }
+        // 
+        // }
+
+        var surf = view.create('parametricsurface3d', [
+            (u, v) => (5 - v) * Math.cos(u) + v * Math.cos(u),
+            (u, v) => (5 - v) * Math.sin(u) + v * Math.sin(u),
+            (u, v) => v,
+            [0, 2 * Math.PI],
+            [-5, 5]
+        ], { strokeColor: '#0000ff', strokeWidth: 1, strokeOpacity: 0.9, stepsU: 4, stepsV: 1 });
+
+        // Calculate vertices points based n
+        var calculate_vertices = (n) => {
+            var triangle_data = {
+                "n": n,
+                "top_center": [0, 0, 5],
+                "bottom_center": [0, 0, -5],
+                "vertices": []
+            };
+            // Create vertices on the circle
+            var vertices = [];
+            for (var i = 0; i < n; i++) {
+                var angle = (2 * Math.PI * i) / n;
+                var x = cir_radius * Math.cos(angle);
+                var y = cir_radius * Math.sin(angle);
+                vertices.push([x, y]);
+            }
+            triangle_data.vertices = vertices;
+
+            return triangle_data;
+        }
+
+        slider1.on('drag', function () {
+            // Remove all points in p array
+            for (var i = 0; i < p.length; i++) {
+                view.removeObject(p[i]);
+            }
+            for (var i = 0; i < triangles.length; i++) {
+                view.removeObject(triangles[i]);
+            }
+            for (var i = 0; i < top_points.length; i++) {
+                view.removeObject(top_points[i]);
+            }
+            for (var i = 0; i < bottom_points.length; i++) {
+                view.removeObject(bottom_points[i]);
+            }
+            p = [];
+            triangles = [];
+            top_points = [];
+            top_vertices = [];
+            bottom_points = [];
+            bottom_vertices = [];
+            var triangle_data_n = [];
+
+            var n = slider1.Value();
+            surf.setAttribute({ stepsU: n });
+
+            // var array_index = (n - 4) / 2;
+            // var triangle_data = triangles_data[array_index];
+            // // Check triangle_data is not null
+            // if (triangle_data == null) {
+            //     return;
+            // }
+            // 
+            // var top_center = triangle_data.top_center;
+            // var bottom_center = triangle_data.bottom_center;
+            // var vertices_data = triangle_data.vertices;
+            // // Create points from vertices_data x, y and top_center[2]
+            // for (var i = 0; i < vertices_data.length; i++) {
+            //     var x = vertices_data[i][0];
+            //     var y = vertices_data[i][1];
+            //     var z_top = top_center[2];
+            //     var z_bottom = bottom_center[2];
+            // 
+            //     p.push(view.create('line3d', [[x, y, z_top], [0, 0, z_top]], { size: 2, name: '', point_attr }));
+            //     p.push(view.create('line3d', [[x, y, z_bottom], [0, 0, z_bottom]], { size: 2, name: '', point_attr }));
+            // 
+            // }
+
+
+            if (n != 96) {
+                return;
+            }
+            // Create vertices on the circle
+            for (var i = 4; i < n; i += 2) {
+                var triangle_data = calculate_vertices(i);
+                triangle_data_n.push(triangle_data);
+            
+            }
+
+            // for (var i = 0; i < n; i++) {
+            //     if (i == n - 1) {
+            //         drawTriangle(bottom_center, bottom_points[n - 1], bottom_points[0]);
+            //     } else {
+            //         drawTriangle(bottom_points[i], bottom_points[i + 1], bottom_center);
+            //     }
+            // }
+            // for (var i = 0; i < n; i++) {
+            //     if (i == n - 1) {
+            //         drawTriangle(top_center, top_points[n - 1], top_points[0]);
+            //     } else {
+            //         drawTriangle(top_points[i], top_points[i + 1], top_center);
+            //     }
+            // }
+
+            // console.log(triangle_data_n);
+            // // Convert JSON data to a string
+            // const jsonString = JSON.stringify(triangle_data_n, null, 2);
+            // // Create a Blob with the JSON data
+            // const blob = new Blob([jsonString], { type: 'application/json' });
+            // // Create a URL for the Blob
+            // const url = URL.createObjectURL(blob);
+            // // Create a download link
+            // const a = document.createElement('a');
+            // a.href = url;
+            // a.download = 'circle_triangles.json'; // Specify the desired filename
+            // // Simulate a click to trigger the download
+            // a.click();
+            // // Clean up by revoking the URL
+            // URL.revokeObjectURL(url);
+            board.update();
+        });
+
+        var isDrawing;
+        var s = view.az_slide._smin;
+        var e = view.az_slide._smax;
+        var az_slider_diff = e - s;
+
+        s = view.el_slide._smin;
+        e = view.el_slide._smax;
+        var el_slider_diff = e - s;
+
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+
+
+        document.addEventListener('mousedown', e => {
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            isDrawing = true;
+        });
+
+
+        document.addEventListener('mousemove', e => {
+            if (isDrawing === true) {
+                const deltaX = e.clientX - lastMouseX;
+                const deltaY = e.clientY - lastMouseY;
+                view.az_slide.position += (deltaX / 100) / az_slider_diff;
+                view.el_slide.position += (deltaY / 100) / el_slider_diff;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                board.update();
+            }
+        });
+
+        document.addEventListener('mouseup', e => {
+            if (isDrawing === true) {
+                isDrawing = false;
+            }
+        });
+
+        board.update();
+    </script>
+</body>
+
+</html>

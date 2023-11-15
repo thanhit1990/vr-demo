@@ -38,6 +38,7 @@ import JSXGraphReact31 from './components/Objects/2D/JSXGraphReact31.jsx'
 import JSXGraphReact32 from './components/Objects/2D/JSXGraphReact32.jsx'
 import Transformation1 from './components/Objects/3D/Transformation1.jsx'
 import Box3D from './components/Objects/3D/Box3D.jsx'
+import Transformation2 from './components/Objects/3D/Transformation2.jsx'
 
 
 const App = () => {
@@ -136,6 +137,8 @@ const App = () => {
         {/* 3. 입체도형 */}
         {/* 입체도형 01 */}
         <Route exact path="/Geometry/:box_id" element={<Box3D />} />
+        {/* 입체도형 06 */}
+        {/* <Route path="/Geo/6" Component={Transformation2} /> */}
         {/* 입체도형 07 */}
         {/* <Route path ="/Geo/7" Component={JSXGraphReact32} /> */}
         {/* 입체도형 09 */}
