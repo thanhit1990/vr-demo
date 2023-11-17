@@ -38,6 +38,7 @@ import JSXGraphReact31 from './components/Objects/2D/JSXGraphReact31.jsx'
 import JSXGraphReact32 from './components/Objects/2D/JSXGraphReact32.jsx'
 import Transformation1 from './components/Objects/3D/Transformation1.jsx'
 import Box3D from './components/Objects/3D/Box3D.jsx'
+import Transformation2 from './components/Objects/3D/Transformation2.jsx'
 
 
 const App = () => {
@@ -117,7 +118,7 @@ const App = () => {
         {/* 작도 02 */}
         <Route path="/Construction/2" Component={JSXGraphReact1} />
         {/* 작도 03 */}
-        {/* <Route path="/Construction/3" Component={JSXGraphReact2} /> */}
+        <Route path="/Construction/3" Component={JSXGraphReact2} />
         {/* 작도 04 */}
         <Route path="/Construction/4" Component={JSXGraphReact3} />
         {/* 작도 05 */}
@@ -125,17 +126,19 @@ const App = () => {
         {/* 작도 06 */}
         <Route path="/Construction/6" Component={JSXGraphReact10} />
         {/* 작도 07 */}
-        {/* <Route path="/Construction/7" Component={JSXGraphReact16} /> */}
+        <Route path="/Construction/7" Component={JSXGraphReact16} />
         {/* 작도 08 */}
-        {/* <Route path="/Construction/8" Component={JSXGraphReact17} /> */}
+        <Route path="/Construction/8" Component={JSXGraphReact17} />
         {/* 작도 09 */}
-        {/* <Route path="/Construction/9" Component={JSXGraphReact18} /> */}
+        <Route path="/Construction/9" Component={JSXGraphReact18} />
         {/* 작도 10 */}
         <Route path="/Construction/10" Component={JSXGraphReact14} />
 
         {/* 3. 입체도형 */}
         {/* 입체도형 01 */}
         <Route exact path="/Geometry/:box_id" element={<Box3D />} />
+        {/* 입체도형 06 */}
+        {/* <Route path="/Geo/6" Component={Transformation2} /> */}
         {/* 입체도형 07 */}
         {/* <Route path ="/Geo/7" Component={JSXGraphReact32} /> */}
         {/* 입체도형 09 */}
