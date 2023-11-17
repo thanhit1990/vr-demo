@@ -113,7 +113,6 @@
                 });
         };
 
-
         // Function to render the scene at the initial state
         function initScene() {
             // Set the container
@@ -157,7 +156,7 @@
 
             // Create the grid and add it to the scene
             const helper = new THREE.GridHelper(30, 30);
-            helper.position.y = 0;
+            helper.position.y = -2.5;
             helper.material.opacity = 0.5;
             helper.material.transparent = true;
             scene.add(helper);
@@ -195,22 +194,13 @@
 
             initData();
 
-            // Get the rotation slider element
-            // const slider = document.getElementById("rotation-slider");
-
-            // Listen for slider changes and update the curve
-            // slider.addEventListener("input", () => {
-            //     const angle = parseFloat(slider.value);
-            //     renderUpdate(angle);
-            // });
-
             const gui = new GUI({ width: 400 });
 
             const myObject = {
-                myNumber: 4
+                Sectors: 4
             };
             // Add a listener for the slider 
-            gui.add(myObject, 'myNumber', 4, 94, 2).onChange(function (value) {
+            gui.add(myObject, 'Sectors', 4, 94, 2).onChange(function (value) {
                 renderUpdate(value);
             });
         }
@@ -370,7 +360,7 @@
             );
 
             // Create a basic material for the circle
-            const circleMaterial = new THREE.LineBasicMaterial({ color: 'red' });
+            const circleMaterial = new THREE.LineBasicMaterial({ color: '#F6F60D' });
 
             // Create a circle mesh
             const topCircleMesh = new THREE.Line(topCircleGeometry, circleMaterial);
@@ -433,7 +423,6 @@
             draw3DSector(top_center, bottom_center, vertices, 0xff0000);
         }
 
-
         // Function to rotate a point around a line in 2D
         function rotateAroundLine(point, lineStart, lineEnd, angle) {
             const lineDirection = new THREE.Vector2().subVectors(lineEnd, lineStart).normalize();
@@ -495,7 +484,7 @@
                     vertices_2d.push([vertices_data_2D[i + 2][0], 2.5, vertices_data_2D[i + 2][1]]);
                     vertices_2d.push([vertices_data_2D[i + 2][0], -2.5, vertices_data_2D[i + 2][1]]);
                     vertices_2d.push([vertices_data_2D[i + 1][0], -2.5, vertices_data_2D[i + 1][1]]);
-                    draw3DBoxSector(up_top_vertex, up_bottom_vertex, vertices_2d, 0x0000ff);
+                    draw3DBoxSector(up_top_vertex, up_bottom_vertex, vertices_2d, '#0000C8');
                     counting++;
                 } else {
                     if (counting < 1) {
@@ -517,7 +506,7 @@
                         vertices_2d.push([down_right[0], 2.5, down_right[2]]);
                         vertices_2d.push([down_right[0], -2.5, down_right[2]]);
                         vertices_2d.push([down_left[0], -2.5, down_left[2]]);
-                        draw3DBoxSector(down_top, down_bottom, vertices_2d, 0xff0000);
+                        draw3DBoxSector(down_top, down_bottom, vertices_2d, '#DF0000');
                     }
                 }
             }
@@ -530,7 +519,7 @@
             vertices_2d.push([lastThreeItems[2][0], 2.5, lastThreeItems[2][1]]);
             vertices_2d.push([lastThreeItems[2][0], -2.5, lastThreeItems[2][1]]);
             vertices_2d.push([lastThreeItems[1][0], -2.5, lastThreeItems[1][1]]);
-            draw3DBoxSector(up_top_vertex, up_bottom_vertex, vertices_2d, 0x0000ff);
+            draw3DBoxSector(up_top_vertex, up_bottom_vertex, vertices_2d, '#0000C8');
 
             up_top_vertex = [lastThreeItems[2][0], 2.5, lastThreeItems[2][1]];
             up_bottom_vertex = [lastThreeItems[2][0], -2.5, lastThreeItems[2][1]];
@@ -539,7 +528,7 @@
             vertices_2d.push([lastThreeItems[0][0], 2.5, lastThreeItems[0][1]]);
             vertices_2d.push([lastThreeItems[0][0], -2.5, lastThreeItems[0][1]]);
             vertices_2d.push([lastThreeItems[3][0], -2.5, lastThreeItems[3][1]]);
-            draw3DBoxSector(up_top_vertex, up_bottom_vertex, vertices_2d, 0xff0000);
+            draw3DBoxSector(up_top_vertex, up_bottom_vertex, vertices_2d, '#DF0000');
 
             var bottomNearRight = new THREE.Vector3(5, -2.5, 0);
             // drawAPoint3D(bottomNearRight.x, bottomNearRight.y, bottomNearRight.z, 'black');
@@ -603,7 +592,7 @@
 
         function drawLine3D(point1, point2) {
             const geometry = new THREE.BufferGeometry();
-            const material = new THREE.LineBasicMaterial({ color: 'red' });
+            const material = new THREE.LineBasicMaterial({ color: '#F6F60D' });
             const vertices = [];
             vertices.push(point1.x, point1.y, point1.z);
             vertices.push(point2.x, point2.y, point2.z);
