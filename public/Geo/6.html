@@ -11,7 +11,7 @@
 
         #slider-container {
             position: absolute;
-            bottom: 150px;
+            top: 120px;
             left: 50%;
             transform: translateX(-45%);
             color: black;
@@ -38,10 +38,10 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script> -->
     <div id="container"></div>
 
-    <div id="slider-container">
+    <!-- <div id="slider-container">
         <input type="range" id="rotation-slider" min="4" max="94" value="4" step="2">
         <label for="rotation-slider" id="for-rotation-slider">n = <span id="angle-value">4</span></label>
-    </div>
+    </div> -->
 
     <script type="module">
         import * as THREE from 'three';
@@ -67,15 +67,17 @@
         };
 
         let triangles_data = [];
+        let triangles_data_2D = [];
         let innerTopCircleMeshes = [];
         let innerBottomCircleMeshes = [];
         let listSectors = [];
-        let listSectors_clone = [];
+        let listSectorsBox = [];
 
         const initData = () => {
             // read data from json file            
-            const jsonUrl = '.././triangle_data.json'; // Replace with your JSON file URL
-            fetch(jsonUrl)
+            const json3DUrl = '.././triangle_data.json'; // Replace with your JSON file URL
+            const json2DUrl = '.././triangle_data_2D.json'; // Replace with your JSON file URL
+            fetch(json3DUrl)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -86,11 +88,32 @@
                     triangles_data = [];
                     triangles_data = data;
                     console.log(triangles_data);
+                    drawCircleSectors(0);
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+            fetch(json2DUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    triangles_data_2D = [];
+                    triangles_data_2D = data;
+                    console.log(triangles_data_2D);
+                    drawBoxSectors(0);
+
+
                 })
                 .catch(error => {
                     console.error('There has been a problem with your fetch operation:', error);
                 });
         };
+
+
         // Function to render the scene at the initial state
         function initScene() {
             // Set the container
@@ -102,8 +125,7 @@
 
             // Create the camera and set its position and add it to the scene
             camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
-            camera.position.set(0, 0, 20);
-            camera.rotation.x = (30 * Math.PI) / 180;
+            camera.position.set(0, 20, 10);
             scene.add(camera);
 
             // Create the light and add it to the scene
@@ -125,20 +147,20 @@
             scene.add(light);
 
             // Create the plane and add it to the scene
-            // const planeGeometry = new THREE.PlaneGeometry(30, 30);
-            // planeGeometry.rotateX(- Math.PI / 2);
-            // const planeMaterial = new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.2 });
-            // const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-            // plane.position.y = 0
-            // plane.receiveShadow = true;
-            // scene.add(plane);
+            const planeGeometry = new THREE.PlaneGeometry(30, 30);
+            planeGeometry.rotateX(- Math.PI / 2);
+            const planeMaterial = new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.2 });
+            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            plane.position.y = 0
+            plane.receiveShadow = true;
+            scene.add(plane);
 
             // Create the grid and add it to the scene
-            // const helper = new THREE.GridHelper(30, 30);
-            // helper.position.y = 0;
-            // helper.material.opacity = 0.5;
-            // helper.material.transparent = true;
-            // scene.add(helper);
+            const helper = new THREE.GridHelper(30, 30);
+            helper.position.y = 0;
+            helper.material.opacity = 0.5;
+            helper.material.transparent = true;
+            scene.add(helper);
 
             // Create the X, Y, Z axes and add them to the scene
             // const axesHelper = new THREE.AxesHelper(5);
@@ -174,22 +196,24 @@
             initData();
 
             // Get the rotation slider element
-            const slider = document.getElementById("rotation-slider");
+            // const slider = document.getElementById("rotation-slider");
 
             // Listen for slider changes and update the curve
-            slider.addEventListener("input", () => {
-                const angle = parseFloat(slider.value);
-                renderUpdate(angle);
+            // slider.addEventListener("input", () => {
+            //     const angle = parseFloat(slider.value);
+            //     renderUpdate(angle);
+            // });
+
+            const gui = new GUI({ width: 400 });
+
+            const myObject = {
+                myNumber: 4
+            };
+            // Add a listener for the slider 
+            gui.add(myObject, 'myNumber', 4, 94, 2).onChange(function (value) {
+                renderUpdate(value);
             });
-
-            // Position the camera
-            // camera.position.set(6.414899007914741, 7.059146722678172, 5.830963045498018);
-            // camera.lookAt(0, 0, 0);
         }
-
-        // Distance array
-        var distances = [];
-        var distance_index = 0;
 
         function rotateAround2Points(object3D, point1, point2, angle) {
             // Create a vector3 from the top and bottom center points
@@ -252,21 +276,61 @@
                 new THREE.Float32BufferAttribute(vertices, 3)
             );
             const sector = new THREE.Mesh(sectorGeometry, sectorMaterial);
+            sector.translateX(-5);
             scene.add(sector);
             listSectors.push(sector);
-            var sector_clone = sector.clone();
-            listSectors_clone.push(sector_clone);
-            // Get random from 15 to 20            
-            sector_clone.position.x += distances[distance_index];
-            if (distance_index != 0) {
-                if (distance_index % 2 == 0) {
-                    //rotateAround2Points(sector_clone, topCenter, bottomCenter, Math.PI / 2)
-                } else {
-                    rotateAround2Points(sector_clone, vertices_data[0], vertices_data[3], Math.PI/2)
-                }
-            }
+        }
 
-            scene.add(sector_clone);
+        function draw3DBoxSector(topCenter, bottomCenter, vertices_data, color) {
+            const sectorGeometry = new THREE.BufferGeometry();
+            const sectorMaterial = new THREE.MeshBasicMaterial({
+                color: color, // Red color
+                side: THREE.DoubleSide, // Ensure the back side is also rendered
+            });
+            const vertices = [];
+            // Put triangle top_center, vertices_data[0], vertices_data[1]
+            vertices.push(topCenter[0], topCenter[1], topCenter[2]);
+            vertices.push(vertices_data[0][0], vertices_data[0][1], vertices_data[0][2]);
+            vertices.push(vertices_data[1][0], vertices_data[1][1], vertices_data[1][2]);
+            // Put triangle bottom_center, vertices_data[2], vertices_data[3]
+            vertices.push(bottomCenter[0], bottomCenter[1], bottomCenter[2]);
+            vertices.push(vertices_data[2][0], vertices_data[2][1], vertices_data[2][2]);
+            vertices.push(vertices_data[3][0], vertices_data[3][1], vertices_data[3][2]);
+            // Put triangle top_center, vertices_data[0], vertices_data[3]
+            vertices.push(topCenter[0], topCenter[1], topCenter[2]);
+            vertices.push(vertices_data[0][0], vertices_data[0][1], vertices_data[0][2]);
+            vertices.push(vertices_data[3][0], vertices_data[3][1], vertices_data[3][2]);
+            // Put triangle bottom_center, vertices_data[3], top_center
+            vertices.push(bottomCenter[0], bottomCenter[1], bottomCenter[2]);
+            vertices.push(vertices_data[3][0], vertices_data[3][1], vertices_data[3][2]);
+            vertices.push(topCenter[0], topCenter[1], topCenter[2]);
+            // Put triangle top_center, vertices_data[1], vertices_data[2]
+            vertices.push(topCenter[0], topCenter[1], topCenter[2]);
+            vertices.push(vertices_data[1][0], vertices_data[1][1], vertices_data[1][2]);
+            vertices.push(vertices_data[2][0], vertices_data[2][1], vertices_data[2][2]);
+            // Put triangle bottom_center, vertices_data[2], top_center
+            vertices.push(bottomCenter[0], bottomCenter[1], bottomCenter[2]);
+            vertices.push(vertices_data[2][0], vertices_data[2][1], vertices_data[2][2]);
+            vertices.push(topCenter[0], topCenter[1], topCenter[2]);
+            // Put triangle Vertices_data[0], vertices_data[1], vertices_data[2]
+            vertices.push(vertices_data[0][0], vertices_data[0][1], vertices_data[0][2]);
+            vertices.push(vertices_data[1][0], vertices_data[1][1], vertices_data[1][2]);
+            vertices.push(vertices_data[2][0], vertices_data[2][1], vertices_data[2][2]);
+            // Put triangle Vertices_data[2], vertices_data[0], vertices_data[3]
+            vertices.push(vertices_data[2][0], vertices_data[2][1], vertices_data[2][2]);
+            vertices.push(vertices_data[0][0], vertices_data[0][1], vertices_data[0][2]);
+            vertices.push(vertices_data[3][0], vertices_data[3][1], vertices_data[3][2]);
+
+            sectorGeometry.setAttribute(
+                'position',
+                new THREE.Float32BufferAttribute(vertices, 3)
+            );
+            const sector = new THREE.Mesh(sectorGeometry, sectorMaterial);
+            // Translate the sector to left 5 units
+            sector.translateX(7);
+            sector.translateZ(0);
+            scene.add(sector);
+            listSectors.push(sector);
         }
 
         // Function to initialize the first render
@@ -311,7 +375,8 @@
             // Create a circle mesh
             const topCircleMesh = new THREE.Line(topCircleGeometry, circleMaterial);
             const bottomCircleMesh = new THREE.Line(bottomCircleGeometry, circleMaterial);
-
+            topCircleMesh.translateX(-5);
+            bottomCircleMesh.translateX(-5);
             // Add the circle to the scene
             scene.add(topCircleMesh);
             scene.add(bottomCircleMesh);
@@ -320,7 +385,7 @@
             const geometry = new THREE.CylinderGeometry(5, 5, 4.9, 96);
             // Create a basic material with transparent set to true
             const material = new THREE.MeshBasicMaterial({
-                color: 0x00ff00,
+                color: 0xffff00,
                 transparent: true,
                 side: THREE.DoubleSide,
                 depthWrite: false, // Disable writes to the depth buffer
@@ -329,6 +394,7 @@
 
             // Create a mesh
             const cylinder = new THREE.Mesh(geometry, material);
+            cylinder.translateX(-5);
 
             // Add the cylinder to the scene
             scene.add(cylinder);
@@ -337,55 +403,17 @@
             renderer.render(scene, camera);
         }
 
-        // Function to update the curve based on the slider value
-        const renderUpdate = (n) => {
-            document.getElementById("angle-value").textContent = n;
-            // Remove all inner circle meshes
-            for (let i = 0; i < innerTopCircleMeshes.length; i++) {
-                scene.remove(innerTopCircleMeshes[i]);
-                scene.remove(innerBottomCircleMeshes[i]);
-            }
-            for (let i = 0; i < listSectors.length; i++) {
-                scene.remove(listSectors[i]);
-            }
-            for (let i = 0; i < listSectors_clone.length; i++) {
-                scene.remove(listSectors_clone[i]);
-            }
-            // Get value of slider
-            var array_index = (n - 4) / 2;
-            var triangle_data = triangles_data[array_index];
+        function drawCircleSectors(number_of_sectors) {
+            var triangle_data = triangles_data[number_of_sectors];
+
             // Check triangle_data is not null
             if (triangle_data == null) {
                 return;
             }
-            distances = [];
 
-            // Create innerTopCircleGeometry
-            // const innerTopCircleGeometry = new THREE.BufferGeometry();
             var vertices_data = triangle_data.vertices;
             var top_center = [0, 2.5, 0];
             var bottom_center = [0, -2.5, 0];
-            // var vertices = [];
-            // for (var i = 0; i < n; i++) {
-            //     var angle = (2 * Math.PI * i) / n;
-            //     var x = cir_radius * Math.cos(angle);
-            //     var y = cir_radius * Math.sin(angle);
-            //     if(i == 0) {
-            //         continue;
-            //     }
-            //     vertices.push([vertices_data[i][0], 2.5, vertices_data[i][1]]);
-            //     vertices.push([vertices_data[i][0], 2.5, vertices_data[i + 1][1]]);
-            //     vertices.push([vertices_data[i][0], -2.5, vertices_data[i][1]]);
-            //     vertices.push([vertices_data[i][0], -2.5, vertices_data[i + 1][1]]);
-            //     draw3DSector(top_center, bottom_center, vertices, 0x0000ff);
-            // }
-
-            // Generate distance based on vertices_data
-            for (var i = 0; i < n; i++) {
-                var distance = 10 + i * 5;
-                distances.push(distance);
-            }
-            distance_index = 0;
 
             for (let i = 0; i < (vertices_data.length - 1); i++) {
                 var vertices = [];
@@ -394,8 +422,8 @@
                 vertices.push([vertices_data[i + 1][0], -2.5, vertices_data[i + 1][1]]);
                 vertices.push([vertices_data[i][0], -2.5, vertices_data[i][1]]);
                 draw3DSector(top_center, bottom_center, vertices, i % 2 == 0 ? 0x0000ff : 0xff0000);
-                distance_index += 1;
             }
+
             vertices = [];
             vertices.push([vertices_data[vertices_data.length - 1][0], 2.5, vertices_data[vertices_data.length - 1][1]]);
             vertices.push([vertices_data[0][0], 2.5, vertices_data[0][1]]);
@@ -403,7 +431,267 @@
             vertices.push([vertices_data[vertices_data.length - 1][0], -2.5, vertices_data[vertices_data.length - 1][1]]);
 
             draw3DSector(top_center, bottom_center, vertices, 0xff0000);
-            //draw3DSector(top_center, bottom_center, vertices, 0xff0000);            
+        }
+
+
+        // Function to rotate a point around a line in 2D
+        function rotateAroundLine(point, lineStart, lineEnd, angle) {
+            const lineDirection = new THREE.Vector2().subVectors(lineEnd, lineStart).normalize();
+            const relativePoint = new THREE.Vector2().subVectors(point, lineStart);
+            const rotatedRelativePoint = relativePoint.clone().rotateAround(new THREE.Vector2(0, 0), angle);
+            const rotatedPoint = rotatedRelativePoint.add(lineStart);
+
+            return rotatedPoint;
+        }
+        var originAngle = NaN;
+        function drawBoxSectors(number_of_sectors) {
+
+            var triangle_data_2D = triangles_data_2D[number_of_sectors];
+            if (triangle_data_2D == null) {
+                return;
+            }
+            var vertices_data_2D = triangle_data_2D.vertices;
+            var rotate_angle = (Math.PI - (2 * Math.PI) / (number_of_sectors * 2 + 4));
+            var shouldRotate = true;
+            if (!originAngle) {
+                originAngle = rotate_angle;
+                shouldRotate = false;
+            } else {
+                shouldRotate = true;
+                rotate_angle = (rotate_angle - originAngle) / 2;
+            }
+            // Create a line connecting the two points
+            if (shouldRotate) {
+                var rotateAxisPoints = [];
+                const startPoint = new THREE.Vector2(vertices_data_2D[1][0], vertices_data_2D[1][1]);
+                const endPoint = new THREE.Vector2(vertices_data_2D[1][0], vertices_data_2D[1][1]);
+
+                for (let i = 0; i < vertices_data_2D.length; i++) {
+                    var rotateAxisTopPoint = rotateAroundLine(new THREE.Vector2(vertices_data_2D[i][0], vertices_data_2D[i][1]), startPoint, endPoint, rotate_angle);
+                    rotateAxisPoints.push([rotateAxisTopPoint.x, rotateAxisTopPoint.y]);
+                }
+
+                vertices_data_2D = rotateAxisPoints;
+            }
+
+            var up_top_vertex, up_bottom_vertex, prev_up_top_vertex, prev_up_bottom_vertex;
+            var counting = 0;
+            for (let i = 0; i < (vertices_data_2D.length - 3); i++) {
+                var vertices_2d = [];
+                if (i % 3 == 0) {
+                    if (counting == 0) {
+                        up_top_vertex = [vertices_data_2D[i][0], 2.5, vertices_data_2D[i][1]];
+                        up_bottom_vertex = [vertices_data_2D[i][0], -2.5, vertices_data_2D[i][1]];
+                    }
+                    if (counting == 1) {
+                        prev_up_top_vertex = up_top_vertex;
+                        prev_up_bottom_vertex = up_bottom_vertex;
+                        up_top_vertex = [vertices_data_2D[i][0], 2.5, vertices_data_2D[i][1]];
+                        up_bottom_vertex = [vertices_data_2D[i][0], -2.5, vertices_data_2D[i][1]];
+                    }
+
+                    vertices_2d = [];
+                    vertices_2d.push([vertices_data_2D[i + 1][0], 2.5, vertices_data_2D[i + 1][1]]);
+                    vertices_2d.push([vertices_data_2D[i + 2][0], 2.5, vertices_data_2D[i + 2][1]]);
+                    vertices_2d.push([vertices_data_2D[i + 2][0], -2.5, vertices_data_2D[i + 2][1]]);
+                    vertices_2d.push([vertices_data_2D[i + 1][0], -2.5, vertices_data_2D[i + 1][1]]);
+                    draw3DBoxSector(up_top_vertex, up_bottom_vertex, vertices_2d, 0x0000ff);
+                    counting++;
+                } else {
+                    if (counting < 1) {
+                        continue;
+                    } else {
+                        counting = 0;
+                        // Create a buffer geometry for the point
+                        var down_top = [vertices_data_2D[i + 1][0], 2.5, vertices_data_2D[i + 1][1]];
+                        var down_bottom = [vertices_data_2D[i + 1][0], -2.5, vertices_data_2D[i + 1][1]];
+
+                        const pointLGeometry = new THREE.BufferGeometry();
+                        var down_left = [vertices_data_2D[i + 2][0], 2.5, vertices_data_2D[i + 2][1]];
+
+                        const pointRGeometry = new THREE.BufferGeometry();
+                        var down_right = up_top_vertex;
+
+                        vertices_2d = [];
+                        vertices_2d.push([down_left[0], 2.5, down_left[2]]);
+                        vertices_2d.push([down_right[0], 2.5, down_right[2]]);
+                        vertices_2d.push([down_right[0], -2.5, down_right[2]]);
+                        vertices_2d.push([down_left[0], -2.5, down_left[2]]);
+                        draw3DBoxSector(down_top, down_bottom, vertices_2d, 0xff0000);
+                    }
+                }
+            }
+
+            var lastThreeItems = vertices_data_2D.slice(-4);
+            up_top_vertex = [lastThreeItems[0][0], 2.5, lastThreeItems[0][1]];
+            up_bottom_vertex = [lastThreeItems[0][0], -2.5, lastThreeItems[0][1]];
+            vertices_2d = [];
+            vertices_2d.push([lastThreeItems[1][0], 2.5, lastThreeItems[1][1]]);
+            vertices_2d.push([lastThreeItems[2][0], 2.5, lastThreeItems[2][1]]);
+            vertices_2d.push([lastThreeItems[2][0], -2.5, lastThreeItems[2][1]]);
+            vertices_2d.push([lastThreeItems[1][0], -2.5, lastThreeItems[1][1]]);
+            draw3DBoxSector(up_top_vertex, up_bottom_vertex, vertices_2d, 0x0000ff);
+
+            up_top_vertex = [lastThreeItems[2][0], 2.5, lastThreeItems[2][1]];
+            up_bottom_vertex = [lastThreeItems[2][0], -2.5, lastThreeItems[2][1]];
+            vertices_2d = [];
+            vertices_2d.push([lastThreeItems[3][0], 2.5, lastThreeItems[3][1]]);
+            vertices_2d.push([lastThreeItems[0][0], 2.5, lastThreeItems[0][1]]);
+            vertices_2d.push([lastThreeItems[0][0], -2.5, lastThreeItems[0][1]]);
+            vertices_2d.push([lastThreeItems[3][0], -2.5, lastThreeItems[3][1]]);
+            draw3DBoxSector(up_top_vertex, up_bottom_vertex, vertices_2d, 0xff0000);
+
+            var bottomNearRight = new THREE.Vector3(5, -2.5, 0);
+            // drawAPoint3D(bottomNearRight.x, bottomNearRight.y, bottomNearRight.z, 'black');
+            var topNearRight = new THREE.Vector3(5, 2.5, 0);
+            // drawAPoint3D(topNearRight.x, topNearRight.y, topNearRight.z, 'black');
+
+            var bottomFarRight = new THREE.Vector3(1.3483006802566533, -2.5, -3.4154197513901536);
+            //drawAPoint3D(bottomFarRight.x, bottomFarRight.y, bottomFarRight.z, 'red');
+            var topFarRight = new THREE.Vector3(1.3483006802566533, 2.5, -3.4154197513901536);
+            //drawAPoint3D(topFarRight.x, topFarRight.y, topFarRight.z, 'red');
+
+            var topFarLeft = new THREE.Vector3(-9.756839032343091, 2.5, 7.68971996121046);
+            //drawAPoint3D(topFarLeft.x, topFarLeft.y, topFarLeft.z, 'red');
+            var bottomFarLeft = new THREE.Vector3(-9.756839032343091, -2.5, 7.68971996121046);
+            //drawAPoint3D(bottomFarLeft.x, bottomFarLeft.y, bottomFarLeft.z, 'red');
+
+            var bottomNearLeft = new THREE.Vector3(-6.105139712599753, -2.5, 11.105139712600606);
+            //drawAPoint3D(bottomFarLeft.x, bottomFarLeft.y, bottomFarLeft.z, 'green');
+            var topNearLeft = new THREE.Vector3(-6.105139712599753, 2.5, 11.105139712600606);
+            //drawAPoint3D(topNearLeft.x, topNearLeft.y, topNearLeft.z, 'green');
+
+            const points = [
+                new THREE.Vector3(bottomNearLeft.x, bottomNearLeft.y, bottomNearLeft.z),
+                new THREE.Vector3(bottomNearRight.x, bottomNearRight.y, bottomNearRight.z),
+                new THREE.Vector3(topNearRight.x, topNearRight.y, topNearRight.z),
+                new THREE.Vector3(topNearLeft.x, topNearLeft.y, topNearLeft.z),
+
+                new THREE.Vector3(bottomFarLeft.x, bottomFarLeft.y, bottomFarLeft.z),
+                new THREE.Vector3(bottomFarRight.x, bottomFarRight.y, bottomFarRight.z),
+                new THREE.Vector3(topFarRight.x, topFarRight.y, topFarRight.z),
+                new THREE.Vector3(topFarLeft.x, topFarLeft.y, topFarLeft.z),
+            ];
+
+            const indices = [
+                0, 1, 2, 2, 3, 0, // Front face
+                4, 5, 6, 6, 7, 4, // Back face
+                0, 4, 7, 7, 3, 0, // Left face
+                1, 5, 6, 6, 2, 1, // Right face
+                0, 1, 5, 5, 4, 0, // Bottom face
+                3, 2, 6, 6, 7, 3, // Top face
+            ];
+            drawRectangular3D(points, indices);
+
+            drawLine3D(bottomNearLeft, bottomNearRight);
+            drawLine3D(bottomNearRight, topNearRight);
+            drawLine3D(topNearRight, topNearLeft);
+            drawLine3D(topNearLeft, bottomNearLeft);
+
+            drawLine3D(bottomFarLeft, bottomFarRight);
+            drawLine3D(bottomFarRight, topFarRight);
+            drawLine3D(topFarRight, topFarLeft);
+            drawLine3D(topFarLeft, bottomFarLeft);
+
+            drawLine3D(bottomNearLeft, bottomFarLeft);
+            drawLine3D(bottomNearRight, bottomFarRight);
+            drawLine3D(topNearRight, topFarRight);
+            drawLine3D(topNearLeft, topFarLeft);
+
+
+        }
+
+        function drawLine3D(point1, point2) {
+            const geometry = new THREE.BufferGeometry();
+            const material = new THREE.LineBasicMaterial({ color: 'red' });
+            const vertices = [];
+            vertices.push(point1.x, point1.y, point1.z);
+            vertices.push(point2.x, point2.y, point2.z);
+            geometry.setAttribute(
+                'position',
+                new THREE.Float32BufferAttribute(vertices, 3)
+            );
+            const line = new THREE.Line(geometry, material);
+            line.translateX(7);
+            line.translateZ(0);
+            scene.add(line);
+            listSectorsBox.push(line);
+        }
+
+        function drawRectangular3D(vertices, indices) {
+            // Create a BufferGeometry
+            const geometry = new THREE.BufferGeometry();
+
+            // Convert the points to a Float32Array
+            const rectangular_vertices = new Float32Array(vertices.length * 3);
+            for (let i = 0; i < vertices.length; i++) {
+                rectangular_vertices[i * 3] = vertices[i].x;
+                rectangular_vertices[i * 3 + 1] = vertices[i].y;
+                rectangular_vertices[i * 3 + 2] = vertices[i].z;
+            }
+
+            // Add the rectangular_vertices to the geometry
+            geometry.setAttribute('position', new THREE.BufferAttribute(rectangular_vertices, 3));
+            // Add the indices to the geometry
+            geometry.setIndex(indices);
+
+            // Create a material (you can replace this with any material you want)
+            const material = new THREE.MeshBasicMaterial({
+                color: 0xffff00,
+                transparent: true,
+                side: THREE.DoubleSide,
+                depthWrite: false, // Disable writes to the depth buffer
+                opacity: 0.1,
+            });
+
+            // Create a mesh using the geometry and material
+            const box = new THREE.Mesh(geometry, material);
+            box.translateX(7);
+            box.translateZ(0);
+
+            // Add the box to the scene
+            scene.add(box);
+            listSectorsBox.push(box);
+        }
+
+        function drawAPoint3D(x, y, z, color) {
+            // Create a buffer geometry for the point
+            const pointGeometry = new THREE.BufferGeometry();
+            const pointMaterial = new THREE.PointsMaterial({ color: color });
+            const point = new THREE.Vector3(x, y, z);
+            const vertices = [];
+            vertices.push(point.x, point.y, point.z);
+            pointGeometry.setAttribute(
+                'position',
+                new THREE.Float32BufferAttribute(vertices, 3)
+            );
+            const pointMesh = new THREE.Points(pointGeometry, pointMaterial);
+            pointMesh.translateX(7);
+            pointMesh.translateZ(0);
+            scene.add(pointMesh);
+            listSectorsBox.push(pointMesh);
+        }
+
+        // Function to update the curve based on the slider value
+        const renderUpdate = (n) => {
+            // document.getElementById("angle-value").textContent = n;
+            // Remove all inner circle meshes
+            for (let i = 0; i < innerTopCircleMeshes.length; i++) {
+                scene.remove(innerTopCircleMeshes[i]);
+                scene.remove(innerBottomCircleMeshes[i]);
+            }
+            for (let i = 0; i < listSectors.length; i++) {
+                scene.remove(listSectors[i]);
+            }
+            for (let i = 0; i < listSectorsBox.length; i++) {
+                scene.remove(listSectorsBox[i]);
+            }
+            // Get value of slider
+            var array_index = (n - 4) / 2;
+            drawCircleSectors(array_index)
+            drawBoxSectors(array_index)
+
+
             renderer.render(scene, camera);
         };
 
