@@ -70,7 +70,8 @@
                     visible: false
                 }
             });
-
+        view.az_slide.hide();
+        view.el_slide.hide();
 
 
         var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 20 } },
@@ -101,7 +102,7 @@
                 var y = radius * Math.sin(angle);
                 var z = -3; // The base is at z = 0
                 // create a new point3d with name is i
-                p.push(view.create('point3d', [x, y, z], { name: (i + 1).toString(), size: 4, strokeColor: 'black', strokeWidth: 0.1, fillColor: 'red' }));
+                p.push(view.create('point3d', [x, y, z], { name: (i + 1).toString(), size: 4, strokeColor: 'black', strokeWidth: 0.1, fillColor: 'red', fixed: true }));
             }
 
             lines.push(view.create('line3d', [p[0], p[1]], { strokeWidth: 2, strokeColor: '#904018' }));
@@ -167,7 +168,7 @@
             faces.push(view.create('polygon', [p[1].element2D, p[2].element2D, p[3].element2D], pol_attr));
 
 
-
+            var isDrawing = false;
             var s = view.az_slide._smin;
             var e = view.az_slide._smax;
             var az_slider_diff = e - s;
@@ -177,6 +178,34 @@
             var el_slider_diff = e - s;
             view.el_slide.position = 0.21 / el_slider_diff;
 
+            let lastMouseX = 0;
+            let lastMouseY = 0;
+
+
+            document.addEventListener('mousedown', e => {
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                isDrawing = true;
+            });
+
+
+            document.addEventListener('mousemove', e => {
+                if (isDrawing === true) {
+                    const deltaX = e.clientX - lastMouseX;
+                    const deltaY = e.clientY - lastMouseY;
+                    view.az_slide.position += (deltaX / 100) / az_slider_diff;
+                    view.el_slide.position += (deltaY / 100) / el_slider_diff;
+                    lastMouseX = e.clientX;
+                    lastMouseY = e.clientY;
+                    board.update();
+                }
+            });
+
+            document.addEventListener('mouseup', e => {
+                if (isDrawing === true) {
+                    isDrawing = false;
+                }
+            });
             board.update();
         }        
     </script>

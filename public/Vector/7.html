@@ -73,7 +73,7 @@
 
 
 
-        var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 20 } },
+        var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed:true },
             // Cube
             p = [], // Vertices of the cube
             faces = [],
@@ -108,19 +108,56 @@
             p.push(view.create('point3d', [-i / 2, i, -i], point_attr).element2D);
             p[9].setAttribute({ fixed: true, size: 5, strokeColor: 'black', fillColor: 'blue' });
 
-            faces.push(board.create('polygon', [p[0], p[1], p[2], p[3]],pol_attr));
-            faces.push(board.create('polygon', [p[4], p[5], p[6], p[7]],pol_attr));
-            faces.push(board.create('polygon', [p[0], p[1], p[5], p[4]],pol_attr));
-            faces.push(board.create('polygon', [p[2], p[3], p[7], p[6]],pol_attr));
-            faces.push(board.create('polygon', [p[0], p[3], p[7], p[4]],pol_attr));
-            faces.push(board.create('polygon', [p[1], p[2], p[6], p[5]],pol_attr));
+            faces.push(board.create('polygon', [p[0], p[1], p[2], p[3]], pol_attr));
+            faces.push(board.create('polygon', [p[4], p[5], p[6], p[7]], pol_attr));
+            faces.push(board.create('polygon', [p[0], p[1], p[5], p[4]], pol_attr));
+            faces.push(board.create('polygon', [p[2], p[3], p[7], p[6]], pol_attr));
+            faces.push(board.create('polygon', [p[0], p[3], p[7], p[4]], pol_attr));
+            faces.push(board.create('polygon', [p[1], p[2], p[6], p[5]], pol_attr));
 
             lines.push(board.create('arrow', [p[8], p[9]], { strokeColor: 'black', dash: 2, strokeWidth: 3, fixed: true }));
             lines.push(board.create('arrow', [p[8], p[4]], { strokeColor: 'black', dash: 2, strokeWidth: 3, fixed: true }));
+
+            var isDrawing;
+            view.az_slide.hide();
+            view.el_slide.hide();
             var s = view.az_slide._smin;
             var e = view.az_slide._smax;
             var az_slider_diff = e - s;
             view.az_slide.position = 0.3 / az_slider_diff;
+
+            s = view.el_slide._smin;
+            e = view.el_slide._smax;
+            var el_slider_diff = e - s;
+
+            let lastMouseX = 0;
+            let lastMouseY = 0;
+
+
+            document.addEventListener('mousedown', e => {
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                isDrawing = true;
+            });
+
+
+            document.addEventListener('mousemove', e => {
+                if (isDrawing === true) {
+                    const deltaX = e.clientX - lastMouseX;
+                    const deltaY = e.clientY - lastMouseY;
+                    view.az_slide.position += (deltaX / 100) / az_slider_diff;
+                    view.el_slide.position += (deltaY / 100) / el_slider_diff;
+                    lastMouseX = e.clientX;
+                    lastMouseY = e.clientY;
+                    board.update();
+                }
+            });
+
+            document.addEventListener('mouseup', e => {
+                if (isDrawing === true) {
+                    isDrawing = false;
+                }
+            });
             board.update();
         }        
     </script>
