@@ -74,7 +74,7 @@
 
 
 
-        var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 10, fixed: true } },
+        var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 10, fixed: true }, fixed: true },
             // Cube
             p = [], // Vertices of the cube
             faces = [],
@@ -159,6 +159,42 @@
             e = view.el_slide._smax;
             var el_slider_diff = e - s;
             view.el_slide.position = 0.24 / el_slider_diff;
+
+
+            
+            var isDrawing;
+            view.az_slide.hide();
+            view.el_slide.hide();
+
+            let lastMouseX = 0;
+            let lastMouseY = 0;
+
+
+            document.addEventListener('mousedown', e => {                
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                isDrawing = true;
+            });
+
+
+            document.addEventListener('mousemove', e => {
+                if (isDrawing === true) {                    
+                    const deltaX = e.clientX - lastMouseX;
+                    const deltaY = e.clientY - lastMouseY;
+                    view.az_slide.position += (deltaX / 100) / az_slider_diff;
+                    view.el_slide.position += (deltaY / 100) / el_slider_diff;
+                    lastMouseX = e.clientX;
+                    lastMouseY = e.clientY;
+                    board.update();
+                }
+            });
+
+            document.addEventListener('mouseup', e => {
+                if (isDrawing === true) {
+                    isDrawing = false;
+                }
+            });
+
             board.clickDownArrow();
             board.clickDownArrow();
             board.update();
