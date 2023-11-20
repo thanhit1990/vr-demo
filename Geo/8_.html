@@ -106,7 +106,7 @@
 
     <div id="container"></div>
 
-    <div id="info"><a href="https://threejs.org" target="_blank">three.js</a> - fat lines</div>
+    <div id="info">육각연필과 쌍곡선(Hexagonal pencil and hyperbola)</div>
 
     <script type="module">
         import * as THREE from 'https://cdn.skypack.dev/three@0.130.0/build/three.module.js';
@@ -145,8 +145,8 @@
             camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
             camera.position.set(- 40, 0, 60);
 
-            camera2 = new THREE.PerspectiveCamera(40, 1, 1, 1000);
-            camera2.position.copy(camera.position);
+            // camera2 = new THREE.PerspectiveCamera(40, 1, 1, 1000);
+            // camera2.position.copy(camera.position);
 
             controls = new OrbitControls(camera, renderer.domElement);
             controls.minDistance = 10;
@@ -247,8 +247,8 @@
             insetWidth = window.innerHeight / 4; // square
             insetHeight = window.innerHeight / 4;
 
-            camera2.aspect = insetWidth / insetHeight;
-            camera2.updateProjectionMatrix();
+            // camera2.aspect = insetWidth / insetHeight;
+            // camera2.updateProjectionMatrix();
 
         }
 
