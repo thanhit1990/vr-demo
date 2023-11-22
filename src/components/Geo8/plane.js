@@ -9,8 +9,6 @@ export default function createPlane() {
         opacity: 0.5,
         side: THREE.DoubleSide
     }));
-    plane.position.y = 0;
-    plane.position.z = 5;
 
     return plane;
 }
