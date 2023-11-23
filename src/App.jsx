@@ -36,6 +36,7 @@ import JSXGraphReact29 from './components/Objects/2D/JSXGraphReact29.jsx'
 import JSXGraphReact30 from './components/Objects/2D/JSXGraphReact30.jsx'
 import JSXGraphReact31 from './components/Objects/2D/JSXGraphReact31.jsx'
 import JSXGraphReact32 from './components/Objects/2D/JSXGraphReact32.jsx'
+import JSXGraphReact33 from './components/Objects/2D/JSXGraphReact33.jsx'
 import Transformation1 from './components/Objects/3D/Transformation1.jsx'
 import Box3D from './components/Objects/3D/Box3D.jsx'
 import Transformation2 from './components/Objects/3D/Transformation2.jsx'
@@ -186,7 +187,7 @@ const App = () => {
         {/* 삼각비 03 */}
         <Route path="/Trigonometry/3" Component={JSXGraphReact30} />
         {/* 삼각비 04 */}
-        {/* <Route path="/Trigonometry/4" Component={JSXGraphReact26} /> */}
+        <Route path="/Trigonometry/4" Component={JSXGraphReact26} />
         {/* 삼각비 05 */}
         <Route path="/Trigonometry/5" Component={JSXGraphReact4} />
         {/* 삼각비 06 */}
@@ -196,8 +197,12 @@ const App = () => {
         {/* 삼각비 08 */}
         <Route path="/Trigonometry/8" Component={JSXGraphReact29} />
         {/* 삼각비 09 */}
-        {/* <Route path="/Trigonometry/9" Component={JSXGraphReact28} /> */}
+        <Route path="/Trigonometry/9" Component={JSXGraphReact28} />
         {/* 삼각비 10 */}
+        <Route path="/Trigonometry/10" Component={JSXGraphReact33} />
+
+        {/* 6. 함수 */}
+        {/* 함수 01 */}
 
 
 
