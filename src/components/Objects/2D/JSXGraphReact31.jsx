@@ -26,7 +26,7 @@ let logicJS = (brd) => {
 
     // create a point at 0, 0 with name "A"
     var A = brd.create('point', [0, 0], {
-        name: '태양', size: 3, fillColor: 'blue', strokeColor:'black', fixed: true,
+        name: '태양', size: 4, fillColor: 'blue', strokeColor: 'black', fixed: true,
         label: { visible: true, fontSize: 20, strokeColor: 'red', cssStyle: 'margin-left: -5px; margin-top: 45px;' }
     });
     // create a point at 10, 0 with name "B"
@@ -34,7 +34,7 @@ let logicJS = (brd) => {
         function () { return 10 * Math.cos(degrees_to_radians(slider.Value() * 360 / 8766)) },
         function () { return 10 * Math.sin(degrees_to_radians(slider.Value() * 360 / 8766)) }],
         {
-            name: '지구', size: 3, fillColor: 'blue', strokeColor:'black', fixed: true,
+            name: '지구', size: 4, fillColor: 'blue', strokeColor: 'black', fixed: true,
             label: { visible: true, fontSize: 20, strokeColor: 'red', cssStyle: 'margin-left: -5px; margin-top: 45px;' }
         });
     // create a circle with center B and radius 1
@@ -44,25 +44,25 @@ let logicJS = (brd) => {
     // create a perpendicular line from B to AB
     var perp = brd.create('perpendicular', [AB, B], { visible: false });
     // point B1 is the intersection of perp and C
-    var B1 = brd.create('intersection', [perp, C, 0], { name: 'B1', size: 3, color: 'black', fixed: true });
+    var B1 = brd.create('intersection', [perp, C, 0], { withLabel: false, name: 'B1', size: 4, color: 'black', fixed: true });
     // point B3 is the intersection of perp and C
-    var B3 = brd.create('intersection', [perp, C, 1], { name: 'B3', size: 3, color: 'black', fixed: true });
+    var B3 = brd.create('intersection', [perp, C, 1], { withLabel: false, name: 'B3', size: 4, color: 'black', fixed: true });
     // point B0 is the intersection of AB and C 
-    var B0 = brd.create('intersection', [AB, C, 0], { name: 'B0', size: 3, color: 'black', fixed: true });
+    var B0 = brd.create('intersection', [AB, C, 0], { withLabel: true, name: 'B0', size: 4, color: 'black', fixed: true });
     // point B2 is the intersection of AB and C
-    var B2 = brd.create('intersection', [AB, C, 1], { name: 'B2', size: 3, color: 'black', fixed: true });
+    var B2 = brd.create('intersection', [AB, C, 1], { withLabel: false, name: 'B2', size: 4, color: 'black', fixed: true });
     // create a bisector of angle ABB1
     var bisector = brd.create('bisector', [A, B, B1], { visible: false });
     // point B4 is the intersection of bisector and C
-    var B4 = brd.create('intersection', [bisector, C, 0], { name: 'B4', size: 3, color: 'black', fixed: true });
+    var B4 = brd.create('intersection', [bisector, C, 0], { withLabel: false, name: 'B4', size: 4, color: 'black', fixed: true });
     // point B5 is the intersection of bisector and C
-    var B5 = brd.create('intersection', [bisector, C, 1], { name: 'B5', size: 3, color: 'black', fixed: true });
+    var B5 = brd.create('intersection', [bisector, C, 1], { withLabel: false, name: 'B5', size: 4, color: 'black', fixed: true });
     // create a bisector of angle ABB3
     var bisector2 = brd.create('bisector', [A, B, B3], { visible: false });
     // point B6 is the intersection of bisector and C
-    var B6 = brd.create('intersection', [bisector2, C, 0], { name: 'B6', size: 3, color: 'black', fixed: true });
+    var B6 = brd.create('intersection', [bisector2, C, 0], { withLabel: false, name: 'B6', size: 4, color: 'black', fixed: true });
     // point B7 is the intersection of bisector and C
-    var B7 = brd.create('intersection', [bisector2, C, 1], { name: 'B7', size: 3, color: 'black', fixed: true });
+    var B7 = brd.create('intersection', [bisector2, C, 1], { withLabel: false, name: 'B7', size: 4, color: 'black', fixed: true });
     // create a point at 13, 0 with name "M"
     var M = brd.create('point', [
         function () { return B.X() + 3 * Math.cos(degrees_to_radians(slider.Value() * 360 / 710)) },

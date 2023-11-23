@@ -52,7 +52,7 @@ let logicJS = (brd) => {
     brd.suspendUpdate();
 
     // create a slider with name "b" and value from 0 to 5 with initial value 3
-    var slider2 = brd.create('slider', [[10, 18], [15, 18], [0, 2, 5]],
+    var slider2 = brd.create('slider', [[2, -3], [5, -3], [0, 2, 5]],
         {
             name: 'r',
             fillColor: 'white',
@@ -90,16 +90,12 @@ let logicJS = (brd) => {
     };
 
     var vecStart = [0, 0];
-    var cArrow;
+    var cArrow, yArrow, paralleLIne, oppositePoint, oppositePointC, lineC, pointC, oppositeC;
+    var xAxis = brd.create('axis', [[0, 0], [1, 0]], { name: 'x', withLabel: false, visible: false });
     var uX = brd.unitX;
     var uY = brd.unitY;
 
-    var f = () => {
-        if (cArrow) {
-            brd.removeObject(cArrow);
-        }
-        var vecEnd = [C.X(), C.Y()];
-
+    var createVector = function (vecStart, vecEnd) {
         var vector = [vecEnd[0] - vecStart[0], vecEnd[1] - vecStart[1]];
         // improvement for exterme aspect ratios
         var mag2 = Math.sqrt(vector[0] * vector[0] * uX * uX + vector[1] * vector[1] * uY * uY);
@@ -117,7 +113,54 @@ let logicJS = (brd) => {
 
         var dataX = [NaN, vecStart[0], vecEnd[0], vecLeft[0], vecIndent[0], vecRight[0], vecEnd[0], NaN];
         var dataY = [NaN, vecStart[1], vecEnd[1], vecLeft[1], vecIndent[1], vecRight[1], vecEnd[1], NaN];
-        cArrow = brd.create('curve', [dataX, dataY], { strokeColor: "black", fillColor: "black", highlightStrokeColor: "black", highlightFillColor: "black", highlightStrokeWidth: 1 });
+        var iArrow = brd.create('curve', [dataX, dataY], { strokeColor: "black", fillColor: "black", highlightStrokeColor: "black", highlightFillColor: "black", highlightStrokeWidth: 1 });
+        return iArrow;
+    }
+
+    var f = () => {
+        if (cArrow) {
+            brd.removeObject(cArrow);
+        }
+
+        if (yArrow) {
+            brd.removeObject(yArrow);
+        }
+
+        if (paralleLIne) {
+            brd.removeObject(paralleLIne);
+        }
+
+        if (oppositePoint) {
+            brd.removeObject(oppositePoint);
+        }
+
+        if (oppositePointC) {
+            brd.removeObject(oppositePointC);
+        }
+
+        if (lineC) {
+            brd.removeObject(lineC);
+        }
+
+        if (pointC) {
+            brd.removeObject(pointC);
+        }
+
+        if (oppositeC) {
+            brd.removeObject(oppositeC);
+        }
+
+        var vecEnd = [C.X(), C.Y()];
+        cArrow = createVector(vecStart, vecEnd);
+        var sliderValue = slider2.Value();
+        vecEnd = [0, sliderValue];
+        yArrow = createVector(vecStart, vecEnd);
+        oppositePoint = brd.create('point', [0, -sliderValue], {withLabel: false,  name: 'D', size: 2, color: 'blue', visible: false });
+        oppositePointC = brd.create('point', [0, -C.Y()], {name: '-C', size: 2, color: 'black', visible: true, fixed: true });
+        lineC = brd.create('segment', [C, [0, C.Y()]], {size: 1, color: 'black', visible: true, dash: 1});
+        pointC = brd.create('point', [0, C.Y()], {withLabel: true,  name: "C'", size: 2, color: 'black', visible: true, fixed: true });
+        // Create a parallel line to xAxis
+        paralleLIne = brd.create('parallel', [xAxis, oppositePoint], { withLabel: false, strokeColor: 'blue', strokeWidth: 1, highlightStrokeColor: 'blue', highlightStrokeWidth: 1 });
     }
 
 
@@ -149,8 +192,8 @@ class JSXGraphComponent extends Component {
                     logic={logicJS}
                     boardAttributes={{
                         boundingBox: [-12, 12, 12, -12], axis: true,
-                        zoomX: 0.5,
-                        zoomY: 0.5
+                        zoomX: 1.5,
+                        zoomY: 1.5
                     }}
                     style={{
                         border: "1px solid black"

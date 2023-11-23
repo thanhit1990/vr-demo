@@ -82,6 +82,11 @@ const App = () => {
     return <></>;
   }
 
+  const Geo_6 = () => {
+    window.location.href = "./6.html";
+    return <></>;
+  }
+
   return (
     <Router>
       <Routes>
@@ -93,7 +98,7 @@ const App = () => {
         {/* 도형변환 01 */}
         <Route path="/Transformation/1" element={<Transformation_1 />} />
         {/* 도형변환 02 */}
-        {/* <Route path="/Transformation/2" Component={JSXGraphReact31} /> */}
+        <Route path="/Transformation/2" Component={JSXGraphReact31} />
         {/* 도형변환 03 */}
         <Route path="/Transformation/3" Component={JSXGraphReact22} />
         {/* 도형변환 04 */}
@@ -103,11 +108,11 @@ const App = () => {
         {/* 도형변환 06 */}
         <Route path="/Transformation/6" element={<Transformation_6 />} />
         {/* 도형변환 07 */}
-        {/* <Route path="/Transformation/7" element={<Transformation_7 />} /> */}
+        <Route path="/Transformation/7" element={<Transformation_7 />} />
         {/* 도형변환 08 */}
         <Route path="/Transformation/8" Component={JSXGraphReact20} />
         {/* 도형변환 09 */}
-        {/* <Route path="/Transformation/9" Component={JSXGraphReact7} /> */}
+        <Route path="/Transformation/9" Component={JSXGraphReact7} />
         {/* 도형변환 10 */}
         {/* <Route path="/Transformation/10" Component={JSXGraphReact15} /> */}
 
@@ -138,13 +143,14 @@ const App = () => {
         {/* 입체도형 01 */}
         <Route exact path="/Geometry/:box_id" element={<Box3D />} />
         {/* 입체도형 06 */}
+        <Route path="/Geo/6" element={<Geo_6 />} />
         {/* <Route path="/Geo/6" Component={Transformation2} /> */}
         {/* 입체도형 07 */}
         {/* <Route path ="/Geo/7" Component={JSXGraphReact32} /> */}
         {/* 입체도형 09 */}
         {/* {<Route path ="/Geo/9" element={<Geo_9 />} />} */}
         {/* 입체도형 10 */}
-        <Route path ="/Geo/10" element={<Geo_10 />} />
+        <Route path="/Geo/10" element={<Geo_10 />} />
 
         {/* 입체도형 01 */}
 
@@ -157,20 +163,20 @@ const App = () => {
         {/* 벡터 03*/}
         <Route path="/Vector/3" Component={JSXGraphReact13} />
         {/* 벡터 04*/}
-        <Route path="/Vector/4" Component={JSXGraphReact24} />        
+        <Route path="/Vector/4" Component={JSXGraphReact24} />
         {/* 벡터 05*/}
         <Route path="/Vector/5" element={<Vector_4 />} />
         {/* 벡터 06*/}
-        <Route path="/Vector/6" Component={JSXGraphReact6} />        
+        <Route path="/Vector/6" Component={JSXGraphReact6} />
         {/* 벡터 07*/}
         <Route path="/Vector/7" Component={JSXGraphReact8} />
-        
+
         {/* 벡터 08 */}
         {/* <Route path="/Vector/8" element={<Vector_7 />} /> */}
         {/* 벡터 09 */}
-        {/* <Route path="/Vector/9" element={<Vector_9 />} /> */}
+        <Route path="/Vector/9" element={<Vector_9 />} />
         {/* 벡터 10 */}
-        {/* <Route path="/Vector/10" element={<Vector_10 />} /> */}
+        <Route path="/Vector/10" element={<Vector_10 />} />
 
         {/* 5. 삼각비 */}
         {/* 삼각비 01 */}

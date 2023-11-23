@@ -36,7 +36,7 @@ let logicJS = (brd) => {
     var segax = brd.create('segment', [pol2.vertices[0], O], { strokeColor: 'black', strokeWidth: 1, dash: 1 });
     var segbx = brd.create('segment', [pol2.vertices[1], O], { strokeColor: 'black', strokeWidth: 1, dash: 1 });
     var segcx = brd.create('segment', [pol2.vertices[2], O], { strokeColor: 'black', strokeWidth: 1, dash: 1 });
-
+    brd.resizeContainer(800, 800);
     brd.unsuspendUpdate();
 }
 

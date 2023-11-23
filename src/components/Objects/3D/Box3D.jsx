@@ -77,6 +77,8 @@ export default function Box3D() {
     } else {
         if (box_idx == 1) {
             box_idx = 4
+        } else if (box_idx == 2) {
+            box_idx = 5
         } else {
             box_idx = 3
         }
