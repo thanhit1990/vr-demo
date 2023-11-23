@@ -57,6 +57,8 @@
             axis: false,
         });
 
+        board.resizeContainer(800, 800, false, false);
+
         var view = board.create('view3d',
             [[-6, -3], [10, 10],
             [[-5, 5], [-5, 5], [-5, 5]]],
@@ -93,8 +95,10 @@
         if (true) {
             // Cube
 
-            var O = view.create('point3d', [2, 0, 0], point_attr);
+            var B = view.create('point3d', [2, 0, 0], point_attr);
+            B.setAttribute({ name: 'B' });
             var I = view.create('point3d', [4, 0, 0], point_attr);
+            I.setAttribute({ visible: 'false' });
             // Horizontal circle
             var circ1 = view.create('curve3d', [
                 (t) => 2 + 2 * Math.sin(t),
@@ -125,30 +129,53 @@
 
             // create a point3d at 0, 0, 3
             var p1 = view.create('point3d', [0, 0, 2.05], point_attr);
-            var p2 = view.create('point3d', [2, 0, 3.05], point_attr);
+            p1.setAttribute({ visible: 'false' });
+
+
+            var p0 = view.create('point3d', [2, 2, 3.05], point_attr);
+            p0.setAttribute({ visible: 'false' });
+            // create a glider
+            var P = board.create('glider', [p0.element2D.X(), p0.element2D.Y(), circ2.element2D], { size: 3, name: 'P', strokeColor: 'black', strokeWidth: 1, strokeOpacity: 1 });
+            P.setAttribute({ name: 'P' });            
+            
+            var A = view.create('point3d', [2, 0, 3.05], point_attr);
+            A.setAttribute({ name: 'A' });
+            var vec_p2glider = board.create('arrow', [A.element2D, P], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+
             // create a line between p1 and p2
-            var linep1p2 = board.create('line', [p1.element2D, p2.element2D], { strokeColor: 'black', strokeWidth: 1, strokeOpacity: 1 });
+            var line_p1p2 = board.create('line', [p1.element2D, A.element2D], { strokeColor: 'black', strokeWidth: 1, strokeOpacity: 1 });
             // create a segment between p1 and p2
-            var segp1p2 = board.create('segment', [p1.element2D, p2.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1, dash: 2 });
-            var segp2O = board.create('segment', [p2.element2D, O.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
-            var segpOI = board.create('line', [O.element2D, I.element2D], { strokeColor: 'black', strokeWidth: 1, strokeOpacity: 1 });
+            var seg_p1p2 = board.create('segment', [p1.element2D, A.element2D], { visible: false, strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1, dash: 2 });
+            var seg_p2O = board.create('segment', [A.element2D, B.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+            var seg_pOI = board.create('line', [B.element2D, I.element2D], { strokeColor: 'black', strokeWidth: 1, strokeOpacity: 1 });
             // create a line z = 0
             var line1 = view.create('curve3d', [
                 (t) => 2,
                 (t) => 0,
                 (t) => t,
                 [-100, 100]
-            ], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1, dash: 2 });
+            ], {visible: false,  strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1, dash: 2 });
 
-            // create segement OI
-            var seg1 = board.create('segment', [O.element2D, I.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+            // create segment OI
+            var seg1 = board.create('segment', [B.element2D, I.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
 
             // create a point3d at 0, -3, 3
             var p3 = view.create('point3d', [2, -2, 0], point_attr);
+            p3.setAttribute({ visible: 'false' });
+
+            // create a glider
+            var Q = board.create('glider', [p3.element2D.X(), p3.element2D.Y(), circ1.element2D], { size: 3, name: 'Q', strokeColor: 'black', strokeWidth: 1, strokeOpacity: 1 });
+            Q.setAttribute({ name: 'Q' });
+
             // create segment p2, p3
-            var segp2p3 = board.create('arrow', [p2.element2D, p3.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+            var seg_p2p3 = board.create('arrow', [A.element2D, Q], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
             // create segment p3, O
-            var segp3O = board.create('arrow', [ O.element2D, p3.element2D], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+            var seg_p3O = board.create('arrow', [ B.element2D, Q], { strokeColor: 'black', strokeWidth: 2, strokeOpacity: 1 });
+
+            // create an angle between Q A P
+            // var angle_QAP = board.create('angle', [Q, A.element2D, P], { radius: 0.7, fillColor: 'red', fillOpacity: 0.7, strokeColor: 'red', strokeWidth: 1});
+            // create an angle between Q B A
+            // var angle_QBA = board.create('angle', [A.element2D, B.element2D, Q], { radius: 0.7, fillColor: 'black', fillOpacity: 0.7, strokeColor: 'black', strokeWidth: 1 });
 
 
             var s = view.az_slide._smin;

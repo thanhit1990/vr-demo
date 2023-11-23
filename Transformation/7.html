@@ -38,10 +38,10 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script> -->
     <div id="container"></div>
 
-    <div id="slider-container">
+    <!-- <div id="slider-container">
         <input type="range" id="rotation-slider" min="0" max="360" value="0" step="1">
         <label for="rotation-slider" id="for-rotation-slider">θ = <span id="angle-value">0</span>°</label>
-    </div>
+    </div> -->
 
     <script type="module">
         import * as THREE from 'three';
@@ -96,7 +96,7 @@
 
         // Function to update the curve based on the slider value
         const updateCurve = (angle) => {
-            document.getElementById("angle-value").textContent = angle;
+            // document.getElementById("angle-value").textContent = angle;
             curve.rotation.x = (angle * Math.PI) / 180;
             // if the angle is bigger than a value in the array of angles, set the flag to true        
             // if the angle is smaller than the value in the array of angles, set the flag to false            
@@ -235,13 +235,13 @@
             updateCurveData();
 
             // Get the rotation slider element
-            const slider = document.getElementById("rotation-slider");
+            // const slider = document.getElementById("rotation-slider");
 
             // Listen for slider changes and update the curve
-            slider.addEventListener("input", () => {
-                const angle = parseFloat(slider.value);
-                updateCurve(angle);
-            });
+            // slider.addEventListener("input", () => {
+            //     const angle = parseFloat(slider.value);
+            //     updateCurve(angle);
+            // });
 
             // Create a curve geometry and add the points
             const curveGeometry = new THREE.BufferGeometry().setFromPoints(curveData);
@@ -258,7 +258,14 @@
             // Position the camera
             camera.position.set(6.414899007914741, 7.059146722678172, 5.830963045498018);
             camera.lookAt(0, 0, 0);
-
+            const gui = new GUI({ width: 400 });
+            const myObject = {
+                θ: 4
+            };
+            // Add a listener for the slider 
+            gui.add(myObject, 'θ', 0, 360, 1).onChange(function (value) {
+                updateCurve(value);
+            });
         }
 
         updateCurve(0);
