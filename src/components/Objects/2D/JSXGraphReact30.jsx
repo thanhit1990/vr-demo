@@ -9,19 +9,49 @@ let logicJS = (brd) => {
     brd.suspendUpdate();
 
     // create a slider with name "a" from 1 to 10 with initial value 1
-    var slider = brd.create('slider', [[-10, 10], [-5, 10], [0, 0, 90]],
+    var slider1 = brd.create('slider', [[5, 10], [10, 10], [0, 0, 90]],
         {
             name: 'n',
             snapWidth: 1,
             fillColor: 'white',
-            strokeColor: 'green',
+            strokeColor: '#00FF01',
             highlightFillColor: 'white',
-            highlightStrokeColor: 'green',
+            highlightStrokeColor: '#00FF01',
             postLabel: '°',
             precision: 0,
-            label: { visible: false, fontSize: 15, strokeColor: 'green', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
-            baseline: { strokeColor: 'green', highlightStrokeColor: 'green', highlightStrokeOpacity: 0.4, strokeWidth: 3, opacity: 0.4 },
-            highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 5 },
+            label: { visible: false, fontSize: 15, strokeColor: '#00FF01', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
+            baseline: { strokeColor: '#00FF01', highlightStrokeColor: '#00FF01', highlightStrokeOpacity: 0.7, strokeWidth: 5, opacity: 0.7 },
+            highline: { strokeColor: '#00FF01', highlightStrokeColor: '#00FF01', strokeWidth: 7 },
+        });
+
+    var slider2 = brd.create('slider', [[5, 9], [10, 9], [0, 0, 90]],
+        {
+            name: 'n',
+            snapWidth: 1,
+            fillColor: 'white',
+            strokeColor: '#00FFFF',
+            highlightFillColor: 'white',
+            highlightStrokeColor: '#00FFFF',
+            postLabel: '°',
+            precision: 0,
+            label: { visible: false, fontSize: 15, strokeColor: '#00FFFF', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
+            baseline: { strokeColor: '#00FFFF', highlightStrokeColor: '#00FFFF', highlightStrokeOpacity: 0.7, strokeWidth: 5, opacity: 0.7 },
+            highline: { strokeColor: '#00FFFF', highlightStrokeColor: '#00FFFF', strokeWidth: 7 },
+        });
+
+    var slider3 = brd.create('slider', [[5, 8], [10, 8], [0, 0, 90]],
+        {
+            name: 'n',
+            snapWidth: 1,
+            fillColor: 'white',
+            strokeColor: '#FFDD02',
+            highlightFillColor: 'white',
+            highlightStrokeColor: '#FFDD02',
+            postLabel: '°',
+            precision: 0,
+            label: { visible: false, fontSize: 15, strokeColor: '#FFDD02', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
+            baseline: { strokeColor: '#FFDD02', highlightStrokeColor: '#FFDD02', highlightStrokeOpacity: 0.7, strokeWidth: 5, opacity: 0.7 },
+            highline: { strokeColor: '#FFDD02', highlightStrokeColor: '#FFDD02', strokeWidth: 7 },
         });
 
     // create a point at (-5, -5)
@@ -91,13 +121,13 @@ let logicJS = (brd) => {
         fillColor: '#00FF00', fillOpacity: 1, strokeColor: 'black', highlightFillColor: '#00FF00', strokeWidth: 1,
         borders: { strokeColor: 'black', strokeWidth: 2, highlightStrokeColor: 'black', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 }
     });
-    // create a polygon with vertices G, H, D color #FFFF00
+    // create a polygon with vertices G, H, D color #FFDD02
     var G1 = brd.create('point', [G.X(), G.Y()], { visible: false, name: "G1", size: 2, color: 'black', fixed: true });
     var H1 = brd.create('point', [H.X(), H.Y()], { visible: false, name: "H1", size: 2, color: 'black', fixed: true });
     var D1 = brd.create('point', [D.X(), D.Y()], { visible: false, name: "D1", size: 2, color: 'black', fixed: true });
     var poly2Vertices = [G1, H1, D1];
     var poly2 = brd.create('polygon', poly2Vertices, {
-        fillColor: '#FFFF00', fillOpacity: 1, strokeColor: 'black', highlightFillColor: '#FFFF00', strokeWidth: 1,
+        fillColor: '#FFDD02', fillOpacity: 1, strokeColor: 'black', highlightFillColor: '#FFDD02', strokeWidth: 1,
         borders: { strokeColor: 'black', strokeWidth: 2, highlightStrokeColor: 'black', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 }
     });
     // create a polygon with vertices H, I, J, D color #7D7DFF
@@ -116,11 +146,11 @@ let logicJS = (brd) => {
     });
 
     // current value of slider
-    var curSlider = slider.Value();
-    var sliderChangeFunction = () => {
+    var curSlider1 = slider1.Value();
+    var slider1ChangeFunction = () => {
         // rotate polygon with angle slider
 
-        var angleInRadians = degrees_to_radians(curSlider - slider.Value());
+        var angleInRadians = degrees_to_radians(curSlider1 - slider1.Value());
 
         var rotationPoint = B;
         polyVertices.forEach((vertex) => {
@@ -131,8 +161,33 @@ let logicJS = (brd) => {
             vertex.setPositionDirectly(JXG.COORDS_BY_USER, [newX, newY]);
         });
 
-        rotationPoint = D;
-        angleInRadians = degrees_to_radians(slider.Value() - curSlider);
+        // rotationPoint = D;
+        // angleInRadians = degrees_to_radians(slider.Value() - curSlider);
+        // poly4Vertices.forEach((vertex) => {
+        //     const x = vertex.X() - rotationPoint.X();
+        //     const y = vertex.Y() - rotationPoint.Y();
+        //     const newX = x * Math.cos(angleInRadians) - y * Math.sin(angleInRadians) + rotationPoint.X();
+        //     const newY = x * Math.sin(angleInRadians) + y * Math.cos(angleInRadians) + rotationPoint.Y();
+        //     vertex.setPositionDirectly(JXG.COORDS_BY_USER, [newX, newY]);
+        // });
+
+        // angleInRadians = degrees_to_radians(slider.Value() - curSlider) * 3;
+        // poly2Vertices.forEach((vertex) => {
+        //     const x = vertex.X() - rotationPoint.X();
+        //     const y = vertex.Y() - rotationPoint.Y();
+        //     const newX = x * Math.cos(angleInRadians) - y * Math.sin(angleInRadians) + rotationPoint.X();
+        //     const newY = x * Math.sin(angleInRadians) + y * Math.cos(angleInRadians) + rotationPoint.Y();
+        //     vertex.setPositionDirectly(JXG.COORDS_BY_USER, [newX, newY]);
+        // });
+
+        curSlider1 = slider1.Value();
+    };
+
+    var curSlider2 = slider2.Value();
+    var slider2ChangeFunction = () => {
+        // rotate polygon with angle slider
+        var rotationPoint = D;
+        var angleInRadians = degrees_to_radians(slider2.Value() - curSlider2);
         poly4Vertices.forEach((vertex) => {
             const x = vertex.X() - rotationPoint.X();
             const y = vertex.Y() - rotationPoint.Y();
@@ -140,8 +195,14 @@ let logicJS = (brd) => {
             const newY = x * Math.sin(angleInRadians) + y * Math.cos(angleInRadians) + rotationPoint.Y();
             vertex.setPositionDirectly(JXG.COORDS_BY_USER, [newX, newY]);
         });
+        curSlider2 = slider2.Value();
+    };
 
-        angleInRadians = degrees_to_radians(slider.Value() - curSlider) * 3;
+    var curSlider3 = slider3.Value();
+    var slider3ChangeFunction = () => {
+        // rotate polygon with angle slider
+        var rotationPoint = D;
+        var angleInRadians = degrees_to_radians(slider3.Value() - curSlider3) * 3;
         poly2Vertices.forEach((vertex) => {
             const x = vertex.X() - rotationPoint.X();
             const y = vertex.Y() - rotationPoint.Y();
@@ -150,18 +211,38 @@ let logicJS = (brd) => {
             vertex.setPositionDirectly(JXG.COORDS_BY_USER, [newX, newY]);
         });
 
-        curSlider = slider.Value();
+        curSlider3 = slider3.Value();
     };
-    slider.on('drag', function () {
-        sliderChangeFunction();
+
+    slider1.on('drag', function () {
+        slider1ChangeFunction();
     });
 
-    slider.coords.on('update', function () {
-        sliderChangeFunction();
+    slider1.coords.on('update', function () {
+        slider1ChangeFunction();
     });
+
+    slider2.on('drag', function () {
+        slider2ChangeFunction();
+    });
+
+    slider2.coords.on('update', function () {
+        slider2ChangeFunction();
+    });
+
+    slider3.on('drag', function () {
+        slider3ChangeFunction();
+    });
+
+    slider3.coords.on('update', function () {
+        slider3ChangeFunction();
+    });
+
 
     F.on('drag', function () {
-        slider.setValue(0);
+        slider1.setValue(0);
+        slider2.setValue(0);
+        slider3.setValue(0);
         // create a polygon with vertices B, F, G, C color #FF7F00
         brd.removeObject(poly1);
         poly1 = brd.create('polygon', [B, F, G, C], {
@@ -181,7 +262,7 @@ let logicJS = (brd) => {
             fillColor: '#00FF00', fillOpacity: 1, strokeColor: 'black', highlightFillColor: '#00FF00', strokeWidth: 1,
             borders: { strokeColor: 'black', strokeWidth: 2, highlightStrokeColor: 'black', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 }
         });
-        // create a polygon with vertices G, H, D color #FFFF00
+        // create a polygon with vertices G, H, D color #FFDD02
         for (var i = 0; i < poly2Vertices.length; i++) {
             brd.removeObject(poly2Vertices[i]);
         }
@@ -192,7 +273,7 @@ let logicJS = (brd) => {
         D1 = brd.create('point', [D.X(), D.Y()], { visible: false, name: "D1", size: 2, color: 'black', fixed: true });
         poly2Vertices = [G1, H1, D1];
         poly2 = brd.create('polygon', poly2Vertices, {
-            fillColor: '#FFFF00', fillOpacity: 1, strokeColor: 'black', highlightFillColor: '#FFFF00', strokeWidth: 1,
+            fillColor: '#FFDD02', fillOpacity: 1, strokeColor: 'black', highlightFillColor: '#FFDD02', strokeWidth: 1,
             borders: { strokeColor: 'black', strokeWidth: 2, highlightStrokeColor: 'black', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 }
         });
         // create a polygon with vertices H, I, J, D color #7D7DFF
