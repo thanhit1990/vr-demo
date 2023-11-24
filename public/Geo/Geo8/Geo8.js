@@ -1,11 +1,11 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.117.0/build/three.module.js';
 
-import setupScene from '.././SceneSetup';
-import createPlane from './plane';
-import createCone from './cone';
-import createIntersection from './intersection';
-import createCurve from './curve';
-import createCurveFull from './curve_full';
+import setupScene from '../SceneSetup.js';
+import createPlane from './plane.js';
+import createCone from './cone.js';
+import createIntersection from './intersection.js';
+import createCurve from './curve.js';
+import createCurveFull from './curve_full.js';
 import { GUI } from 'https://cdn.jsdelivr.net/npm/three@0.117.0/examples/jsm/libs/dat.gui.module.js';
 
 

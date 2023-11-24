@@ -39,11 +39,44 @@ let logicJS = (brd) => {
 
 
     // Create a point at -20, 20 with name "P"
-    var P = brd.create('point', [-20, 20], { name: 'P', size: 2, color: 'green', strokeColor: 'black', strokeWidth: 1, fixed: true });
-    var Q = brd.create('point', [-20 + slider1.Value() * 5, 20 - slider2.Value() * 5], { name: 'Q', size: 2, color: 'green',  strokeColor: 'black', strokeWidth: 1,fixed: true });
+    var P = brd.create('point', [-20, 20], { name: 'P', size: 4, color: 'green', strokeColor: 'black', strokeWidth: 1, fixed: true });
+    var Q = brd.create('point', [-20 + slider1.Value() * 5, 20 - slider2.Value() * 5], { name: 'Q', size: 4, color: 'green',  strokeColor: 'black', strokeWidth: 1,fixed: true });
     var arrowList = [];
     var pointList = [];
     var segmentList = [];
+    
+    var uX = brd.unitX;
+    var uY = brd.unitY;
+    var param = {
+        headWidth: 2, // multiple of stroke width
+        headLength: 3,
+        strokeWidth: 5,
+        indent: 0.1
+    };
+
+    var drawArrow = (pointStart, pointEnd, color) => {
+        var vecStart = [pointStart.X(), pointStart.Y()];
+        var vecEnd = [pointEnd.X(), pointEnd.Y()];
+        var vector = [vecEnd[0] - vecStart[0], vecEnd[1] - vecStart[1]];
+        // improvement for exterme aspect ratios
+        var mag2 = Math.sqrt(vector[0] * vector[0] * uX * uX + vector[1] * vector[1] * uY * uY);
+
+        var headWidth = param.headWidth * param.strokeWidth / mag2;
+        var headLength = param.headLength * param.strokeWidth / mag2;
+
+        var vecMid = [vecEnd[0] - headLength * vector[0], vecEnd[1] - headLength * vector[1]]; // where head crosses
+
+        var vecPixel = [headWidth / 2 * uX * vector[0], headWidth / 2 * uY * vector[1]];
+        var vecLeft = [vecMid[0] + vecPixel[1] / uX, vecMid[1] - vecPixel[0] / uY];
+        var vecRight = [vecMid[0] - vecPixel[1] / uX, vecMid[1] + vecPixel[0] / uY];
+        var portion = param.indent;
+        var vecIndent = [(1 - portion) * vecMid[0] + portion * vecEnd[0], (1 - portion) * vecMid[1] + portion * vecEnd[1]];
+
+        var dataX = [NaN, vecStart[0], vecEnd[0], vecLeft[0], vecIndent[0], vecRight[0], vecEnd[0], NaN];
+        var dataY = [NaN, vecStart[1], vecEnd[1], vecLeft[1], vecIndent[1], vecRight[1], vecEnd[1], NaN];
+        var arrow = brd.create('curve', [dataX, dataY], { strokeWidth:2, strokeColor: color, fillColor: color, highlightStrokeColor: color, highlightFillColor: color, highlightStrokeWidth: 2 });
+        arrowList.push(arrow);
+    }
     var f = () => {
         for (var i = 0; i < arrowList.length; i++) {
             brd.removeObject(arrowList[i]);
@@ -112,7 +145,8 @@ let logicJS = (brd) => {
                 pointList.push(newPoint2D);
                 pointList.push(startPoint2D);
                 // Create an arrow from P to newPoint
-                arrowList.push(brd.create('arrow', [startPoint2D, newPoint2D], { strokeWidth: 3, strokeColor: 'blue' }));
+                drawArrow(startPoint2D, newPoint2D, 'blue');
+                // arrowList.push(brd.create('arrow', [startPoint2D, newPoint2D], { strokeWidth: 3, strokeColor: 'blue' }));
                 startPoint = newPoint;
             } else {
                 var newPoint = [startPoint[0], startPoint[1] - 5];
@@ -122,7 +156,8 @@ let logicJS = (brd) => {
                 pointList.push(newPoint2D);
                 pointList.push(startPoint2D);
                 // Create an arrow from P to newPoint
-                arrowList.push(brd.create('arrow', [startPoint2D, newPoint2D], { strokeWidth: 3, strokeColor: 'red' }));
+                drawArrow(startPoint2D, newPoint2D, 'red');
+                // arrowList.push(brd.create('arrow', [startPoint2D, newPoint2D], { strokeWidth: 3, strokeColor: 'red' }));
                 startPoint = newPoint;
             }
         }
@@ -134,7 +169,7 @@ let logicJS = (brd) => {
         if (Q != null) {
             brd.removeObject(Q);
         }
-        Q = brd.create('point', [-20 + slider1.Value() * 5, 20 - slider2.Value() * 5], { name: 'Q', size: 2, color: 'green',  strokeColor: 'black', strokeWidth: 1,fixed: true });
+        Q = brd.create('point', [-20 + slider1.Value() * 5, 20 - slider2.Value() * 5], { name: 'Q', size: 4, color: 'green',  strokeColor: 'black', strokeWidth: 1,fixed: true });
         f();
     });
 
@@ -142,7 +177,7 @@ let logicJS = (brd) => {
         if (Q != null) {
             brd.removeObject(Q);
         }
-        Q = brd.create('point', [-20 + slider1.Value() * 5, 20 - slider2.Value() * 5], { name: 'Q', size: 2, color: 'green',  strokeColor: 'black', strokeWidth: 1,fixed: true });
+        Q = brd.create('point', [-20 + slider1.Value() * 5, 20 - slider2.Value() * 5], { name: 'Q', size: 4, color: 'green',  strokeColor: 'black', strokeWidth: 1,fixed: true });
         f();
     });
 

@@ -56,6 +56,8 @@
             keepaspectratio: false,
             axis: false
         });
+        board.resizeContainer(600, 600, false, false);
+        board.clickLeftArrow();
 
         var view = board.create('view3d',
             [[-6, -3], [10, 10],
@@ -73,7 +75,7 @@
 
 
 
-        var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed:true },
+        var point_attr = { withLabel: true, size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true },
             // Cube
             p = [], // Vertices of the cube
             faces = [],
@@ -93,20 +95,27 @@
         if (true) {
             // Cube
             i = phi;
-            p.push(view.create('point3d', [-i, -i, -i], point_attr).element2D);
-            p.push(view.create('point3d', [-i, i, -i], point_attr).element2D);
-            p.push(view.create('point3d', [i, i, -i], point_attr).element2D);
-            p.push(view.create('point3d', [i, -i, -i], point_attr).element2D);
+            p.push(view.create('point3d', [-i, -i, -i], { name: 'A', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
+            p.push(view.create('point3d', [-i, i, -i], { name: 'B', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
+            p.push(view.create('point3d', [i, i, -i], { name: 'C', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
+            p.push(view.create('point3d', [i, -i, -i], { name: 'D', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
 
-            p.push(view.create('point3d', [-i, -i, i], point_attr).element2D);
-            p.push(view.create('point3d', [-i, i, i], point_attr).element2D);
-            p.push(view.create('point3d', [i, i, i], point_attr).element2D);
-            p.push(view.create('point3d', [i, -i, i], point_attr).element2D);
+            p.push(view.create('point3d', [-i, -i, i], { name: 'E', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
+            p.push(view.create('point3d', [-i, i, i], { name: 'F', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
+            p.push(view.create('point3d', [i, i, i], { name: 'G', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
+            p.push(view.create('point3d', [i, -i, i], { name: 'H', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
 
-            p.push(view.create('point3d', [i, i, i / 2], point_attr).element2D);
+            var Q = view.create('point3d', [9, -3, -5], { name: 'Q', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D;
+
+
+
+            p.push(view.create('point3d', [i, i, i / 2], { name: 'I', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
             p[8].setAttribute({ fixed: true, size: 5, strokeColor: 'black', fillColor: 'blue' });
-            p.push(view.create('point3d', [-i / 2, i, -i], point_attr).element2D);
+            p.push(view.create('point3d', [-i / 2, i, -i], { name: 'J', withLabel: true, fillColor: 'blue', size: 4, label: { offset: [5, 5], fontSize: 20 }, fixed: true }).element2D);
             p[9].setAttribute({ fixed: true, size: 5, strokeColor: 'black', fillColor: 'blue' });
+
+            var angleEGQ = view.create('angle', [p[4], p[8], Q], { radius: 1, orthoSensitivity: 360 });
+            
 
             faces.push(board.create('polygon', [p[0], p[1], p[2], p[3]], pol_attr));
             faces.push(board.create('polygon', [p[4], p[5], p[6], p[7]], pol_attr));
@@ -117,6 +126,7 @@
 
             lines.push(board.create('arrow', [p[8], p[9]], { strokeColor: 'black', dash: 2, strokeWidth: 3, fixed: true }));
             lines.push(board.create('arrow', [p[8], p[4]], { strokeColor: 'black', dash: 2, strokeWidth: 3, fixed: true }));
+            lines.push(board.create('arrow', [p[8], Q], { strokeColor: 'black', dash: 2, strokeWidth: 3, fixed: true }));
 
             var isDrawing;
             view.az_slide.hide();

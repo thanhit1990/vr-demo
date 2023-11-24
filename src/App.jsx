@@ -83,6 +83,11 @@ const App = () => {
     return <></>;
   }
 
+  const Geo_8 = () => {
+    window.location.href = "./8.html";
+    return <></>;
+  }
+
   const Geo_6 = () => {
     window.location.href = "./6.html";
     return <></>;
@@ -115,7 +120,7 @@ const App = () => {
         {/* 도형변환 09 */}
         <Route path="/Transformation/9" Component={JSXGraphReact7} />
         {/* 도형변환 10 */}
-        {/* <Route path="/Transformation/10" Component={JSXGraphReact15} /> */}
+        <Route path="/Transformation/10" Component={JSXGraphReact15} />
 
 
         {/* 2. 작도 */}
@@ -147,9 +152,12 @@ const App = () => {
         <Route path="/Geo/6" element={<Geo_6 />} />
         {/* <Route path="/Geo/6" Component={Transformation2} /> */}
         {/* 입체도형 07 */}
-        {/* <Route path ="/Geo/7" Component={JSXGraphReact32} /> */}
+        <Route path="/Geo/7" Component={JSXGraphReact32} />
+        {/* 입체도형 08 */}
+        <Route path="/Geo/8" element={<Geo_8 />} />
+
         {/* 입체도형 09 */}
-        {/* {<Route path ="/Geo/9" element={<Geo_9 />} />} */}
+        {<Route path ="/Geo/9" element={<Geo_9 />} />}
         {/* 입체도형 10 */}
         <Route path="/Geo/10" element={<Geo_10 />} />
 
@@ -173,7 +181,7 @@ const App = () => {
         <Route path="/Vector/7" Component={JSXGraphReact8} />
 
         {/* 벡터 08 */}
-        {/* <Route path="/Vector/8" element={<Vector_7 />} /> */}
+        <Route path="/Vector/8" element={<Vector_7 />} />
         {/* 벡터 09 */}
         <Route path="/Vector/9" element={<Vector_9 />} />
         {/* 벡터 10 */}
