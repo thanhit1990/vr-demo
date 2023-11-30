@@ -16,9 +16,9 @@ import Button3D from "./Button3D";
 import { XR } from "@react-three/xr";
 
 
-function useAnimationControls() {
+function useAnimationControls(min_va, max_val) {
     const { percentage } = useControls({
-        percentage: { value: 0.01, min: 0.01, max: 0.99, step: 0.01 },
+        percentage: { value: 0.01, min: min_va, max: max_val, step: 0.01 },
     });
 
     return percentage;
@@ -28,22 +28,24 @@ function useAnimationControls() {
 const models = [
     "../box3d0.gltf",
     "../box3d1.gltf",
-    "../box3d2.gltf",
-    "../dagiac1.gltf",
+    "../box3d2.gltf",    
     "../Cone_solid  BAKED 100fps.glb",
-    "../Cylinder_solid_BAKED_100fps.glb",]
+    "../Cylinder_solid_BAKED_100fps.glb",
+    "../dagiac1.gltf",
+    "../pentagon2.glb",]
 const button_positions = [
     [3.8, 0.2, 2.5],
     [0.1, 0.2, 2.5],
     [0.1, 0.2, 2.8],
     [-0.1, 0.2, 3.8],
     [0.1, 0.2, 2.8],
-    [2, 0.2, 2.8],
+    [2, 0.2, 3.8],
+    [2, 0.2, 2.5],
 ]
 
 
 export default function Box3D() {
-    let percentage = useAnimationControls();
+    let percentage;
     // Get value from parameters using useParams hook
     // if value is undefined, set it to 0
     let box_idx = 0
@@ -59,6 +61,7 @@ export default function Box3D() {
     }      
     // if box_idx is 0, use useControls hook to get value from GUI
     if(box_idx == 0) {
+        percentage = useAnimationControls(0.01, 0.99);
         // Define GUI controls
         const values = useControls({
             box_style: {
@@ -75,12 +78,11 @@ export default function Box3D() {
             box_idx = 0
         }
     } else {
-        if (box_idx == 1) {
-            box_idx = 4
-        } else if (box_idx == 2) {
-            box_idx = 5
+        box_idx += 2
+        if (box_idx ==6) {
+            percentage = useAnimationControls(0.01, 0.55);
         } else {
-            box_idx = 3
+            percentage = useAnimationControls(0.01, 0.99);
         }
     }
     
