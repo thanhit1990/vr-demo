@@ -6,7 +6,7 @@ import JXG from 'jsxgraph'
 let logicJS = (brd) => {
     brd.suspendUpdate();
     // slider d
-    // var d = brd.create('slider', [[1, 5], [4, 5], [-5, 1, 5]], { name: 'd', withLabel: true, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
+    // var d = brd.create('slider', [[1, 5], [4, 5], [-5, 1, 5]], { name: 'd', withLabel: false, visible: true, strokeColor: 'black', strokeWidth: 1, size: 5 });
     var d = brd.create('slider', [[1, 5], [4, 5], [-5, 1, 5]], {
         name: 'd',
         fillColor: 'white',
@@ -108,17 +108,17 @@ let logicJS = (brd) => {
         fg2 = brd.create('functiongraph', [f2], { strokeColor: '#4181CA', strokeWidth: 2 });
         // create line crossing y = 1
         q = brd.create('line', [[0, function () { return d.Value() }], [1, function () { return d.Value() }]], { strokeColor: '#FF5CFF', strokeWidth: 3 });
-        A = brd.create('point', [function () { return k.Value() }, function () { return d.Value() }], { name: 'A', withLabel: true, visible: true, strokeColor: 'gray', fillColor: '#1565C0', strokeWidth: 1, size: 3 });
-        B = brd.create('point', [function () { return A.X(); }, function () { return f2(A.X()) }], { name: 'B', withLabel: true, visible: true, strokeColor: 'gray', strokeWidth: 1, size: 3 });
-        g1 = brd.create('glider', [function () { return B.X() }, function () { return B.Y() }, fg2]);
+        A = brd.create('point', [function () { return k.Value() }, function () { return d.Value() }], { name: 'A', withLabel: false, visible: true, strokeColor: 'gray', fillColor: '#1565C0', strokeWidth: 1, size: 3 });
+        B = brd.create('point', [function () { return A.X(); }, function () { return f2(A.X()) }], { name: 'B', withLabel: false, visible: true, strokeColor: 'gray', strokeWidth: 1, size: 3 });
+        g1 = brd.create('glider', [function () { return B.X() }, function () { return B.Y() }, fg2], { withLabel: false });
         tang1 = brd.create('tangent', [g1], { visible: false });
         per1 = brd.create('perpendicular', [tang1, A], { visible: false });
-        C = brd.create('intersection', [per1, tang1, 0], { name: 'C', withLabel: true, visible: false, strokeColor: 'black', strokeWidth: 1, size: 5 });
+        C = brd.create('intersection', [per1, tang1, 0], { name: 'C', withLabel: false, visible: false, strokeColor: 'black', strokeWidth: 1, size: 5 });
         C1 = brd.create('point', [function () { return A.X() + (C.X() - A.X()) * Math.cos(phi) - (C.Y() - A.Y()) * Math.sin(phi); }, function () { return A.Y() + (C.X() - A.X()) * Math.sin(phi) + (C.Y() - A.Y()) * Math.cos(phi); }], { name: 'C1', size: 2, visible: false });
         lAC1 = brd.create('line', [A, C1], { strokeColor: 'black', strokeWidth: 1, visible: false });
-        D = brd.create('intersection', [lAC1, tang1, 0], { name: 'D', fillColor: 'gray', strokeColor: 'gray', size: 2 });
-        D1 = brd.create('reflection', [D, per1], { name: 'D1', size: 2, fillColor: 'gray', strokeColor: 'gray' });
-        polygon = brd.create('regularpolygon', [D1, D, n.Value()], { vertices: { visible: true, fillColor: 'gray', strokeColor: 'gray' } });
+        D = brd.create('intersection', [lAC1, tang1, 0], { name: 'D', withLabel: false, fillColor: 'gray', strokeColor: 'gray', size: 2 });
+        D1 = brd.create('reflection', [D, per1], { name: 'D1', withLabel: false, size: 2, fillColor: 'gray', strokeColor: 'gray' });
+        polygon = brd.create('regularpolygon', [D1, D, n.Value()], { vertices: { visible: true, withLabel: false, fillColor: 'gray', strokeColor: 'gray' } });
 
 
     });
@@ -133,17 +133,17 @@ let logicJS = (brd) => {
     fg2 = brd.create('functiongraph', [f2], { strokeColor: '#4181CA', strokeWidth: 2 });
     // create line crossing y = 1
     q = brd.create('line', [[0, function () { return d.Value() }], [1, function () { return d.Value() }]], { strokeColor: '#FF5CFF', strokeWidth: 3 });
-    A = brd.create('point', [function () { return k.Value() }, function () { return d.Value() }], { name: 'A', withLabel: true, visible: true, strokeColor: 'gray', fillColor: '#1565C0', strokeWidth: 1, size: 3 });
-    B = brd.create('point', [function () { return A.X(); }, function () { return f2(A.X()) }], { name: 'B', withLabel: true, visible: true, strokeColor: 'gray', strokeWidth: 1, size: 3 });
+    A = brd.create('point', [function () { return k.Value() }, function () { return d.Value() }], { name: 'A', withLabel: false, visible: true, strokeColor: 'gray', fillColor: '#1565C0', strokeWidth: 1, size: 3 });
+    B = brd.create('point', [function () { return A.X(); }, function () { return f2(A.X()) }], { name: 'B', withLabel: false, visible: true, strokeColor: 'gray', strokeWidth: 1, size: 3 });
     g1 = brd.create('glider', [function () { return B.X() }, function () { return B.Y() }, fg2]);
     tang1 = brd.create('tangent', [g1], { visible: false });
     per1 = brd.create('perpendicular', [tang1, A], { visible: false });
-    C = brd.create('intersection', [per1, tang1, 0], { name: 'C', withLabel: true, visible: false, strokeColor: 'black', strokeWidth: 1, size: 5 });
+    C = brd.create('intersection', [per1, tang1, 0], { name: 'C', withLabel: false, visible: false, strokeColor: 'black', strokeWidth: 1, size: 5 });
     C1 = brd.create('point', [function () { return A.X() + (C.X() - A.X()) * Math.cos(phi) - (C.Y() - A.Y()) * Math.sin(phi); }, function () { return A.Y() + (C.X() - A.X()) * Math.sin(phi) + (C.Y() - A.Y()) * Math.cos(phi); }], { name: 'C1', size: 2, visible: false });
     lAC1 = brd.create('line', [A, C1], { strokeColor: 'black', strokeWidth: 1, visible: false });
-    D = brd.create('intersection', [lAC1, tang1, 0], { name: 'D', fillColor: 'gray', strokeColor: 'gray', size: 2 });
-    D1 = brd.create('reflection', [D, per1], { name: 'D1', size: 2, fillColor: 'gray', strokeColor: 'gray' });
-    polygon = brd.create('regularpolygon', [D1, D, n.Value()], { vertices: { visible: true, fillColor: 'gray', strokeColor: 'gray' } });
+    D = brd.create('intersection', [lAC1, tang1, 0], { name: 'D', withLabel: false, fillColor: 'gray', strokeColor: 'gray', size: 2 });
+    D1 = brd.create('reflection', [D, per1], { name: 'D1', withLabel: false, size: 2, fillColor: 'gray', strokeColor: 'gray' });
+    polygon = brd.create('regularpolygon', [D1, D, n.Value()], { vertices: { visible: true, withLabel: false, fillColor: 'gray', strokeColor: 'gray' } });
     brd.clickRightArrow();
     brd.clickRightArrow();
     brd.clickRightArrow();

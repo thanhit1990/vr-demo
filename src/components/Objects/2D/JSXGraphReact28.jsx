@@ -7,7 +7,7 @@ let logicJS = (brd) => {
     brd.suspendUpdate();
 
     // create a slider with name "a" from 1 to 10 with initial value 1
-    var slider = brd.create('slider', [[2, 10], [5, 10], [0, 180, 180]],
+    var slider = brd.create('slider', [[2, 11], [10, 11], [0, 180, 180]],
         {
             name: 'θ',
             snapWidth: 1,
@@ -22,7 +22,7 @@ let logicJS = (brd) => {
             highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 5 },
         });
 
-    var slider2 = brd.create('slider', [[2, 9], [5, 9], [0, 180, 180]],
+    var slider2 = brd.create('slider', [[2, 9], [10, 9], [0, 180, 180]],
         {
             name: 'θ',
             snapWidth: 1,
