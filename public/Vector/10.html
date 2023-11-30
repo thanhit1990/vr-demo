@@ -55,6 +55,8 @@
             boundingbox: [-10, 10, 10, -10],
             keepaspectratio: false,
             axis: false,
+            zoomX: 1.5,
+            zoomY: 1.5
         });
 
         board.resizeContainer(600, 600, false, false);
@@ -92,7 +94,7 @@
         if (true) {
             // Cube
             var O = view.create('point3d', [0, 0, 0], point_attr);
-            O.setAttribute({ name: '0', visible: 'false'});
+            O.setAttribute({ name: '0', visible: 'false' });
 
             var B = view.create('point3d', [2, 0, 0], point_attr);
             B.setAttribute({ name: 'B' });
@@ -222,8 +224,8 @@
                 }
             });
 
-            // board.clickDownArrow();
-            // board.clickDownArrow();
+            board.clickDownArrow();
+            board.clickDownArrow();
             board.update();
         }        
     </script>
