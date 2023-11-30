@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CSG</title>
+    <!-- <link rel="stylesheet" href="css/01.css"> -->
+</head>
+
+<body>
+    <!--script src="https://threejs.org/build/three.js"></!--script-->
+    <script src="https://rawcdn.githack.com/mrdoob/three.js/r124/build/three.js"></script>
+    <script src="https://rawcdn.githack.com/mrdoob/three.js/r124/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://rawcdn.githack.com/mrdoob/three.js/r124/examples/js/controls/DragControls.js"></script>
+    <script src="https://rawgit.com/Wilt/ThreeCSG/develop/ThreeCSG.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19"></script>
+    <div id="container"></div>
+    <script>
+        (function onLoad() {
+            var GUI = lil.GUI;
+            var container, camera, scene, renderer, controls, gui, bsp_mesh, bsp_A, bsp_Y, bsp_Y_subA, dragControls;
+            var geometry_A, geometry_Y, geometry_A_mesh;
+            var cur_X = 0, cur_Y = 0, cur_Z = 0;
+            init();
+            animate();
+
+            function init() {
+                container = document.getElementById('container');
+
+                renderer = new THREE.WebGLRenderer({
+                    antialias: true
+                });
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.shadowMap.enabled = true;
+                container.appendChild(renderer.domElement);
+
+                scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xffffff);
+
+                camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 10000);
+                camera.position.set(1.6, 1.6, -1);
+                scene.add(camera);
+                window.onresize = function () {
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                }
+
+                var ambientLight = new THREE.AmbientLight(0x404040);
+                scene.add(ambientLight);
+
+                var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+                directionalLight.position.x = 4;
+                directionalLight.position.y = 1;
+                directionalLight.position.z = -2;
+                scene.add(directionalLight);
+
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+                addGridHelper();
+                createModel();
+                addGUI();
+            }
+
+            function addGUI() {
+                gui = new GUI();
+                obj = { X: 0, Y: 0, Z: 0 }
+                gui.add(obj, 'X', -0.6, 0.6, 0.1).onChange(value => {
+                    var seek_value = value - cur_X;
+                    geometry_A.translate(seek_value, 0, 0);
+                    cur_X = value;
+                    updateModel();
+                }); // min, max, step
+                gui.add(obj, 'Y', -0.6, 0.6, 0.1).onChange(value => {
+                    var seek_value = value - cur_Y;
+                    geometry_A.translate(0, seek_value, 0);
+                    cur_Y = value;
+                    updateModel();
+                }); // min, max, step
+                gui.add(obj, 'Z', -0.6, 0.6, 0.1).onChange(value => {
+                    var seek_value = value - cur_Z;
+                    geometry_A.translate(0, 0, seek_value);
+                    cur_Z = value;
+                    updateModel();
+                }); // min, max, step
+            }
+
+            function updateModel() {
+                scene.remove(bsp_mesh);
+                scene.remove(bsp_A);
+                // Remove bsp_A data                
+                scene.remove(bsp_Y);
+                scene.remove(bsp_Y_subA);
+                bsp_A = new ThreeBSP(geometry_A);
+                bsp_Y = new ThreeBSP(geometry_Y);
+
+                bsp_Y_subA = bsp_Y.subtract(bsp_A);
+                bsp_mesh = bsp_Y_subA.toMesh();
+                bsp_mesh.material = new THREE.MeshLambertMaterial({ color: 0x00ff00, wireframe: true });
+                geometry_Y = bsp_mesh.geometry;
+                scene.add(bsp_mesh);
+            }
+
+            function onWindowResize() {
+
+				const aspect = window.innerWidth / window.innerHeight;
+
+				cameraPersp.aspect = aspect;
+				cameraPersp.updateProjectionMatrix();
+
+				cameraOrtho.left = cameraOrtho.bottom * aspect;
+				cameraOrtho.right = cameraOrtho.top * aspect;
+				cameraOrtho.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				render();
+
+			}
+
+
+            function render() {
+                renderer.render(scene, currentCamera);
+            }
+
+            function createModel() {
+
+                geometry_Y = new THREE.BoxBufferGeometry(1.5, 1.5, 1.5);
+                geometry_A = new THREE.CylinderBufferGeometry(0.2, 0.2, 0.7, 12);
+                // geometry_A = new THREE.BoxBufferGeometry(0.3, 0.7, 0.3);
+                var geometry_A_mesh = new THREE.Mesh(geometry_A, new THREE.MeshLambertMaterial({ color: 0xff0000, wireframe: true }));
+                scene.add(geometry_A_mesh);
+                geometry_A.translate(0, 0.7, 0);
+
+                bsp_A = new ThreeBSP(geometry_A);
+                bsp_Y = new ThreeBSP(geometry_Y);
+
+                bsp_Y_subA = bsp_Y.subtract(bsp_A);
+                bsp_mesh = bsp_Y_subA.toMesh();
+                bsp_mesh.material = new THREE.MeshLambertMaterial({ color: 0x00ff00, wireframe: true });
+                geometry_Y = bsp_mesh.geometry;
+                scene.add(bsp_mesh);
+            }
+
+            function addGridHelper() {
+
+                var helper = new THREE.GridHelper(10, 10);
+                helper.material.opacity = 0.25;
+                helper.material.transparent = true;
+                scene.add(helper);
+
+                // var axis = new THREE.AxesHelper(100);
+                // scene.add(axis);
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                render();
+            }
+
+            function render() {
+                renderer.render(scene, camera);
+            }
+        })();
+    </script>
+</body>
+
+
+
+</html>
