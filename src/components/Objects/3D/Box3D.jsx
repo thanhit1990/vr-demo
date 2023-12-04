@@ -32,7 +32,7 @@ const models = [
     "../Cone_solid  BAKED 100fps.glb",
     "../Cylinder_solid_BAKED_100fps.glb",
     "../dagiac1.gltf",
-    "../pentagon2.glb",]
+    "../pentagon5.glb",]
 const button_positions = [
     [3.8, 0.2, 2.5],
     [0.1, 0.2, 2.5],
@@ -80,7 +80,7 @@ export default function Box3D() {
     } else {
         box_idx += 2
         if (box_idx ==6) {
-            percentage = useAnimationControls(0.01, 0.55);
+            percentage = useAnimationControls(0.01, 1.01);
         } else {
             percentage = useAnimationControls(0.01, 0.99);
         }
@@ -100,6 +100,16 @@ export default function Box3D() {
         },
         castShadow: true,
     }
+
+    const directionalCtl2 = {
+        visible: true,
+        position: {
+            x: -3.3,
+            y: -1.0,
+            z: -4.4,
+        },
+        castShadow: true,
+    }
     return (
         <>
             <Canvas camera={{ position: [-10, 10, 10], fov: 60 }}>
@@ -115,6 +125,15 @@ export default function Box3D() {
                             directionalCtl.position.z,
                         ]}
                         castShadow={directionalCtl.castShadow}
+                    />
+                    <directionalLight
+                        visible={directionalCtl2.visible}
+                        position={[
+                            directionalCtl2.position.x,
+                            directionalCtl2.position.y,
+                            directionalCtl2.position.z,
+                        ]}
+                        castShadow={directionalCtl2.castShadow}
                     />
                     <Button3D position={button_position} text="tekville.com" />
                     <Suspense fallback={null}>
