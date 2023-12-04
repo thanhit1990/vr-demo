@@ -32,7 +32,7 @@ const models = [
     "../Cone_solid  BAKED 100fps.glb",
     "../Cylinder_solid_BAKED_100fps.glb",
     "../dagiac1.gltf",
-    "../pentagon6.glb",]
+    "../pentagon7.glb",]
 const button_positions = [
     [3.8, 0.2, 2.5],
     [0.1, 0.2, 2.5],

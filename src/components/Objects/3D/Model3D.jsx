@@ -10,7 +10,7 @@ export default function Model3D({ percentage, ...props }) {
 
     // Create a custom material (you can replace this with your own material settings)
     const customMaterial = new MeshBasicMaterial({ color: 'red', wireframe: false });
-    const material = new MeshStandardMaterial({ color: props.color, flatShading: true })
+    const material = new MeshStandardMaterial({ color: props.color, flatShading: true})
 
     // Traverse through the model and apply the custom material to all meshes
     scene.traverse((child) => {
