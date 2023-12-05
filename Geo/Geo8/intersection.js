@@ -1,10 +1,10 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.117.0/build/three.module.js';
 import { Line2 } from 'https://cdn.jsdelivr.net/npm/three@0.117.0/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.117.0/examples/jsm/lines/LineGeometry.js';
-import { GeometryUtils } from 'https://cdn.jsdelivr.net/npm/three@0.117.0/examples/jsm/utils/GeometryUtils.js';
+// import { GeometryUtils } from 'https://cdn.jsdelivr.net/npm/three@0.117.0/examples/jsm/utils/GeometryUtils.js';
 import { LineMaterial } from './src/LineMaterial.js';
 
-import { BufferGeometry } from 'three';
+// import { BufferGeometry } from 'three';
 
 function interpolatePoints(points, numberOfInterpolatedPoints) {
     const result = [];
@@ -96,32 +96,6 @@ function drawIntersectionPoints(plane, cone) {
     geometry.setPositions(positions);
     geometry.setColors(colors);
 
-    console.log(positions);
-    // console.log(colors);
-
-    // var curveData = {
-    //     "positions": positions,
-    //     "colors": colors
-    // };
-
-    // var curveData_n = [];
-    // curveData_n.push(curveData);
-    // // Save positions and colors to json file
-    // // Convert JSON data to a string
-    // const jsonString = JSON.stringify(curveData_n, null, 2);
-    // // Create a Blob with the JSON data
-    // const blob = new Blob([jsonString], { type: 'application/json' });
-    // // Create a URL for the Blob
-    // const url = URL.createObjectURL(blob);
-    // // Create a download link
-    // const download_link = document.createElement('a');
-    // download_link.href = url;
-    // download_link.download = 'curveData.json'; // Specify the desired filename
-    // // Simulate a click to trigger the download
-    // download_link.click();
-    // // Clean up by revoking the URL
-    // URL.revokeObjectURL(url);
-
 
     var matLine = new LineMaterial({
         color: 0xffffff,
@@ -161,7 +135,7 @@ function removeDuplicatePoints(points) {
     });
 }
 
-export default function createIntersection(plane, cone) {
+export function createIntersection(plane, cone) {
 
     const lines = drawIntersectionPoints(plane, cone);
     return lines;

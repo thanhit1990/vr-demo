@@ -1299,7 +1299,7 @@ var curveDataTop = [
     }
 ]
 
-export default function createCurve() {
+export function createCurve() {
     // read data from json file
     var line = drawLine(curveDataTop[0].positions, curveDataTop[0].colors);
     return line;
