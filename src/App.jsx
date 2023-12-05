@@ -191,7 +191,7 @@ const App = () => {
         {/* 삼각비 01 */}
         <Route path="/Trigonometry/1" Component={JSXGraphReact21} />
         {/* 삼각비 02 */}
-        {/* <Route path="/Trigonometry/2" Component={JSXGraphReact25} /> */}
+        <Route path="/Trigonometry/2" Component={JSXGraphReact25} />
         {/* 삼각비 03 */}
         <Route path="/Trigonometry/3" Component={JSXGraphReact30} />
         {/* 삼각비 04 */}

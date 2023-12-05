@@ -7,7 +7,7 @@ let logicJS = (brd) => {
     brd.suspendUpdate();
 
     // create a slider with name "a" from 1 to 10 with initial value 1
-    var slider = brd.create('slider', [[-15, -5], [15, -5], [1, 1, 10]],
+    var slider = brd.create('slider', [[-20, -5], [5, -5], [1, 1, 5]],
         {
             name: '',
             snapWidth: 0.1,
@@ -22,11 +22,11 @@ let logicJS = (brd) => {
             highline: { strokeColor: 'blue', highlightStrokeColor: 'blue', strokeWidth: 5 },
         });
 
-
+    var list_triangles = [];
     // create a point with name "A" at coordinates (-20,0)
-    var A = brd.create('point', [-20, 0], { name: "A", size: 2, color: 'red', visible: false });
+    var A = brd.create('point', [-20, 0], { name: "A", size: 4, color: 'green', visible: true });
     // create a point with name "B" at coordinates (19,0)
-    var B = brd.create('point', [-15, 0], { name: "B", size: 2, color: 'red', visible: false });
+    var B = brd.create('point', [-15, 0], { name: "B", size: 4, color: 'green', visible: true });
 
     // create a line through A and B
     var line = brd.create('line', [[-20, 0], [-15, 0]], { strokeColor: 'black', strokeWidth: 1, fixed: true });
@@ -37,16 +37,15 @@ let logicJS = (brd) => {
             fillOpacity: 0.3,
             strokeColor: 'red',
             strokeWidth: 2,
-            vertices:
-            {
-                strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
-            }
+            vertices: { visible: false },
+            borders: { strokeColor: 'blue', strokeWidth: 2, highlightStrokeColor: 'blue', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 },
         });
-    var E = brd.create('point', [pol.vertices[2].X(), pol.vertices[2].Y()], { name: "E", size: 2, color: 'green', visible: false });
+
+    var E = brd.create('point', [pol.vertices[2].X(), pol.vertices[2].Y()], { name: "C", size: 4, color: 'green', visible: true });
     var previousA = brd.create('point', [E.X(), E.Y()], { name: "A", size: 2, color: 'red', visible: false });
     var A1 = brd.create('point', [A.X(), A.Y()], { name: "A1", size: 2, color: 'red', visible: false });
     var B1 = brd.create('point', [B.X(), B.Y()], { name: "B1", size: 2, color: 'red', visible: false });
-    var arc = brd.create('arc', [B, E, previousA], { visible: true, strokeColor: 'red', strokeWidth: 2, fixed: true });
+    var arc = brd.create('arc', [B, E, previousA], { visible: true, strokeColor: 'red', strokeWidth: 2, fixed: false });
     // create a regular polygon with A, B, and 3 vertices
     var pol3 = brd.create('regularpolygon', [A1, B1, 3],
         {
@@ -54,11 +53,30 @@ let logicJS = (brd) => {
             fillOpacity: 0.3,
             strokeColor: 'red',
             strokeWidth: 2,
-            vertices:
-            {
-                strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
-            }
+            vertices: { visible: false },
+            borders: { strokeColor: 'blue', strokeWidth: 2, highlightStrokeColor: 'blue', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 },
         });
+    list_triangles.push(pol3);
+
+    var createTriangle = function (A, B) {
+        var A1 = brd.create('point', [A.X(), A.Y()], { name: "A1", size: 2, color: 'red', visible: false });
+        var B1 = brd.create('point', [B.X(), B.Y()], { name: "B1", size: 2, color: 'red', visible: false });
+        // create a regular polygon with A, B, and 3 vertices
+        var pol3 = brd.create('regularpolygon', [A1, B1, 3],
+            {
+                fillColor: 'red',
+                fillOpacity: 0.3,
+                strokeColor: 'red',
+                strokeWidth: 2,
+                vertices: { visible: false },
+                borders: { strokeColor: 'blue', strokeWidth: 2, highlightStrokeColor: 'blue', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 },
+                visible: true
+            });
+        var verticesC = pol3.vertices[2];
+        verticesC.setAttribute({ visible: true, withLabel: true, name: "C", size: 4, color: 'green' })
+        return pol3;
+    };
+
 
     // rotate B around A an angle of slider value
     // Define the rotation angle in radians (e.g., 30 degrees)
@@ -68,102 +86,90 @@ let logicJS = (brd) => {
         rotationPoint.moveTo([pivotPoint.X() + (rotationPoint.X() - pivotPoint.X()) * Math.cos(angle) - (rotationPoint.Y() - pivotPoint.Y()) * Math.sin(angle),
         pivotPoint.Y() + (rotationPoint.X() - pivotPoint.X()) * Math.sin(angle) + (rotationPoint.Y() - pivotPoint.Y()) * Math.cos(angle)]);
         brd.update();
-    }; ``
+    };
     // get current slider value
     var val = slider.Value();
+    var pivotPoint = B;
+    var rotationPoint = A;
+    var direction = true;
+
+
 
     slider.on('drag', function () {
         // get current slider value
+        if (val % 2 == 0 || val % 2 == 1) {
+            if (slider.Value() < val) {
+                var triangle_index_floor = Math.floor(val) - 1;
+                if (triangle_index_floor != 0) {
+                    if (list_triangles[triangle_index_floor] != null) {
+                        var cur_triangle = list_triangles.pop();
+                        var verticesC = cur_triangle.vertices[2];
+                        brd.removeObject(cur_triangle);
+                        brd.removeObject(verticesC);
+                        console.log("remove " + list_triangles.length);
+                    }
+                }
+            }
+        }
         var new_val = slider.Value();
+        var diff_val = val - new_val;
         // convert slider value to radians
         var angle = (val - new_val) * 120 * Math.PI / 180;
         val = new_val;
-        rotateObject(B, A, angle);
-        if (slider.Value() % 2 == 0) {
-            // create new regular polygon with A, B, and 3 vertices
-            var pol1 = brd.create('regularpolygon', [A, B, 3],
-                {
-                    fillColor: 'red',
-                    fillOpacity: 0.3,
-                    strokeColor: 'red',
-                    strokeWidth: 2,
-                    vertices:
-                    {
-                        strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
-                    }
-                });
-            var polyVertices = pol.vertices;
-            for (var i = 0; i < polyVertices.length; i++) {
-                console.log(polyVertices[i].X(), polyVertices[i].Y());
-            }
-            var previousA1 = brd.create('point', [previousA.X(), previousA.Y()], { name: "A", size: 2, color: 'red', visible: false });
-            previousA = brd.create('point', [A.X(), A.Y()], { name: "A", size: 2, color: 'red', visible: false });
-            A = brd.create('point', [B.X(), B.Y()], { name: "A", size: 2, color: 'red', visible: false });
-            B = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 2, color: 'red', visible: false });
-            var A1 = brd.create('point', [A.X(), A.Y()], { name: "A1", size: 2, color: 'red', visible: false });
-            var B1 = brd.create('point', [B.X(), B.Y()], { name: "B1", size: 2, color: 'red', visible: false });
+        if (diff_val > 0) {
+            direction = false;
+            rotateObject(rotationPoint, pivotPoint, angle);
+        } else {
+            direction = true;
+            rotateObject(pivotPoint, rotationPoint, angle);
+        }
 
-            var arc2 = brd.create('arc', [A1, B1, previousA1], { visible: true, strokeColor: 'red', strokeWidth: 2, fixed: true });
+        // Get all triangle vertices of regularpolygon pol
+        var polyVertices = pol.vertices;
+
+        if (slider.Value() % 2 == 0 || slider.Value() % 2 == 1) {
+            // Remove object A, B
+            brd.removeObject(A);
+            brd.removeObject(B);
             brd.removeObject(pol);
+
+            if (direction) {
+                A = brd.create('point', [B.X(), B.Y()], { name: "A", size: 4, color: 'green', visible: true });
+                B = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 4, color: 'green', visible: true });
+            } else {
+                B = brd.create('point', [A.X(), A.Y()], { name: "A", size: 4, color: 'green', visible: true });
+                A = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 4, color: 'green', visible: true });
+            }
+
+            var triangle_index = slider.Value();
+            var triangle_index_floor = Math.floor(triangle_index);
+            console.log(triangle_index_floor);
+            if (list_triangles[triangle_index_floor - 1] != null) {
+            } else {
+                list_triangles.push(createTriangle(A, B));
+                console.log(list_triangles.length);
+            }
+
             pol = brd.create('regularpolygon', [A, B, 3],
                 {
                     fillColor: 'red',
                     fillOpacity: 0.3,
                     strokeColor: 'red',
                     strokeWidth: 2,
-                    vertices:
-                    {
-                        strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
-                    }
+                    vertices: { visible: false },
+                    borders: { strokeColor: 'blue', strokeWidth: 2, highlightStrokeColor: 'blue', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 },
+                    visible: true
                 });
 
-        } else
-            if ((Number.isInteger(slider.Value()))) {
-                var pol2 = brd.create('regularpolygon', [A, B, 3],
-                    {
-                        fillColor: 'red',
-                        fillOpacity: 0.3,
-                        strokeColor: 'red',
-                        strokeWidth: 2,
-                        vertices:
-                        {
-                            strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
-                        }
-                    });
-                var polyVertices = pol.vertices;
-                for (var i = 0; i < polyVertices.length; i++) {
-                    console.log(polyVertices[i].X(), polyVertices[i].Y());
-                }
-                var previousA1 = brd.create('point', [previousA.X(), previousA.Y()], { name: "A", size: 2, color: 'red', visible: false });
-                previousA = brd.create('point', [A.X(), A.Y()], { name: "A", size: 2, color: 'red', visible: false });
-                A = brd.create('point', [B.X(), B.Y()], { name: "A", size: 2, color: 'red', visible: false });
-                B = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 2, color: 'red', visible: false });
-                var A1 = brd.create('point', [A.X(), A.Y()], { name: "A1", size: 2, color: 'red', visible: false });
-                var B1 = brd.create('point', [B.X(), B.Y()], { name: "B1", size: 2, color: 'red', visible: false });
-                var arc2 = brd.create('arc', [A1, B1, previousA1], { visible: true, strokeColor: 'red', strokeWidth: 2, fixed: true });
-                brd.removeObject(pol);
-                pol = brd.create('regularpolygon', [A, B, 3],
-                    {
-                        fillColor: 'red',
-                        fillOpacity: 0.3,
-                        strokeColor: 'red',
-                        strokeWidth: 2,
-                        vertices:
-                        {
-                            strokeColor: 'black', fillColor: '#00FF00', strokeOpacity: 0.3
-                        }
-                    });
-            } else {
-                // draw an arc with center A and crossing B
-                // create a new point at [polyVertices[2].X(), polyVertices[2].Y()]
-                brd.removeObject(E);
-                // brd.removeObject(arc);
-                E = brd.create('point', [pol.vertices[2].X(), pol.vertices[2].Y()], { name: "E", size: 2, color: 'green', visible: false });
-                var arc2 = brd.create('arc', [B, E, previousA], { visible: true, strokeColor: 'red', strokeWidth: 2, fixed: true });
-            }
-
+            pivotPoint = B;
+            rotationPoint = A;
+        } else {
+            pol.setAttribute({ visible: true, borders: { strokeColor: 'blue', strokeWidth: 2, highlightStrokeColor: 'blue', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 }, });
+        }
     });
 
+    brd.clickLeftArrow();
+    brd.clickLeftArrow();
 
     brd.resizeContainer(800, 800);
     brd.unsuspendUpdate();
@@ -184,8 +190,8 @@ class JSXGraphComponent extends Component {
                     logic={logicJS}
                     boardAttributes={{
                         boundingBox: [-12, 12, 12, -12], axis: false,
-                        zoomX: 0.5,
-                        zoomY: 0.5
+                        zoomX: 0.7,
+                        zoomY: 0.7
                     }}
                     style={{
                         border: "1px solid black"
