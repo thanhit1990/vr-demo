@@ -1,12 +1,9 @@
-import {
-    init
-} from 'events';
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.117.0/build/three.module.js';
 import {
     OrbitControls
 } from 'https://cdn.jsdelivr.net/npm/three@0.117.0/examples/jsm/controls/OrbitControls.js';
 
-export default function setupScene() {
+export function setupScene() {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);

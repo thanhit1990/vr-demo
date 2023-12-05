@@ -2020,7 +2020,7 @@ var curveDataTop = [
     }
 ]
 
-export default function createCurveFull() {
+export function createCurveFull() {
     // read data from json file
     var line = drawLine(curveDataTop[0].positions, curveDataTop[0].colors);
     return line;
