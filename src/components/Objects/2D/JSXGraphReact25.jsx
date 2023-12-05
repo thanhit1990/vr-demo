@@ -24,9 +24,9 @@ let logicJS = (brd) => {
 
     var list_triangles = [];
     // create a point with name "A" at coordinates (-20,0)
-    var A = brd.create('point', [-20, 0], { name: "A", size: 4, color: 'green', visible: true });
+    var A = brd.create('point', [-20, 0], { name: "A", size: 4, color: 'red', visible: true });
     // create a point with name "B" at coordinates (19,0)
-    var B = brd.create('point', [-15, 0], { name: "B", size: 4, color: 'green', visible: true });
+    var B = brd.create('point', [-15, 0], { name: "B", size: 4, color: 'red', visible: true });
 
     // create a line through A and B
     var line = brd.create('line', [[-20, 0], [-15, 0]], { strokeColor: 'black', strokeWidth: 1, fixed: true });
@@ -38,7 +38,7 @@ let logicJS = (brd) => {
             strokeColor: 'red',
             strokeWidth: 2,
             vertices: { visible: false },
-            borders: { strokeColor: 'blue', strokeWidth: 2, highlightStrokeColor: 'blue', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 },
+            visible: false,
         });
 
     var E = brd.create('point', [pol.vertices[2].X(), pol.vertices[2].Y()], { name: "C", size: 4, color: 'green', visible: true });
@@ -134,11 +134,11 @@ let logicJS = (brd) => {
             brd.removeObject(pol);
 
             if (direction) {
-                A = brd.create('point', [B.X(), B.Y()], { name: "A", size: 4, color: 'green', visible: true });
-                B = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 4, color: 'green', visible: true });
+                A = brd.create('point', [B.X(), B.Y()], { name: "A", size: 4, color: 'red', visible: true });
+                B = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 4, color: 'red', visible: true });
             } else {
-                B = brd.create('point', [A.X(), A.Y()], { name: "A", size: 4, color: 'green', visible: true });
-                A = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 4, color: 'green', visible: true });
+                B = brd.create('point', [A.X(), A.Y()], { name: "A", size: 4, color: 'red', visible: true });
+                A = brd.create('point', [polyVertices[2].X(), polyVertices[2].Y()], { name: "B", size: 4, color: 'red', visible: true });
             }
 
             var triangle_index = slider.Value();
@@ -158,7 +158,7 @@ let logicJS = (brd) => {
                     strokeWidth: 2,
                     vertices: { visible: false },
                     borders: { strokeColor: 'blue', strokeWidth: 2, highlightStrokeColor: 'blue', highlightStrokeWidth: 2, highlightStrokeOpacity: 0.4 },
-                    visible: true
+                    visible: false
                 });
 
             pivotPoint = B;

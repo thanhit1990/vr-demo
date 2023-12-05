@@ -7,7 +7,7 @@ let logicJS = (brd) => {
     brd.suspendUpdate();
 
     // create a slider with name "a" from 1 to 10 with initial value 1
-    var slider = brd.create('slider', [[2, 11], [10, 11], [0, 180, 180]],
+    var slider = brd.create('slider', [[2, -10], [10, -10], [0, 180, 180]],
         {
             name: 'θ',
             snapWidth: 1,
@@ -17,12 +17,12 @@ let logicJS = (brd) => {
             highlightStrokeColor: 'green',
             postLabel: '',
             precision: 0,
-            label: { fontSize: 10, strokeColor: 'green', cssStyle: 'margin-left: -55px; margin-top: 0px;' },
+            label: { fontSize: 20, strokeColor: 'green', cssStyle: 'margin-left: -55px; margin-top: -10px;' },
             baseline: { strokeColor: 'green', highlightStrokeColor: 'green', highlightStrokeOpacity: 0.4, strokeWidth: 3, opacity: 0.4 },
             highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 5 },
         });
 
-    var slider2 = brd.create('slider', [[2, 9], [10, 9], [0, 180, 180]],
+    var slider2 = brd.create('slider', [[-4, -10], [-12, -10], [0, 180, 180]],
         {
             name: 'θ',
             snapWidth: 1,
@@ -32,7 +32,7 @@ let logicJS = (brd) => {
             highlightStrokeColor: 'blue',
             postLabel: '',
             precision: 0,
-            label: { fontSize: 10, strokeColor: 'blue', cssStyle: 'margin-left: -55px; margin-top: 0px;' },
+            label: { fontSize: 20, strokeColor: 'blue', cssStyle: 'margin-left: 0px; margin-top: -10px;' },
             baseline: { strokeColor: 'blue', highlightStrokeColor: 'blue', highlightStrokeOpacity: 0.4, strokeWidth: 3, opacity: 0.4 },
             highline: { strokeColor: 'blue', highlightStrokeColor: 'blue', strokeWidth: 5 },
         });
@@ -106,7 +106,7 @@ let logicJS = (brd) => {
         withLines: true,
         highlightFillColor: 'white',
         vertices: { visible: false },
-        borders: { strokeColor: 'black', dash: 2, highlightStrokeColor: 'black' },
+        borders: { strokeColor: 'green', dash: 2, highlightStrokeColor: 'black' },
     });
 
     // Set the new position for the rotated point rrC
@@ -136,11 +136,11 @@ let logicJS = (brd) => {
         withLines: true,
         highlightFillColor: 'white',
         vertices: { visible: false },
-        borders: { strokeColor: 'black', dash: 2, highlightStrokeColor: 'black' },
+        borders: { strokeColor: 'blue', dash: 2, highlightStrokeColor: 'black' },
     });
 
 
-
+    brd.clickUpArrow();
     brd.resizeContainer(800, 800);
     brd.unsuspendUpdate();
 }
