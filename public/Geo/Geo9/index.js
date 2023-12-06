@@ -19,7 +19,7 @@ const pointer = new THREE.Vector2();    // Vector2 to hold the pointer position
 const onUpPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is released
 const onDownPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is pressed
 const ARC_SEGMENTS = 200; // Number of segments to use for the curve
-let earthSphere, point1, point2, radius = 5, lineGeometry, phi, theta1, theta2, middlePointMesh, crossPlane;
+let earthSphere, point1, point2, radius = 5, lineGeometry, phi, theta1, theta2, middlePointMesh, crossPlane, perpendicularPlane_,  intersectionLine;
 
 init();
 
@@ -135,13 +135,26 @@ function createCrossPlane(point1, point2, point3) {
     if (crossPlane) {
         scene.remove(crossPlane);
     }
+
+    if (perpendicularPlane_) {
+        scene.remove(perpendicularPlane_);
+    }
+
     // Calculate the normal vector
     const normal = new THREE.Vector3().crossVectors(point2.clone().sub(point1), point3.clone().sub(point1)).normalize();
+    // Create a vector that 90 degrees to the normal vector
+    const perpendicularNormal = new THREE.Vector3().crossVectors(normal, point3.clone().sub(point2)).normalize();
+
     var plane = new THREE.Plane();
     plane.setFromNormalAndCoplanarPoint(normal, point1).normalize();
 
+    var perpendicularPlane = new THREE.Plane();
+    perpendicularPlane.setFromNormalAndCoplanarPoint(perpendicularNormal, point2).normalize();
+
     // Create a basic rectangle geometry
     var planeGeometry = new THREE.PlaneGeometry(10, 10);
+
+    var perpendicularGeometry = new THREE.PlaneGeometry(10, 10);    
 
     // Align the geometry to the plane
     var coplanarPoint = plane.coplanarPoint();
@@ -149,10 +162,171 @@ function createCrossPlane(point1, point2, point3) {
     planeGeometry.lookAt(focalPoint);
     planeGeometry.translate(coplanarPoint.x, coplanarPoint.y, coplanarPoint.z);
 
+    var coplanarPoint2 = perpendicularPlane.coplanarPoint();
+    var focalPoint2 = new THREE.Vector3().copy(coplanarPoint2).add(perpendicularPlane.normal);
+    perpendicularGeometry.lookAt(focalPoint2);
+    perpendicularGeometry.translate(coplanarPoint2.x, coplanarPoint2.y, coplanarPoint2.z);
+
     // Create mesh with the geometry
     var planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffff00, side: THREE.DoubleSide });
     crossPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+    crossPlane.visible = false;
+
+    perpendicularPlane_ = new THREE.Mesh(perpendicularGeometry, planeMaterial);  
+    perpendicularPlane_.visible = false;  
+
     scene.add(crossPlane);
+    scene.add(perpendicularPlane_);
+
+    if (intersectionLine) {
+        scene.remove(intersectionLine);
+    }
+    // Find intersection points between crossPlane and earthSphere
+    var pointsOfIntersection = new THREE.Geometry();
+    var a = new THREE.Vector3(),
+        b = new THREE.Vector3(),
+        c = new THREE.Vector3();
+    var planePointA = new THREE.Vector3(),
+        planePointB = new THREE.Vector3(),
+        planePointC = new THREE.Vector3();
+    var lineAB = new THREE.Line3(),
+        lineBC = new THREE.Line3(),
+        lineCA = new THREE.Line3();
+
+    var mathPlane = new THREE.Plane();
+    crossPlane.localToWorld(planePointA.copy(crossPlane.geometry.vertices[crossPlane.geometry.faces[0].a]));
+    crossPlane.localToWorld(planePointB.copy(crossPlane.geometry.vertices[crossPlane.geometry.faces[0].b]));
+    crossPlane.localToWorld(planePointC.copy(crossPlane.geometry.vertices[crossPlane.geometry.faces[0].c]));
+    mathPlane.setFromCoplanarPoints(planePointA, planePointB, planePointC);
+
+    earthSphere.geometry.faces.forEach(function (face) {
+        earthSphere.localToWorld(a.copy(earthSphere.geometry.vertices[face.a]));
+        earthSphere.localToWorld(b.copy(earthSphere.geometry.vertices[face.b]));
+        earthSphere.localToWorld(c.copy(earthSphere.geometry.vertices[face.c]));
+        lineAB = new THREE.Line3(a, b);
+        lineBC = new THREE.Line3(b, c);
+        lineCA = new THREE.Line3(c, a);
+        var pointAB = setPointOfIntersection(lineAB, mathPlane);
+        if (pointAB != null) pointsOfIntersection.vertices.push(pointAB);
+        var pointBC = setPointOfIntersection(lineBC, mathPlane);
+        if (pointBC != null) pointsOfIntersection.vertices.push(pointBC);
+        var pointCA = setPointOfIntersection(lineCA, mathPlane);
+        if (pointCA != null) pointsOfIntersection.vertices.push(pointCA);
+    });
+    var pointVertices = pointsOfIntersection.vertices;
+    // Remove duplicates points from the array
+    var uniquePoints = removeDuplicatePoints(pointVertices);
+    // uniquePoints = uniquePoints.sort((a, b) => a.x - b.x);
+    uniquePoints = interpolatePoints(uniquePoints, 5);
+
+    var newPoints = [];
+    var underSide = true;
+    const distanceToPlane = perpendicularPlane.distanceToPoint(point1);
+    if (distanceToPlane > 0) {
+        underSide = false;
+    }
+    // Calculate distance between each point in uniquePoints to the point1
+    for (var i = 0; i < uniquePoints.length; i++) {
+        var pointDistancetoPlane = perpendicularPlane.distanceToPoint(uniquePoints[i]);
+        if (pointDistancetoPlane < 0 && underSide) {
+            newPoints.push(uniquePoints[i]);
+        }
+
+        if (pointDistancetoPlane > 0 && !underSide) {
+            newPoints.push(uniquePoints[i]);
+        }
+    }
+
+
+    uniquePoints = newPoints;
+    
+    var colorUniquePoint = [1, 0, 1]
+    // convert from vector3 to array
+    var positions = [];
+    var colors = [];
+    var color = new THREE.Color();
+    for (var i = 0; i < uniquePoints.length; i++) {
+        positions.push(uniquePoints[i].x, uniquePoints[i].y, uniquePoints[i].z);
+        color.setHSL(i / uniquePoints.length, 1.0, 0.5);
+        colors.push(colorUniquePoint[0], colorUniquePoint[1], colorUniquePoint[2]);
+    }
+
+    var geometry = new LineGeometry();
+    geometry.setPositions(positions);
+    geometry.setColors(colors);
+    var matLine = new LineMaterial({
+        color: 0xffffff,
+        linewidth: 0.007, // in pixels
+        vertexColors: THREE.VertexColors,
+        transparent: false,
+        dashed: false,
+        stencilWrite: true,
+        stencilRef: 0
+    });
+
+    intersectionLine = new Line2(geometry, matLine);
+    intersectionLine.scale.set(1, 1, 1);
+    intersectionLine.renderOrder = 1;
+    scene.add(intersectionLine);
+
+}
+
+function calculateDistanceBetween2Points(point1, point2) {
+    var distance = Math.sqrt(Math.pow(point1.x - point2.x, 2) +
+        Math.pow(point1.y - point2.y, 2) +
+        Math.pow(point1.z - point2.z, 2));
+    return distance;
+}
+
+
+function interpolatePoints(points, numberOfInterpolatedPoints) {
+    const result = [];
+
+    for (let i = 0; i < points.length - 1; i++) {
+        const currentPoint = points[i];
+        const nextPoint = points[i + 1];
+
+        result.push(currentPoint); // Add the current point
+
+        // Perform linear interpolation between current and next points
+        for (let j = 1; j < numberOfInterpolatedPoints; j++) {
+            const t = j / numberOfInterpolatedPoints;
+            const interpolatedPoint = {
+                x: lerp(currentPoint.x, nextPoint.x, t),
+                y: lerp(currentPoint.y, nextPoint.y, t),
+                z: lerp(currentPoint.z, nextPoint.z, t),
+            };
+            result.push(interpolatedPoint);
+        }
+    }
+
+    result.push(points[points.length - 1]); // Add the last point
+
+    return result;
+}
+
+function lerp(start, end, t) {
+    return start + t * (end - start);
+}
+
+function removeDuplicatePoints(points) {
+    return points.filter((point, index, self) => {
+        // Check if the current point is the first occurrence in the array
+        return (
+            index ===
+            self.findIndex(
+                (p) => p.x === point.x && p.y === point.y && p.z === point.z
+            )
+        );
+    });
+}
+
+function setPointOfIntersection(line, plane) {
+    var pointOfIntersection = plane.intersectLine(line);
+    if (pointOfIntersection) {
+        if (pointOfIntersection.y <= -4) return null;
+        return pointOfIntersection.clone();
+    };
 }
 
 
@@ -219,7 +393,6 @@ function createGreatLine(radius) {
 }
 
 function addMiddlePoint(pointMesh1, pointMesh2) {
-
     if (middlePointMesh) {
         scene.remove(middlePointMesh);
     }
