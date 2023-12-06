@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>기하와 벡터
+    </title>
+    <style>
+        #JSXBoard {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            border-style: solid;
+            border-width: 1px;
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ffffff;
+            white-space: nowrap;
+            text-overflow: clip;
+        }
+
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #JSXBoard button {
+            padding: 0px;
+            margin-top: 0px;
+            background-color: #ffffff;
+
+        }
+
+        #JSXBoard_licenseText {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>기하와 벡터</h1>
+
+    <script type='text/javascript' charset='UTF-8'
+        src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' />
+    </script>
+    <div class='jxgbox' id='JSXBoard'> </div>
+    <script>
+        const board = JXG.JSXGraph.initBoard('JSXBoard', {
+            boundingbox: [-20, 20, 20, -20],
+            keepaspectratio: false,
+            axis: false
+        });
+
+        board.resizeContainer(800, 800, false, false);
+
+        var view = board.create('view3d',
+            [[10, -3], [15, 10],
+            [[-5, 5], [-5, 5], [-5, 5]]],
+            {
+                xPlaneRear: { visible: false },
+                yPlaneRear: { visible: false },
+                zPlaneRear: { fillColor: 'blue' },
+                xAxis: { visible: true },
+                yAxis: { visible: true },
+                zAxis: {
+                    visible: true
+                }
+            });
+        view.az_slide.hide();
+        view.el_slide.hide();
+
+        var slider = board.create('slider', [[-8, 10], [0, 10], [0, 0, 100]],
+            {
+                name: 'distance',
+                snapWidth: 1,
+                fillColor: 'white',
+                strokeColor: 'green',
+                highlightFillColor: 'white',
+                highlightStrokeColor: 'green',
+                postLabel: '%',
+                precision: 0,
+                label: { visible: true, fontSize: 15, strokeColor: 'green', cssStyle: 'margin-left: -55px; margin-top: -5px;' },
+                baseline: { strokeColor: 'green', highlightStrokeColor: 'green', highlightStrokeOpacity: 0.4, strokeWidth: 3, opacity: 0.4 },
+                highline: { strokeColor: 'green', highlightStrokeColor: 'green', strokeWidth: 5 },
+            });
+
+        if (true) {
+
+            // create a point at (0, 0) with name "O"
+            var O = board.create('point', [0, 0], { name: 'O', size: 9, color: 'black', fixed: true });
+            // create a point at (10, 0) with name I and fill color in white, border in black
+            var X = board.create('point', [8, 0], { name: 'X', size: 9, fillColor: 'white', strokeColor: 'black' });
+            // create a line y =0
+            var line = board.create('line', [[0, 0], [1, 0]], { visible: false });
+            // create a circle with center O and crossing I
+            var circle = board.create('circle', [O, X], {
+                visible: true, strokeColor: 'black', strokeWidth: 2, fillColor: '#FFEFD5', highlightFillColor: '#FFEFD5', fillColorOpacity: 0.5,
+            });
+            // point O is the intersection of line and circle
+            var O1 = board.create('intersection', [line, circle, 0], { visible: false, name: 'O1' });
+            // create a glider on circle with name "X"
+            var I = board.create('glider', [-10, 10, circle], { visible: false, name: 'I', size: 9, fillColor: '#FF6699', strokeColor: 'black', trace: false, });
+
+            // create a segment with two points O and I
+            var segment = board.create('segment', [O, I], { visible: false });
+            // create a point at (slider.Value(), 0)
+            var A = board.create('point', [(O1.X() * slider.Value() / 100), 0], { visible: true });
+            // create a circle with center O and crossing A
+            var circle2 = board.create('circle', [O, A], { visible: true });
+            // point B is the intersection of circle2 and segment
+            var B = board.create('intersection', [circle2, segment, 0], { visible: false });
+            // create a segment with two points O and B
+            var segment2 = board.create('segment', [O, B], { strokeColor: '#800200', strokeWidth: 4, fixed: false });
+
+            slider.on('drag', function () {
+                board.removeObject(A);
+                A = board.create('point', [(O1.X() * slider.Value() / 100), 0], { visible: false });
+                board.removeObject(circle2);
+                circle2 = board.create('circle', [O, A], { visible: false });
+                board.removeObject(B);
+                B = board.create('intersection', [circle2, segment, 0], { visible: false });
+                if (slider.Value() == 100) {
+                    I.setAttribute({ visible: true });
+                    I.setAttribute({ trace: true });
+                    circle.setAttribute({ visible: false });
+                    X.setAttribute({ visible: false });
+                } else {
+                    I.setAttribute({ visible: false });
+                    I.setAttribute({ trace: false });
+                    circle.setAttribute({ visible: true });
+                    X.setAttribute({ visible: true });
+                }
+                board.removeObject(segment2);
+                segment2 = board.create('segment', [O, B], { strokeColor: '#800200', strokeWidth: 4, fixed: true });
+                board.update();
+            });
+
+
+
+            var isDrawing = false;
+            var s = view.az_slide._smin;
+            var e = view.az_slide._smax;
+            var az_slider_diff = e - s;
+            view.az_slide.position = 0.8 / az_slider_diff;
+            s = view.el_slide._smin;
+            e = view.el_slide._smax;
+            var el_slider_diff = e - s;
+            view.el_slide.position = 0.21 / el_slider_diff;
+
+            let lastMouseX = 0;
+            let lastMouseY = 0;
+
+
+            document.addEventListener('mousedown', e => {
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                isDrawing = true;
+            });
+
+            document.addEventListener('mousemove', e => {
+                if (isDrawing === true) {
+                    const deltaX = e.clientX - lastMouseX;
+                    const deltaY = e.clientY - lastMouseY;
+                    view.az_slide.position += (deltaX / 100) / az_slider_diff;
+                    view.el_slide.position += (deltaY / 100) / el_slider_diff;
+                    lastMouseX = e.clientX;
+                    lastMouseY = e.clientY;
+                    board.update();
+                }
+            });
+
+            document.addEventListener('mouseup', e => {
+                if (isDrawing === true) {
+                    isDrawing = false;
+                }
+            });
+            board.clickRightArrow();
+            board.clickRightArrow();
+            board.update();
+        }        
+    </script>
+</body>
+
+</html>

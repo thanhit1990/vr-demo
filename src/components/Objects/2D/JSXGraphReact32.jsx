@@ -36,15 +36,15 @@ let logicJS = (brd) => {
         visible: true, strokeColor: 'black', strokeWidth: 2, fillColor: '#FFEFD5', highlightFillColor: '#FFEFD5', fillColorOpacity: 0.5,
     });
     // point O is the intersection of line and circle
-    var O1 = brd.create('intersection', [line, circle, 0], { visible: false });
+    var O1 = brd.create('intersection', [line, circle, 0], { visible: true, name: 'O1' });
     // create a glider on circle with name "X"
     var I = brd.create('glider', [-10, -10, circle], { visible: false, name: '', size: 9, fillColor: '#FF6699', strokeColor: 'black', trace: false, });
     // create a segment with two points O and I
     var segment = brd.create('segment', [O, I], { visible: false });
     // create a point at (slider.Value(), 0)
-    var A = brd.create('point', [(O1.X() * slider.Value() / 100), 0], { visible: false });
+    var A = brd.create('point', [(O1.X() * slider.Value() / 100), 0], { visible: true, name: 'A' });
     // create a circle with center O and crossing A
-    var circle2 = brd.create('circle', [O, A], { visible: false });
+    var circle2 = brd.create('circle', [O, A], { visible: true });
     // point B is the intersection of circle2 and segment
     var B = brd.create('intersection', [circle2, segment, 0], { visible: false });
     // create a segment with two points O and B

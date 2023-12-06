@@ -36,6 +36,7 @@ let logicJS = (brd) => {
             baseline: { strokeColor: 'blue', highlightStrokeColor: 'blue', highlightStrokeOpacity: 0.4, strokeWidth: 3, opacity: 0.4 },
             highline: { strokeColor: 'blue', highlightStrokeColor: 'blue', strokeWidth: 5 },
         });
+        
 
     //create a point at 0, -3
     var A = brd.create('point', [0, -3], {
