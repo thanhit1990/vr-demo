@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>회전체</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #slider-container {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-45%);
+            color: black;
+        }
+
+        #for-rotation-slider {
+            margin-bottom: 10px;
+            position: absolute;
+            width: 100px;
+            margin-left: 10px;
+        }
+
+        #JSXBoard {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            border-style: solid;
+            border-width: 1px;
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ffffff;
+            white-space: nowrap;
+            text-overflow: clip;
+        }
+
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #JSXBoard button {
+            padding: 0px;
+            margin-top: 0px;
+            background-color: #ffffff;
+
+        }
+
+        #JSXBoard_licenseText {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.149/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.149/examples/jsm/"
+            }
+        }
+      </script>
+
+    <script type='text/javascript' charset='UTF-8'
+        src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' />
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div id="scene-container"></div>
+            </div>
+            <div class="col-md-6">
+                <div id="slider-container">
+                    <div class='jxgbox' id='JSXBoard'> </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const board = JXG.JSXGraph.initBoard('JSXBoard', {
+                boundingbox: [-20, 20, 20, -20],
+                keepaspectratio: false,
+                axis: true
+            });
+
+            board.resizeContainer(700, 700, false, false);
+
+            // create a point at (0, 0) with name "O"
+            var O = board.create('point', [0, 0], { name: 'O', size: 9, color: 'black', fixed: true });
+            // create a point at (10, 0) with name I and fill color in white, border in black
+            var X = board.create('point', [12, 0], { name: 'X', size: 9, visible: false, fillColor: 'white', strokeColor: 'black' });
+            // create a line y =0
+            var line = board.create('line', [[0, 0], [1, 0]], { visible: false });
+            // create a circle with center O and crossing I
+            var circle = board.create('circle', [O, X], {
+                visible: true, strokeColor: 'black', strokeWidth: 2, fillColor: '#FFEFD5', highlightFillColor: '#FFEFD5', fillColorOpacity: 0.5,
+            });
+            // point O is the intersection of line and circle
+            var O1 = board.create('intersection', [line, circle, 0], { visible: false, name: 'O1' });
+            // create a glider on circle with name "X"
+            var I = board.create('glider', [-10, 10, circle], {
+                visible: false, name: 'I', size: 9, fillColor: 'red', strokeColor: 'red', strokeWidth: 0.5, trace: false, highlightFillColor: 'red', highlightStrokeColor: 'red',
+                traceAttributes: { strokeColor: 'green', fillColor: 'green', size: 7 }
+            });
+            
+            // I on drag
+            I.on('drag', function () {
+                I.setAttribute({ trace: true });
+            });
+
+            // create a segment with two points O and I
+            var segment = board.create('segment', [O, I], { visible: false });
+            // create a point at (value, 0)
+            var A = board.create('point', [(O1.X() * 0), 0], { visible: true });
+            // create a circle with center O and crossing A
+            var circle2 = board.create('circle', [O, A], { visible: true });
+            // point B is the intersection of circle2 and segment
+            var B = board.create('intersection', [circle2, segment, 0], { visible: false });
+            // create a segment with two points O and B
+            var segment2 = board.create('segment', [O, B], { strokeColor: 'blue', strokeWidth: 4, fixed: false });
+        </script>
+
+        <script type="module">
+            import * as THREE from 'three';
+            import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+            import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+            import { TransformControls } from 'three/addons/controls/TransformControls.js';
+            import { DragControls } from 'three/addons/controls/DragControls.js';
+            import { Line2 } from 'three/addons/lines/Line2.js';
+            import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+            import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+            import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
+            // Global variables for the scene and camera objects as well as the renderer
+            let container; // The container we place the scene in
+            let camera, scene, renderer, curve; // Camera, scene and renderer objects
+            let minT = -1.9; // Initial minimum value of t
+            let maxT = 1.7; // Initial maximum value of t
+            const raycaster = new THREE.Raycaster(); // Raycaster to enable selection and dragging
+            const pointer = new THREE.Vector2();    // Vector2 to hold the pointer position
+            const onUpPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is released
+            const onDownPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is pressed
+            let transformControl; // TransformControls object to enable dragging of points
+            const ARC_SEGMENTS = 200; // Number of segments to use for the curve
+            let earthSphere, point1, point2, radius = 5, lineGeometry, radius2, phi, theta1, theta2, originLine, movingLine, originMesh;
+            let movingPoint;
+            let listPointOnSphere = [];
+            let rendererWidth = window.innerWidth / 2;
+            let rendererHeight = window.innerHeight;
+            // The Earth sphere
+
+            init();
+
+            function init() {
+                // Add event listeners for pointer events
+                document.addEventListener('pointerdown', onPointerDown);
+                document.addEventListener('pointerup', onPointerUp);
+                document.addEventListener('pointermove', onPointerMove);
+                window.addEventListener('resize', onWindowResize);
+
+                // Get the container element from the HTML document
+                container = document.getElementById("scene-container");
+                // Create the renderer and add it to the container element 
+                renderer = new THREE.WebGLRenderer({ antialias: true });
+                // Set the viewport size to the container size
+                renderer.setPixelRatio(window.devicePixelRatio);
+                // Set the renderer size to the container size is container size
+                renderer.setSize(rendererWidth, rendererHeight);
+                // Enable shadow mapping in the renderer
+                renderer.shadowMap.enabled = true;
+                // Add the renderer to the container element
+                container.appendChild(renderer.domElement);
+
+                // Create the scene and set the scene background color to black
+                scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xf0f0f0);
+
+                // Create the camera and set its position and direction to look at the center of the scene (the origin)
+                camera = new THREE.PerspectiveCamera(70, rendererWidth / rendererHeight, 1, 10000);
+                camera.position.set(8.414899007914741, 9.059146722678172, 7.830963045498018);
+                scene.add(camera);
+
+                // Create the renderer and set its size to the size of the browser window
+                scene.add(new THREE.AmbientLight(0xf0f0f0, 0.5));
+                // Create a directional light and add it to the scene
+                const light = new THREE.SpotLight(0xffffff, 0.5);
+                light.position.set(0, 1500, 200);
+                light.angle = Math.PI * 0.2;
+                light.decay = 0;
+                light.castShadow = true;
+                light.shadow.camera.near = 200;
+                light.shadow.camera.far = 2000;
+                light.shadow.bias = - 0.000222;
+                // Set up shadow properties for the light
+                light.shadow.mapSize.width = 1024;
+                light.shadow.mapSize.height = 1024;
+                light.shadow.camera.near = 0.5;
+                light.shadow.camera.far = 20;
+                scene.add(light);
+
+                // create orbit controls and transform controls for the scene
+                const orbitControls = new OrbitControls(camera, renderer.domElement);
+                orbitControls.damping = 0.2;
+                transformControl = new TransformControls(camera, renderer.domElement);
+
+                transformControl.addEventListener('dragging-changed', function (event) {
+                    orbitControls.enabled = !event.value;
+                });
+                scene.add(transformControl);
+
+                transformControl.addEventListener('objectChange', function () {
+                    updateSplineOutline();
+                });
+
+                // Create a sphere geometry
+                const sphereGeometry = new THREE.SphereGeometry(radius, 32, 32); // Radius, widthSegments, heightSegments
+                // Load the Earth texture
+                const textureLoader = new THREE.TextureLoader();
+                const earthTexture = textureLoader.load('.././earth_texture.jpg'); // Replace with the actual URL of your Earth texture
+                // Create a material with the Earth texture
+                const material = new THREE.MeshStandardMaterial({
+                    roughness: 0.8, // Adjust the roughness for more realistic appearance
+                    metalness: 0.1, // Adjust the metalness for more realistic appearance
+                    color: 0xffffff, // Base color
+                    opacity: 0.5, // Make the material opaque
+                    transparent: true, // Make the material transparent
+
+                });
+
+                // Call the function to create the coordinate plane
+                createCoordinatePlane();
+
+                // Create the X, Y, Z axes
+                const axesHelper = new THREE.AxesHelper(3);
+                scene.add(axesHelper);
+
+                // Create a mesh with the geometry and material
+                earthSphere = new THREE.Mesh(sphereGeometry, material);
+                earthSphere.visible = false;
+                // Add the Earth sphere to the scene
+                scene.add(earthSphere);
+                earthSphere.castShadow = true;
+                earthSphere.receiveShadow = true;
+
+                phi = 45; // Replace with the desired phi angle in radians
+                theta1 = Math.PI / 4; // Replace with the desired theta angle for point1 in radians
+
+                var pointX = radius * Math.sin(theta1) * Math.cos(phi);
+                var pointY = radius * Math.sin(theta1) * Math.sin(phi);
+                var pointZ = radius * Math.cos(theta1);
+
+                // Usage:
+                point1 = create3DPoint(new THREE.Vector3(pointX, pointY, pointZ), 0.15, 'red');
+                point1.visible = false;
+
+                originMesh = create3DPoint(new THREE.Vector3(0, 0, 0), 0.15, 'red');
+
+                movingPoint = create3DPoint(new THREE.Vector3(0, 0, 0), 0.15, 'red');
+
+                draw3DLine(originMesh, point1, 0x0000ff);
+                originLine.visible = false;
+                drawMoving3DLine(originMesh, movingPoint, 0x0000ff);
+
+                // Create a DragControls object to make the points draggable
+                const dragControls = new DragControls([point1], camera, renderer.domElement);
+
+                // Function to disable OrbitControls and TransformControls during dragging
+                function disableControlsDuringDrag() {
+                    orbitControls.enabled = false;
+                    dragControls.enabled = true; // Enable TransformControls
+                }
+
+                // Function to re-enable controls after dragging
+                function enableControlsAfterDrag() {
+                    orbitControls.enabled = true;
+                    dragControls.enabled = false; // Disable TransformControls
+                }
+
+                // Event listener for when dragging starts
+                dragControls.addEventListener('dragstart', function (event) {
+                    orbitControls.enabled = false;
+                });
+
+                // Event listener for when a point is being dragged
+                dragControls.addEventListener('drag', obj => {
+                    projectPointToSphere(obj);
+                });
+
+                // Event listener for when dragging ends
+                dragControls.addEventListener('dragend', function (event) {
+
+                    orbitControls.enabled = true;
+
+                });
+
+                initGUI();
+
+                render();
+            }
+
+            function initGUI() {
+                const gui = new GUI();
+                // Add button to gui            
+                const folder = gui.addFolder('Operation');
+                const button = { clearPoint: function () { clearPoint(); } };
+                // Add button to folder
+                folder.add(button, 'clearPoint').name('Clear Point');
+                folder.open();
+                // Create a slider from 0 to 100
+                const extendSlider = { Extend: 0 };
+                const extendFolder = gui.addFolder('Extend');
+                extendFolder.add(extendSlider, 'Extend', 0, 100).onChange(function (value) {
+                    // Move the movingPoint to point1 based on value on slider as %
+                    movingPoint.position.copy(point1.position).multiplyScalar(value / 100);
+                    drawMoving3DLine(originMesh, movingPoint, 0x0000ff);
+                    // if value == 100 then hide the movingPoint
+                    if (value == 100) {
+                        movingPoint.visible = false;
+                        movingLine.visible = false;
+                        point1.visible = true;
+                        originLine.visible = true;
+                        earthSphere.visible = true;
+                    } else {
+                        movingPoint.visible = true;
+                        movingLine.visible = true;
+                        point1.visible = false;
+                        originLine.visible = false;
+                        earthSphere.visible = false;
+                        clearPoint();
+                    }
+
+                    board.removeObject(A);
+                    A = board.create('point', [(O1.X() * value / 100), 0], { visible: false });
+                    board.removeObject(circle2);
+                    circle2 = board.create('circle', [O, A], { visible: false });
+                    board.removeObject(B);
+                    B = board.create('intersection', [circle2, segment, 0], { visible: false });
+                    if (value == 100) {
+                        I.setAttribute({ visible: true });
+                        I.setAttribute({ trace: true });
+                        circle.setAttribute({ visible: false });
+                        X.setAttribute({ visible: false });
+                    } else {
+                        I.setAttribute({ visible: false });
+                        I.setAttribute({ trace: false });
+                        circle.setAttribute({ visible: true });
+                        X.setAttribute({ visible: true });
+                        clearPoint();
+                    }
+                    board.removeObject(segment2);
+                    segment2 = board.create('segment', [O, B], { strokeColor: 'blue', strokeWidth: 4, fixed: true });
+                    board.update();
+                });
+                extendFolder.open();
+            }
+
+            function clearPoint() {
+                // Clear all point in listPointOnSphere
+                for (let i = 0; i < listPointOnSphere.length; i++) {
+                    scene.remove(listPointOnSphere[i]);
+                }
+                I.setAttribute({ trace: false });
+            }
+
+
+            function createCoordinatePlane() {
+                // Create a plane geometry to serve as the ground
+                const coordinatePlaneGeometry = new THREE.PlaneGeometry(30, 30);
+                coordinatePlaneGeometry.rotateX(- Math.PI / 2);
+                const coordinatePlaneMaterial = new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.2 });
+                // Create a mesh with the plane geometry and add it to the scene
+                const coordinatePlane = new THREE.Mesh(coordinatePlaneGeometry, coordinatePlaneMaterial);
+                coordinatePlane.position.y = -5
+                coordinatePlane.receiveShadow = true;
+                scene.add(coordinatePlane);
+                // Create a grid helper
+                const helper = new THREE.GridHelper(30, 30);
+                helper.position.y = -5;
+                helper.material.opacity = 0.5;
+                helper.material.transparent = true;
+                scene.add(helper);
+            }
+
+            function create3DPoint(position, size, color) {
+                const pointGeometry = new THREE.SphereGeometry(size, 32, 32);
+                const pointMaterial = new THREE.MeshStandardMaterial({ color: color });
+                pointMaterial.metalness = 0;
+                pointMaterial.roughness = 1;
+
+                const point = new THREE.Mesh(pointGeometry, pointMaterial);
+                point.position.copy(position);
+
+                scene.add(point);
+
+                return point;
+            }
+
+            function draw3DLine(pointMesh1, pointMesh2, color) {
+                if (originLine) {
+                    scene.remove(originLine);
+                }
+                // Create a 3D line from originMesh to point1 using Line2
+                const lineMaterial = new LineMaterial({
+                    color: color,
+                    linewidth: 0.005, // in pixels
+                    vertexColors: false,
+                    dashed: false,
+                });
+                const lineGeometry = new LineGeometry();
+                const positions = [];
+
+                positions.push(pointMesh1.position.x, pointMesh1.position.y, pointMesh1.position.z);
+                positions.push(pointMesh2.position.x, pointMesh2.position.y, pointMesh2.position.z);
+
+                lineGeometry.setPositions(positions);
+                originLine = new Line2(lineGeometry, lineMaterial);
+                originLine.computeLineDistances();
+                originLine.scale.set(1, 1, 1);
+                scene.add(originLine);
+            }
+
+            function drawMoving3DLine(pointMesh1, pointMesh2, color) {
+                if (movingLine) {
+                    scene.remove(movingLine);
+                }
+                // Create a 3D line from originMesh to point1 using Line2
+                const lineMaterial = new LineMaterial({
+                    color: color,
+                    linewidth: 0.005, // in pixels
+                    vertexColors: false,
+                    dashed: false,
+                });
+                const lineGeometry = new LineGeometry();
+                const positions = [];
+
+                positions.push(pointMesh1.position.x, pointMesh1.position.y, pointMesh1.position.z);
+                positions.push(pointMesh2.position.x, pointMesh2.position.y, pointMesh2.position.z);
+
+                lineGeometry.setPositions(positions);
+                movingLine = new Line2(lineGeometry, lineMaterial);
+                movingLine.computeLineDistances();
+                movingLine.scale.set(1, 1, 1);
+                scene.add(movingLine);
+            }
+
+            // Function to update the scene
+            function render() {
+                renderer.render(scene, camera);
+            }
+
+            function calculateHaversineDistance(point1, point2, radius) {
+                const phi1 = phi;
+                const phi2 = phi;
+
+                // Convert angles from degrees to radians
+                const phi1Rad = (Math.PI / 180) * phi1;
+                const theta1Rad = (Math.PI / 180) * theta1;
+                const phi2Rad = (Math.PI / 180) * phi2;
+                const theta2Rad = (Math.PI / 180) * theta2;
+
+                // Haversine formula
+                const dPhi = phi2Rad - phi1Rad;
+                const dTheta = theta2Rad - theta1Rad;
+                const a = Math.sin(dPhi / 2) * Math.sin(dPhi / 2) +
+                    Math.cos(phi1Rad) * Math.cos(phi2Rad) *
+                    Math.sin(dTheta / 2) * Math.sin(dTheta / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+                // Distance along the surface of the sphere
+                const distance = radius * c;
+
+                return distance;
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                render();
+            }
+            // Function to calculate the angle between two points
+            function calculateAngleBetweenPoints(pointA, pointB) {
+                const dotProduct = pointA.dot(pointB);
+                const magnitudeA = pointA.length();
+                const magnitudeB = pointB.length();
+                return Math.acos(dotProduct / (magnitudeA * magnitudeB));
+            }
+            // Function to project a point onto the sphere's surface
+            function projectPointToSphere(obj) {
+                const sphere = earthSphere.geometry;
+                sphere.computeBoundingBox();
+
+                const pointOnSphere = new THREE.Vector3();
+                pointOnSphere.copy(obj.object.position).sub(earthSphere.position).normalize().multiplyScalar(sphere.boundingBox.max.x);
+
+                obj.object.position.copy(pointOnSphere);
+                obj.object.position.add(earthSphere.position);
+
+                draw3DLine(originMesh, point1, 0x0000ff);
+                // Draw 3D point at pointOnSphere using create3DPoint()
+                const pointOnSphereMesh = create3DPoint(pointOnSphere, 0.1, 'green');
+                listPointOnSphere.push(pointOnSphereMesh);
+            }
+
+            function onPointerDown(event) {
+                onDownPosition.x = event.clientX;
+                onDownPosition.y = event.clientY;
+            }
+
+            function onPointerUp(event) {
+
+                onUpPosition.x = event.clientX;
+                onUpPosition.y = event.clientY;
+
+                if (onDownPosition.distanceTo(onUpPosition) === 0) {
+                    transformControl.detach();
+                }
+
+            }
+
+            function onPointerMove(event) {
+
+                pointer.x = (event.clientX / rendererWidth) * 2 - 1;
+                pointer.y = - (event.clientY / rendererHeight) * 2 + 1;
+
+                raycaster.setFromCamera(pointer, camera);
+            }
+
+            function onWindowResize() {
+
+                camera.aspect = rendererWidth / rendererHeight;
+                camera.updateProjectionMatrix();
+
+                renderer.setSize(rendererWidth, rendererHeight);
+
+
+
+            }
+
+            animate();
+        </script>
+</body>
+
+</html>

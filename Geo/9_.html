@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>육각연필과 쌍곡선(Hexagonal pencil and hyperbola)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: Monospace;
+            font-size: 13px;
+            line-height: 24px;
+            overscroll-behavior: none;
+        }
+
+        a {
+            color: #ff0;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #info {
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            padding: 30px;
+            box-sizing: border-box;
+            text-align: center;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            color: #000000;
+            font-weight: bold;
+            font-size: 34px;
+
+            /* TODO Solve this in HTML */
+        }
+
+        a,
+        button,
+        input,
+        select {
+            pointer-events: auto;
+        }
+
+        .dg.ac {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            z-index: 2 !important;
+            /* TODO Solve this in HTML */
+        }
+
+        #overlay {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        #overlay>div {
+            text-align: center;
+        }
+
+        #overlay>div>button {
+            height: 20px;
+            background: transparent;
+            color: #ffffff;
+            outline: 1px solid #ffffff;
+            border: 0px;
+            cursor: pointer;
+        }
+
+        #overlay>div>p {
+            color: #777777;
+            font-size: 12px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="container"></div>
+
+    <div id="info">육각연필과 쌍곡선(Hexagonal pencil and hyperbola)</div>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.149/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.149/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="./Geo9/index.js">
+    </script>
+
+</body>
+
+</html>
