@@ -19,7 +19,7 @@ const pointer = new THREE.Vector2();    // Vector2 to hold the pointer position
 const onUpPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is released
 const onDownPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is pressed
 const ARC_SEGMENTS = 200; // Number of segments to use for the curve
-let earthSphere, point1, point2, radius = 5, lineGeometry, phi, theta1, theta2;
+let earthSphere, point1, point2, radius = 5, lineGeometry, phi, theta1, theta2, middlePointMesh, crossPlane;
 
 init();
 
@@ -77,41 +77,26 @@ function mainGame() {
     // Add the points to the scene
     scene.add(point1);
     scene.add(point2);
-
+    addMiddlePoint(point1, point2);
+    createCrossPlane(middlePointMesh.position, point1.position, point2.position);
 
     // Create a DragControls object to make the points draggable
     const dragControls = new DragControls([point1, point2], camera, renderer.domElement);
-
-    // Function to disable controls and TransformControls during dragging
-    function disableControlsDuringDrag() {
-        controls.enabled = false;
-        dragControls.enabled = true; // Enable TransformControls
-    }
-
-    // Function to re-enable controls after dragging
-    function enableControlsAfterDrag() {
-        controls.enabled = true;
-        dragControls.enabled = false; // Disable TransformControls
-    }
-
     // Event listener for when dragging starts
     dragControls.addEventListener('dragstart', function (event) {
-
         controls.enabled = false;
-
     });
-
     // Event listener for when a point is being dragged
     dragControls.addEventListener('drag', obj => {
         projectPointToSphere(obj);
+        // addMiddlePoint(point1, point2);
+        createCrossPlane(middlePointMesh.position, point1.position, point2.position);
     });
-
     // Event listener for when dragging ends
     dragControls.addEventListener('dragend', function (event) {
-
         controls.enabled = true;
-
     });
+
     let matLine = new LineMaterial({
         color: 0x52FF00,
         linewidth: 0.005, // in world units with size attenuation, pixels otherwise
@@ -144,6 +129,30 @@ function mainGame() {
 
     let lineObject = new Line2(lineGeometry, matLine);
     scene.add(lineObject);
+}
+
+function createCrossPlane(point1, point2, point3) {
+    if (crossPlane) {
+        scene.remove(crossPlane);
+    }
+    // Calculate the normal vector
+    const normal = new THREE.Vector3().crossVectors(point2.clone().sub(point1), point3.clone().sub(point1)).normalize();
+    var plane = new THREE.Plane();
+    plane.setFromNormalAndCoplanarPoint(normal, point1).normalize();
+
+    // Create a basic rectangle geometry
+    var planeGeometry = new THREE.PlaneGeometry(10, 10);
+
+    // Align the geometry to the plane
+    var coplanarPoint = plane.coplanarPoint();
+    var focalPoint = new THREE.Vector3().copy(coplanarPoint).add(plane.normal);
+    planeGeometry.lookAt(focalPoint);
+    planeGeometry.translate(coplanarPoint.x, coplanarPoint.y, coplanarPoint.z);
+
+    // Create mesh with the geometry
+    var planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffff00, side: THREE.DoubleSide });
+    crossPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+    scene.add(crossPlane);
 }
 
 
@@ -188,12 +197,14 @@ function projectPointToSphere(obj) {
 
     obj.object.position.copy(pointOnSphere);
     obj.object.position.add(earthSphere.position);
+    createGreatLine(radius);
+}
 
+function createGreatLine(radius) {
     const newGreatCirclePoints = [];
     const numGreatCirclePoints = 100;
 
     for (let i = 0; i <= numGreatCirclePoints; i++) {
-        const angle = calculateAngleBetweenPoints(point1.position, point2.position);
         const interpolationFactor = i / numGreatCirclePoints;
         const greatCirclePoint = new THREE.Vector3().lerpVectors(point1.position, point2.position, interpolationFactor);
         greatCirclePoint.normalize();
@@ -205,6 +216,41 @@ function projectPointToSphere(obj) {
 
     lineGeometry.setPositions(newGreatCirclePoints);
     lineGeometry.attributes.position.needsUpdate = true;
+}
+
+function addMiddlePoint(pointMesh1, pointMesh2) {
+
+    if (middlePointMesh) {
+        scene.remove(middlePointMesh);
+    }
+    // Calculate the middle of the great circle
+    var middlePoint = new THREE.Vector3().lerpVectors(pointMesh1.position, pointMesh2.position, 0.5);
+    middlePoint.normalize();
+    middlePoint.multiplyScalar(radius + 0.02);
+    // Create 3D point at middlePoint
+    var middlePointGeometry = new THREE.SphereGeometry(0.1, 32, 32);
+    var middlePointMaterial = new THREE.MeshStandardMaterial({ color: '#ff8000', })
+    middlePointMaterial.metalness = 0
+    middlePointMaterial.roughness = 1
+    middlePointMesh = new THREE.Mesh(middlePointGeometry, middlePointMaterial);
+    middlePointMesh.position.copy(middlePoint);
+    scene.add(middlePointMesh);
+
+    // Create a DragControls object to make the points draggable
+    const dragMiddleControls = new DragControls([middlePointMesh], camera, renderer.domElement);
+    // Event listener for when dragging starts
+    dragMiddleControls.addEventListener('dragstart', function (event) {
+        controls.enabled = false;
+    });
+    // Event listener for when a point is being dragged
+    dragMiddleControls.addEventListener('drag', obj => {
+        projectPointToSphere(obj);
+        createCrossPlane(middlePointMesh.position, point1.position, point2.position)
+    });
+    // Event listener for when dragging ends
+    dragMiddleControls.addEventListener('dragend', function (event) {
+        controls.enabled = true;
+    });
 }
 
 function init() {
