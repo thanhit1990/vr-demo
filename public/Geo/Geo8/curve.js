@@ -1302,5 +1302,12 @@ var curveDataTop = [
 export function createCurve() {
     // read data from json file
     var line = drawLine(curveDataTop[0].positions, curveDataTop[0].colors);
+    // convert positions array to vector3 array
+    var curvePoints = [];
+    for (var i = 0; i < curveDataTop[0].positions.length; i += 3) {
+        var v = new THREE.Vector3(curveDataTop[0].positions[i], curveDataTop[0].positions[i + 1], curveDataTop[0].positions[i + 2]);
+        curvePoints.push(v);
+    }    
+    // draw line fro
     return line;
 }

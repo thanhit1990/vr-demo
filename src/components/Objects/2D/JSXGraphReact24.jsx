@@ -177,6 +177,17 @@ let logicJS = (brd) => {
     brd.unsuspendUpdate();
 }
 
+import { useControls, button } from "leva";
+function CloseWindow(props) {
+    useControls(
+        {
+            Close: button(() => window.close(), {
+            })
+        },
+    );
+    return;
+}
+
 class JSXGraphComponent extends Component {
 
     render() {
@@ -188,6 +199,7 @@ class JSXGraphComponent extends Component {
                         포물선과 포물선 위의 점에서의 접선의 벡터 방정식
                     </h2>
                 </div>
+                <CloseWindow />
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{

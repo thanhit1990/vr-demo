@@ -29,7 +29,16 @@ let logicJS = (brd) => {
     var hseg2 = brd.create('hatch', [seg2, 2], { name: '', strokeColor: 'green', strokeWidth: 0.5, ticksDistance: 1 });
     brd.unsuspendUpdate();
 }
-
+import { useControls, button } from "leva";
+function CloseWindow(props) {
+    useControls(
+        {
+            Close: button(() => window.close(), {
+            })
+        },
+    );
+    return;
+}
 class JSXGraphComponent extends Component {
     render() {
         return (
@@ -39,6 +48,7 @@ class JSXGraphComponent extends Component {
                         실을 이용한 포물선 작도
                     </h2>
                 </div>
+                <CloseWindow />
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{

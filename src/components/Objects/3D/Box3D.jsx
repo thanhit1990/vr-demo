@@ -10,15 +10,16 @@ import {
     OrbitControls, useFBX
 } from "@react-three/drei";
 import { Suspense, useRef, useState } from "react";
-import { useControls } from "leva";
+import { useControls, button } from "leva";
 import Button from "../2D/Button2D";
 import Button3D from "./Button3D";
 import { XR } from "@react-three/xr";
 
 
 function useAnimationControls(min_va, max_val) {
+
     const { percentage } = useControls({
-        percentage: { value: 0.01, min: min_va, max: max_val, step: 0.01 },
+        percentage: { value: 0.01, min: min_va, max: max_val, step: 0.01 }
     });
 
     return percentage;
@@ -28,7 +29,7 @@ function useAnimationControls(min_va, max_val) {
 const models = [
     "../box3d0.gltf",
     "../box3d1.gltf",
-    "../box3d2.gltf",    
+    "../box3d2.gltf",
     "../Cone_solid  BAKED 100fps.glb",
     "../Cylinder_solid_BAKED_100fps.glb",
     "../dagiac1.gltf",
@@ -54,13 +55,13 @@ export default function Box3D() {
     // if value is undefined, set it to 0
     if (model_idx === undefined) {
         box_idx = 0
-    }  
+    }
     else {
         // convert string to integer
         box_idx = parseInt(model_idx)
-    }      
+    }
     // if box_idx is 0, use useControls hook to get value from GUI
-    if(box_idx == 0) {
+    if (box_idx == 0) {
         percentage = useAnimationControls(0.01, 0.99);
         // Define GUI controls
         const values = useControls({
@@ -79,13 +80,21 @@ export default function Box3D() {
         }
     } else {
         box_idx += 2
-        if (box_idx ==6) {
+        if (box_idx == 6) {
             percentage = useAnimationControls(0.01, 1.01);
         } else {
             percentage = useAnimationControls(0.01, 0.99);
         }
     }
-    
+    useControls(
+        {
+            Close: button(() => window.close(), {
+            })
+        },
+    );
+
+    // Create a button       
+
     // Get model and button position from the list
     const box_model = models[box_idx]
     // Get button position from the list

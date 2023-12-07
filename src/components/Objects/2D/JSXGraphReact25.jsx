@@ -5,7 +5,6 @@ import { is } from '@react-spring/shared';
 
 let logicJS = (brd) => {
     brd.suspendUpdate();
-
     // create a slider with name "a" from 1 to 10 with initial value 1
     var slider = brd.create('slider', [[-20, -5], [5, -5], [1, 1, 5]],
         {
@@ -174,18 +173,29 @@ let logicJS = (brd) => {
     brd.resizeContainer(800, 800);
     brd.unsuspendUpdate();
 }
+import { useControls, button } from "leva";
+function CloseWindow(props) {
+    useControls(
+        {
+            Close: button(() => window.close(), {
+            })
+        },
+    );
+    return;
+}
 
 class JSXGraphComponent extends Component {
 
     render() {
-
         return (
+
             <>
                 <div >
                     <h2>
                         정삼각형 굴리기
                     </h2>
                 </div>
+                <CloseWindow/>
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{

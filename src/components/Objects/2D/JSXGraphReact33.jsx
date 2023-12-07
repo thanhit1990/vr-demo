@@ -184,7 +184,16 @@ let logicJS = (brd) => {
     brd.resizeContainer(600, 600);
     brd.unsuspendUpdate();
 }
-
+import { useControls, button } from "leva";
+function CloseWindow(props) {
+    useControls(
+        {
+            Close: button(() => window.close(), {
+            })
+        },
+    );
+    return;
+}
 class JSXGraphComponent extends Component {
 
     render() {
@@ -196,6 +205,7 @@ class JSXGraphComponent extends Component {
                         최단 거리로 가는 경우의 수와 파스칼의 삼각형
                     </h2>
                 </div>
+                <CloseWindow />
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{

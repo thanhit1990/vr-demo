@@ -266,6 +266,16 @@
             gui.add(myObject, 'θ', 0, 360, 1).onChange(function (value) {
                 updateCurve(value);
             });
+
+            var obj = {
+                close: function () {
+                    window.close();
+                }
+            };
+            var closeButton = gui.add(obj, "close").name("Close");
+            // Change background of button 
+            var closeButtonStyle = closeButton.domElement.style;
+            closeButtonStyle.color = 'white';
         }
 
         updateCurve(0);

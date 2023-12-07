@@ -95,7 +95,16 @@ let logicJS = (brd) => {
     brd.resizeContainer(800, 800);
     brd.unsuspendUpdate();
 }
-
+import { useControls, button } from "leva";
+function CloseWindow(props) {
+    useControls(
+        {
+            Close: button(() => window.close(), {
+            })
+        },
+    );
+    return;
+}
 class JSXGraphComponent extends Component {
 
     render() {
@@ -107,6 +116,7 @@ class JSXGraphComponent extends Component {
                         조각맞추기 - 한 눈에 보이는 피타고라스 정리
                     </h2>
                 </div>
+                <CloseWindow />
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{

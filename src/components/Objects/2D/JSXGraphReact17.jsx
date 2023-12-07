@@ -139,7 +139,16 @@ let logicJS = (brd) => {
     brd.clickRightArrow()
     brd.unsuspendUpdate();
 }
-
+import { useControls, button } from "leva";
+function CloseWindow(props) {
+    useControls(
+        {
+            Close: button(() => window.close(), {
+            })
+        },
+    );
+    return;
+}
 class JSXGraphComponent extends Component {
 
     render() {
@@ -151,6 +160,7 @@ class JSXGraphComponent extends Component {
                         원의 중심 작도
                     </h2>
                 </div>
+                <CloseWindow />
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{

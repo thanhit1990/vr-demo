@@ -66,9 +66,9 @@ curveFull.visible = false;
 function initGui() {
     var gui = new GUI();
     // change size of gui
-    gui.width = 250;
+    gui.width = 300;
     // change text font size of gui
-    gui.domElement.style.fontSize = "15px";
+    gui.domElement.style.fontSize = "12px";
 
     var param = {
         'cone': false,
@@ -90,6 +90,16 @@ function initGui() {
     gui.add(param, 'plane').onChange(update);
 
     gui.add(param, 'cone curve').onChange(update);
+
+    var obj = {
+        close: function () {
+            window.close();
+        }
+    };
+    var closeButton = gui.add(obj, "close").name("Close");
+    // Change background of button 
+    var closeButtonStyle = closeButton.domElement.style;
+    closeButtonStyle.color = 'white';
 }
 
 initGui();

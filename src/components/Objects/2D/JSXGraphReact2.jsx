@@ -79,7 +79,16 @@ let logicJS = (brd) => {
 
     brd.unsuspendUpdate();
 }
-
+import { useControls, button } from "leva";
+function CloseWindow(props) {
+    useControls(
+        {
+            Close: button(() => window.close(), {
+            })
+        },
+    );
+    return;
+}
 class JSXGraphComponent extends Component {
     render() {
         return (
@@ -89,6 +98,7 @@ class JSXGraphComponent extends Component {
                         정삼각형 작도
                     </h2>
                 </div>
+                <CloseWindow    />
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{ axis: true, boundingbox: [-10, 10, 10, -10] }}

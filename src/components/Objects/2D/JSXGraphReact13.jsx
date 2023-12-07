@@ -34,7 +34,16 @@ let logicJS = (brd) => {
 
     brd.unsuspendUpdate();
 }
-
+import { useControls, button } from "leva";
+function CloseWindow(props) {
+    useControls(
+        {
+            Close: button(() => window.close(), {
+            })
+        },
+    );
+    return;
+}
 class JSXGraphComponent extends Component {
 
     render() {
@@ -47,6 +56,7 @@ class JSXGraphComponent extends Component {
                         성분이 주어진 벡터 나타내기_퀴즈
                     </h2>
                 </div>
+                <CloseWindow />
                 <JXGBoard
                     logic={logicJS}
                     boardAttributes={{

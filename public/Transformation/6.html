@@ -218,6 +218,21 @@
 
         init();
 
+        initGUI();
+
+        function initGUI() {
+            const gui = new GUI({ width: 400 });
+            var obj = {
+                close: function () {
+                    window.close();
+                }
+            };
+            var closeButton = gui.add(obj, "close").name("Close");
+            // Change background of button 
+            var closeButtonStyle = closeButton.domElement.style;
+            closeButtonStyle.color = 'white';
+        }
+
         function init() {
 
             container = document.getElementById('container');
