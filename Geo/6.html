@@ -203,6 +203,18 @@
             gui.add(myObject, 'Sectors', 4, 94, 2).onChange(function (value) {
                 renderUpdate(value);
             });
+            var obj = {
+                close: function () {
+                    window.close();
+                }
+            };
+            var closeButton = gui.add(obj, "close").name("Close");
+            // Change background of button 
+            var closeButtonStyle = closeButton.domElement.style;
+            closeButtonStyle.color = 'white';
+
+
+
         }
 
         function rotateAround2Points(object3D, point1, point2, angle) {
