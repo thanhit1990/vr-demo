@@ -39,12 +39,7 @@ export function setupScene() {
     document.body.appendChild(renderer.domElement);
 
     var controls = new OrbitControls(camera, renderer.domElement);
-    const helper = new THREE.GridHelper(50, 50);
-    // change size grid size
-    helper.position.y = -10;
-    helper.material.opacity = 0.5;
-    helper.material.transparent = true;
-    scene.add(helper);
+    
     return {
         scene,
         camera,
