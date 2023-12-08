@@ -25,23 +25,24 @@ init();
 function initGui() {
     gui = new GUI();
     // change size of gui
-    gui.width = 300;
+    gui.width = 400;
     // change text font size of gui
-    gui.domElement.style.fontSize = "12px";
+    gui.domElement.id = 'gui';
 
     var obj = {
         close: function () {
             window.close();
         }
     };
-    var closeButton = gui.add(obj, "close").name("Close");
-    // Change background of button 
-    var closeButtonStyle = closeButton.domElement.style;
-    closeButtonStyle.color = 'white';
 
     distances = { 'x': 0, 'y': 0 };
     greatDistanceController = gui.add(distances, 'x').name('녹색');
     distanceController = gui.add(distances, 'y').name('자주색');
+
+    var closeButton = gui.add(obj, "close").name("Close");
+    // Change background of button 
+    var closeButtonStyle = closeButton.domElement.style;
+    closeButtonStyle.color = 'white';
 }
 
 initGui();
@@ -208,12 +209,14 @@ function createCrossPlane(point1, point2, point3) {
     var perpendicularGeometry = new THREE.PlaneGeometry(10, 10);
 
     // Align the geometry to the plane
-    var coplanarPoint = plane.coplanarPoint();
+    var coplanarPoint = new THREE.Vector3();
+    plane.coplanarPoint(coplanarPoint);
     var focalPoint = new THREE.Vector3().copy(coplanarPoint).add(plane.normal);
     planeGeometry.lookAt(focalPoint);
     planeGeometry.translate(coplanarPoint.x, coplanarPoint.y, coplanarPoint.z);
 
-    var coplanarPoint2 = perpendicularPlane.coplanarPoint();
+    var coplanarPoint2 = new THREE.Vector3();
+    perpendicularPlane.coplanarPoint(coplanarPoint2);
     var focalPoint2 = new THREE.Vector3().copy(coplanarPoint2).add(perpendicularPlane.normal);
     perpendicularGeometry.lookAt(focalPoint2);
     perpendicularGeometry.translate(coplanarPoint2.x, coplanarPoint2.y, coplanarPoint2.z);
@@ -411,7 +414,8 @@ function removeDuplicatePoints(points) {
 }
 
 function setPointOfIntersection(line, plane) {
-    var pointOfIntersection = plane.intersectLine(line);
+    var pointOfIntersection = new THREE.Vector3();
+    plane.intersectLine(line, pointOfIntersection);
     if (pointOfIntersection) {
         if (pointOfIntersection.y <= -4) return null;
         return pointOfIntersection.clone();
