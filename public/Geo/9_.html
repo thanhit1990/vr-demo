@@ -102,6 +102,65 @@
             color: #777777;
             font-size: 12px;
         }
+
+        #gui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: large;
+            font-family: sans-serif;
+        }
+
+        #gui li.number {
+            height: 50px;
+            padding-left: 10px;
+        }
+        #gui li.number input{
+            height: 40px;            
+            font-size: 30px;
+        }
+
+        #gui li.number .c {
+            width: 70%;
+        }
+
+        #gui li.number span.property-name {
+            padding-top: 15px;
+            width: 30%;
+        }
+
+        #gui li.function {
+            background-color: #007BFF;
+            text-align: center;
+            margin: auto;
+            height: 40px;
+        }
+
+        #gui li.function span.property-name {
+            width: 100%;
+            height: 100%;
+            margin-top: 5px;
+        }
+
+        #gui li.number:nth-child(1) span.property-name {
+            color: #71FA00;
+        }
+
+        #gui li.number:nth-child(2) span.property-name {
+            color: #EC38FF;
+        }
+
+        #gui li.number:nth-child(1) input {
+            color: #71FA00;
+        }
+
+        #gui li.number:nth-child(2) input {
+            color: #EC38FF;
+        }
+
+        .close-button {
+            display: none;
+        }
     </style>
 
 </head>
