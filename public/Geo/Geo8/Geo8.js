@@ -5,6 +5,7 @@ import {createPlane} from './plane.js';
 import {createCone} from './cone.js';
 import {createIntersection} from './intersection.js';
 import {createCurve} from './curve.js';
+import {createLines} from './lines.js';
 import {createCurveFull} from './curve_full.js';
 import { GUI } from 'https://cdn.jsdelivr.net/npm/three@0.117.0/examples/jsm/libs/dat.gui.module.js';
 
@@ -57,6 +58,26 @@ function drawIntersectionPoints() {
 
 const curve = createCurve();
 scene.add(curve);
+
+var originPoint = new THREE.Vector3(0, 10, 0);
+const lines = createLines(originPoint);
+for (let i = 0; i < lines.length; i++) {
+    scene.add(lines[i]);
+}
+
+// Rotate the lines around the origin point 30 degrees
+lines.forEach(function (line) {
+    var lineClone = line.clone();
+    lineClone.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2.3);
+    scene.add(lineClone);
+});
+
+
+lines.forEach(function (line) {
+    var lineClone = line.clone();
+    lineClone.rotateOnAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2.3);
+    scene.add(lineClone);
+});
 
 const curveFull = createCurveFull();
 scene.add(curveFull);

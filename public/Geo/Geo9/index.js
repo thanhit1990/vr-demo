@@ -11,17 +11,40 @@ import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
 // Initialize scene, camera, and renderer
 const { scene, camera, renderer, controls } = setupScene();
 
-
-let minT = -1.9; // Initial minimum value of t
-let maxT = 1.7; // Initial maximum value of t
 const raycaster = new THREE.Raycaster(); // Raycaster to enable selection and dragging
 const pointer = new THREE.Vector2();    // Vector2 to hold the pointer position
 const onUpPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is released
 const onDownPosition = new THREE.Vector2(); // Vector2 to hold the pointer position when the mouse button is pressed
-const ARC_SEGMENTS = 200; // Number of segments to use for the curve
-let earthSphere, point1, point2, radius = 5, lineGeometry, phi, theta1, theta2, middlePointMesh, crossPlane, perpendicularPlane_,  intersectionLine;
-
+let earthSphere, point1, point2, radius = 5, lineGeometry, phi, theta1, theta2;
+let middlePointMesh, crossPlane, perpendicularPlane_, intersectionLine;
+let lineStrangeAB;
+var gui, distances, greatDistanceController, distanceController;
+let projectionMarkerList = [];
 init();
+
+function initGui() {
+    gui = new GUI();
+    // change size of gui
+    gui.width = 300;
+    // change text font size of gui
+    gui.domElement.style.fontSize = "12px";
+
+    var obj = {
+        close: function () {
+            window.close();
+        }
+    };
+    var closeButton = gui.add(obj, "close").name("Close");
+    // Change background of button 
+    var closeButtonStyle = closeButton.domElement.style;
+    closeButtonStyle.color = 'white';
+
+    distances = { 'x': 0, 'y': 0 };
+    greatDistanceController = gui.add(distances, 'x').name('녹색');
+    distanceController = gui.add(distances, 'y').name('자주색');
+}
+
+initGui();
 
 mainGame();
 
@@ -37,15 +60,39 @@ function mainGame() {
         map: earthTexture,
         roughness: 0.8, // Adjust the roughness for more realistic appearance
         metalness: 0.1, // Adjust the metalness for more realistic appearance
-        color: 0xffffff, // Base color
+        color: 0xffffff, // Base color,
+        // wireframe: true, // Render wireframe
     });
 
     // Create a mesh with the geometry and material
     earthSphere = new THREE.Mesh(sphereGeometry, material);
+    earthSphere.visible = false;
     // Add the Earth sphere to the scene
     scene.add(earthSphere);
     earthSphere.castShadow = true;
     earthSphere.receiveShadow = true;
+
+
+    const sphereGeometryTemp = new THREE.SphereGeometry(radius - 0.03, 64, 64); // Radius, widthSegments, heightSegments
+    // Load the Earth texture
+    const textureLoaderTemp = new THREE.TextureLoader();
+    const earthTextureTemp = textureLoaderTemp.load('./Geo9/earth_texture.jpg'); // Replace with the actual URL of your Earth texture
+    earthTextureTemp.minFilter = THREE.LinearFilter;
+    // Create a material with the Earth texture
+    const materialTemp = new THREE.MeshStandardMaterial({
+        map: earthTextureTemp,
+        roughness: 0.8, // Adjust the roughness for more realistic appearance
+        metalness: 0.1, // Adjust the metalness for more realistic appearance
+        color: 0xffffff, // Base color,
+        // wireframe: true, // Render wireframe
+    });
+
+    // Create a mesh with the geometry and material
+    var earthSphereTemp = new THREE.Mesh(sphereGeometryTemp, materialTemp);
+    // Add the Earth sphere to the scene
+    scene.add(earthSphereTemp);
+    earthSphereTemp.castShadow = true;
+    earthSphereTemp.receiveShadow = true;
 
     // Create a sphere for point placement
     const pointGeometry = new THREE.SphereGeometry(0.1, 32, 32);
@@ -78,8 +125,10 @@ function mainGame() {
     scene.add(point1);
     scene.add(point2);
     addMiddlePoint(point1, point2);
-    createCrossPlane(middlePointMesh.position, point1.position, point2.position);
-
+    var lineDistance = createCrossPlane(middlePointMesh.position, point1.position, point2.position);
+    greatDistanceController.setValue(lineDistance);
+    distanceController.setValue(lineDistance);
+    gui.updateDisplay();
     // Create a DragControls object to make the points draggable
     const dragControls = new DragControls([point1, point2], camera, renderer.domElement);
     // Event listener for when dragging starts
@@ -89,8 +138,11 @@ function mainGame() {
     // Event listener for when a point is being dragged
     dragControls.addEventListener('drag', obj => {
         projectPointToSphere(obj);
-        // addMiddlePoint(point1, point2);
-        createCrossPlane(middlePointMesh.position, point1.position, point2.position);
+        addMiddlePoint(point1, point2);
+        var lineDistance = createCrossPlane(middlePointMesh.position, point1.position, point2.position);
+        greatDistanceController.setValue(lineDistance);
+        distanceController.setValue(lineDistance);
+        gui.updateDisplay();
     });
     // Event listener for when dragging ends
     dragControls.addEventListener('dragend', function (event) {
@@ -108,7 +160,6 @@ function mainGame() {
     const numGreatCirclePoints = 100;
 
     for (let i = 0; i <= numGreatCirclePoints; i++) {
-        const angle = calculateAngleBetweenPoints(point1.position, point2.position);
         const interpolationFactor = i / numGreatCirclePoints;
         const greatCirclePoint = new THREE.Vector3().lerpVectors(point1.position, point2.position, interpolationFactor);
         greatCirclePoint.normalize();
@@ -154,7 +205,7 @@ function createCrossPlane(point1, point2, point3) {
     // Create a basic rectangle geometry
     var planeGeometry = new THREE.PlaneGeometry(10, 10);
 
-    var perpendicularGeometry = new THREE.PlaneGeometry(10, 10);    
+    var perpendicularGeometry = new THREE.PlaneGeometry(10, 10);
 
     // Align the geometry to the plane
     var coplanarPoint = plane.coplanarPoint();
@@ -172,14 +223,18 @@ function createCrossPlane(point1, point2, point3) {
     crossPlane = new THREE.Mesh(planeGeometry, planeMaterial);
     crossPlane.visible = false;
 
-    perpendicularPlane_ = new THREE.Mesh(perpendicularGeometry, planeMaterial);  
-    perpendicularPlane_.visible = false;  
+    perpendicularPlane_ = new THREE.Mesh(perpendicularGeometry, planeMaterial);
+    perpendicularPlane_.visible = false;
 
     scene.add(crossPlane);
     scene.add(perpendicularPlane_);
 
     if (intersectionLine) {
         scene.remove(intersectionLine);
+    }
+
+    if (lineStrangeAB) {
+        scene.remove(lineStrangeAB);
     }
     // Find intersection points between crossPlane and earthSphere
     var pointsOfIntersection = new THREE.Geometry();
@@ -216,9 +271,6 @@ function createCrossPlane(point1, point2, point3) {
     var pointVertices = pointsOfIntersection.vertices;
     // Remove duplicates points from the array
     var uniquePoints = removeDuplicatePoints(pointVertices);
-    // uniquePoints = uniquePoints.sort((a, b) => a.x - b.x);
-    uniquePoints = interpolatePoints(uniquePoints, 5);
-
     var newPoints = [];
     var underSide = true;
     const distanceToPlane = perpendicularPlane.distanceToPoint(point1);
@@ -237,18 +289,33 @@ function createCrossPlane(point1, point2, point3) {
         }
     }
 
-
     uniquePoints = newPoints;
-    
-    var colorUniquePoint = [1, 0, 1]
+    // clone uniquePoints array
+    var uniquePointsClone = uniquePoints.slice(0);
+    var clonePoint = point2.clone();
+    var newUniquePoints = [];
+    newUniquePoints.push(clonePoint);
+    for (var i = 0; i < uniquePoints.length; i++) {
+
+        // createProjectMarker(uniquePoints[i], point2, point3);
+        var nearestPoint = findNearestPoint(clonePoint, uniquePointsClone);
+        // remove the nearest point from uniquePointsClone
+        uniquePointsClone = uniquePointsClone.filter(function (value, index, arr) {
+            return value !== nearestPoint;
+        });
+        newUniquePoints.push(nearestPoint);
+        clonePoint = nearestPoint;
+    }
+    newUniquePoints.push(point3);
+
+    uniquePoints = newUniquePoints;
     // convert from vector3 to array
     var positions = [];
     var colors = [];
     var color = new THREE.Color();
     for (var i = 0; i < uniquePoints.length; i++) {
         positions.push(uniquePoints[i].x, uniquePoints[i].y, uniquePoints[i].z);
-        color.setHSL(i / uniquePoints.length, 1.0, 0.5);
-        colors.push(colorUniquePoint[0], colorUniquePoint[1], colorUniquePoint[2]);
+        colors.push(1, 0, 1);
     }
 
     var geometry = new LineGeometry();
@@ -261,7 +328,7 @@ function createCrossPlane(point1, point2, point3) {
         transparent: false,
         dashed: false,
         stencilWrite: true,
-        stencilRef: 0
+        stencilRef: 0,
     });
 
     intersectionLine = new Line2(geometry, matLine);
@@ -269,6 +336,28 @@ function createCrossPlane(point1, point2, point3) {
     intersectionLine.renderOrder = 1;
     scene.add(intersectionLine);
 
+    var totalDistance = 0;
+    // Calculate the distance between point1 and point2
+    for (var i = 0; i < uniquePoints.length - 2; i++) {
+        var distance = calculateDistanceBetween2Points(uniquePoints[i], uniquePoints[i + 1]);
+        totalDistance += distance;
+    }
+    return totalDistance.toFixed(3) * 1000;
+}
+
+function findNearestPoint(point, points) {
+    let nearestPoint = points[0];
+    let nearestDistance = calculateDistanceBetween2Points(point, nearestPoint);
+
+    for (let i = 1; i < points.length; i++) {
+        const distance = calculateDistanceBetween2Points(point, points[i]);
+        if (distance < nearestDistance) {
+            nearestPoint = points[i];
+            nearestDistance = distance;
+        }
+    }
+
+    return nearestPoint;
 }
 
 function calculateDistanceBetween2Points(point1, point2) {
@@ -329,38 +418,6 @@ function setPointOfIntersection(line, plane) {
     };
 }
 
-
-function calculateHaversineDistance(point1, point2, radius) {
-    const phi1 = phi;
-    const phi2 = phi;
-
-    // Convert angles from degrees to radians
-    const phi1Rad = (Math.PI / 180) * phi1;
-    const theta1Rad = (Math.PI / 180) * theta1;
-    const phi2Rad = (Math.PI / 180) * phi2;
-    const theta2Rad = (Math.PI / 180) * theta2;
-
-    // Haversine formula
-    const dPhi = phi2Rad - phi1Rad;
-    const dTheta = theta2Rad - theta1Rad;
-    const a = Math.sin(dPhi / 2) * Math.sin(dPhi / 2) +
-        Math.cos(phi1Rad) * Math.cos(phi2Rad) *
-        Math.sin(dTheta / 2) * Math.sin(dTheta / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    // Distance along the surface of the sphere
-    const distance = radius * c;
-
-    return distance;
-}
-
-// Function to calculate the angle between two points
-function calculateAngleBetweenPoints(pointA, pointB) {
-    const dotProduct = pointA.dot(pointB);
-    const magnitudeA = pointA.length();
-    const magnitudeB = pointB.length();
-    return Math.acos(dotProduct / (magnitudeA * magnitudeB));
-}
 // Function to project a point onto the sphere's surface
 function projectPointToSphere(obj) {
     const sphere = earthSphere.geometry;
@@ -418,7 +475,9 @@ function addMiddlePoint(pointMesh1, pointMesh2) {
     // Event listener for when a point is being dragged
     dragMiddleControls.addEventListener('drag', obj => {
         projectPointToSphere(obj);
-        createCrossPlane(middlePointMesh.position, point1.position, point2.position)
+        var distance = createCrossPlane(middlePointMesh.position, point1.position, point2.position)
+        distanceController.setValue(distance);
+        gui.updateDisplay();
     });
     // Event listener for when dragging ends
     dragMiddleControls.addEventListener('dragend', function (event) {

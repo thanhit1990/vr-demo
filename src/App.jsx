@@ -79,12 +79,17 @@ const App = () => {
   }
 
   const Geo_9 = () => {
-    window.location.href = "./9.html";
+    window.location.href = "./9_.html";
     return <></>;
   }
 
   const Geo_8 = () => {
     window.location.href = "./8.html";
+    return <></>;
+  }
+
+  const Geo_7 = () => {
+    window.location.href = "./7.html";
     return <></>;
   }
 
@@ -152,7 +157,7 @@ const App = () => {
         <Route path="/Geo/6" element={<Geo_6 />} />
         {/* <Route path="/Geo/6" Component={Transformation2} /> */}
         {/* 입체도형 07 */}
-        <Route path="/Geo/7" Component={JSXGraphReact32} />
+        <Route path="/Geo/7" element={<Geo_7 />} />
         {/* 입체도형 08 */}
         <Route path="/Geo/8" element={<Geo_8 />} />
 

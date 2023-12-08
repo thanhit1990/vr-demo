@@ -9,12 +9,13 @@ function drawLine(positions, colors) {
     geometry.setColors(colors);
     var matLine = new LineMaterial({
         color: 0xffffff,
-        linewidth: 0.005, // in pixels
+        linewidth: 0.002, // in pixels
         vertexColors: THREE.VertexColors,
         transparent: false,
         dashed: false,
         stencilWrite: true,
-        stencilRef: 0
+        stencilRef: 0,
+        side: THREE.DoubleSide
 
     });
 
@@ -1299,11 +1300,50 @@ var curveDataTop = [
     }
 ]
 
-export function createCurve() {
-    // read data from json file
-    var positions = curveDataTop[0].positions;
-    var colors = curveDataTop[0].colors;
-    var line = drawLine(positions, colors);    
+export function createLines(originPoint) {
+    // convert positions array to vector3 array
+    var lines = [];
+    for (var i = 0; i < curveDataTop[0].positions.length; i += 3) {
+        var linePoints = [];
+        var lineColors = [];
+        linePoints.push(curveDataTop[0].positions[i]);
+        linePoints.push(curveDataTop[0].positions[i + 1]);
+        linePoints.push(curveDataTop[0].positions[i + 2]);
+        linePoints.push(originPoint.x);
+        linePoints.push(originPoint.y);
+        linePoints.push(originPoint.z);
+
+        lineColors.push(0.5);
+        lineColors.push(0.5);
+        lineColors.push(0.5);
+        lineColors.push(0.5);
+        lineColors.push(0.5);
+        lineColors.push(0.5);
+        
+        var line = drawLine(linePoints, lineColors);
+        lines.push(line);
+    }    
+
+    for (var i = 0; i < curveDataTop[0].positions.length; i += 3) {
+        var linePoints = [];
+        var lineColors = [];
+        linePoints.push(curveDataTop[0].positions[i]);
+        linePoints.push(curveDataTop[0].positions[i + 1]);
+        linePoints.push(curveDataTop[0].positions[i + 2]);
+        linePoints.push(curveDataTop[0].positions[i]);
+        linePoints.push(-10);
+        linePoints.push(curveDataTop[0].positions[i + 2]);
+
+        lineColors.push(1);
+        lineColors.push(0.5);
+        lineColors.push(0);
+        lineColors.push(1);
+        lineColors.push(0.5);
+        lineColors.push(0);
+        
+        var line = drawLine(linePoints, lineColors);
+        lines.push(line);
+    }    
     // draw line fro
-    return line;
+    return lines;
 }
