@@ -13,7 +13,11 @@
     <script src="https://rawcdn.githack.com/mrdoob/three.js/r124/examples/js/controls/OrbitControls.js"></script>
     <script src="https://rawcdn.githack.com/mrdoob/three.js/r124/examples/js/controls/DragControls.js"></script>
     <script src="https://rawgit.com/Wilt/ThreeCSG/develop/ThreeCSG.js"></script>
+    <script src="https://rawcdn.githack.com/mrdoob/three.js/r124/examples/js/modifiers/SimplifyModifier.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19"></script>
+    <script src="./lightgl.js"></script>
+    <script src="./csg.js"></script>
+    <script src="./viewer.js"></script>
     <div id="container"></div>
     <script>
         (function onLoad() {
@@ -93,31 +97,77 @@
                 scene.remove(bsp_Y);
                 scene.remove(bsp_Y_subA);
                 bsp_A = new ThreeBSP(geometry_A);
-                bsp_Y = new ThreeBSP(geometry_Y);
+                bsp_Y = new ThreeBSP(geometry_Y); // Geometry
 
                 bsp_Y_subA = bsp_Y.subtract(bsp_A);
                 bsp_mesh = bsp_Y_subA.toMesh();
-                bsp_mesh.material = new THREE.MeshLambertMaterial({ color: 0x00ff00, wireframe: true });
+                bsp_mesh.geometry.computeVertexNormals();
+
+
+                const myGeometry = bsp_mesh.geometry; // Geometry
+                const newGeometry = simplifyGeometry(myGeometry);
+                newGeometry.computeVertexNormals();
+                //const newNewGeometry = simplifyGeometry(newGeometry);
+                material = new THREE.MeshLambertMaterial({ color: 0x00ff00, wireframe: true });
+
+                bsp_mesh.geometry = newGeometry;
+                bsp_mesh.material = material;
                 geometry_Y = bsp_mesh.geometry;
                 scene.add(bsp_mesh);
+
             }
+
+            const simplifyGeometry = (geometry) => {
+                var settings = {
+                    tolerance: 5,
+                }
+                const bufferGeometry = new THREE.BufferGeometry().fromGeometry(geometry);
+                bufferGeometry.computeVertexNormals();
+                const modifier = new THREE.SimplifyModifier();
+                const simplifiedBufferGeometry = modifier.modify(bufferGeometry);
+                simplifiedBufferGeometry.dynamic = true;
+                console.log(simplifiedBufferGeometry.attributes.position.count);
+                return new THREE.Geometry().fromBufferGeometry(simplifiedBufferGeometry);
+            };
+
+            const geometryFromBufferGeometry = (bufferGeometry) => {
+                const geometry = new THREE.Geometry();
+
+                // Extract vertex positions
+                const positions = bufferGeometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    geometry.vertices.push(new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]));
+                }
+
+                // Extract faces (assuming TRIANGLES)
+                const indices = bufferGeometry.index.array;
+                for (let i = 0; i < indices.length; i += 3) {
+                    const face = new THREE.Face3(indices[i], indices[i + 1], indices[i + 2]);
+                    geometry.faces.push(face);
+                }
+
+                // Other attributes (colors, UVs, normals) might be extracted similarly
+
+                return geometry;
+            };
+
 
             function onWindowResize() {
 
-				const aspect = window.innerWidth / window.innerHeight;
+                const aspect = window.innerWidth / window.innerHeight;
 
-				cameraPersp.aspect = aspect;
-				cameraPersp.updateProjectionMatrix();
+                cameraPersp.aspect = aspect;
+                cameraPersp.updateProjectionMatrix();
 
-				cameraOrtho.left = cameraOrtho.bottom * aspect;
-				cameraOrtho.right = cameraOrtho.top * aspect;
-				cameraOrtho.updateProjectionMatrix();
+                cameraOrtho.left = cameraOrtho.bottom * aspect;
+                cameraOrtho.right = cameraOrtho.top * aspect;
+                cameraOrtho.updateProjectionMatrix();
 
-				renderer.setSize( window.innerWidth, window.innerHeight );
+                renderer.setSize(window.innerWidth, window.innerHeight);
 
-				render();
+                render();
 
-			}
+            }
 
 
             function render() {
@@ -126,8 +176,8 @@
 
             function createModel() {
 
-                geometry_Y = new THREE.BoxBufferGeometry(1.5, 1.5, 1.5);
-                geometry_A = new THREE.CylinderBufferGeometry(0.2, 0.2, 0.7, 12);
+                geometry_Y = new THREE.CubeGeometry(1.5, 1.5, 1.5);
+                geometry_A = new THREE.CylinderGeometry(0.2, 0.2, 0.7, 12);
                 // geometry_A = new THREE.BoxBufferGeometry(0.3, 0.7, 0.3);
                 var geometry_A_mesh = new THREE.Mesh(geometry_A, new THREE.MeshLambertMaterial({ color: 0xff0000, wireframe: true }));
                 scene.add(geometry_A_mesh);
@@ -141,6 +191,24 @@
                 bsp_mesh.material = new THREE.MeshLambertMaterial({ color: 0x00ff00, wireframe: true });
                 geometry_Y = bsp_mesh.geometry;
                 scene.add(bsp_mesh);
+            }
+
+            function createMeshFromPolygons(polygons) {
+                var geometry = new THREE.Geometry();
+                polygons.forEach(function (polygon) {
+                    var vertices = polygon.vertices.map(function (vertex) {
+                        return new THREE.Vector3(vertex.pos.x, vertex.pos.y, vertex.pos.z);
+                    });
+                    for (var i = 2; i < vertices.length; i++) {
+                        geometry.vertices.push(vertices[0]);
+                        geometry.vertices.push(vertices[i - 1]);
+                        geometry.vertices.push(vertices[i]);
+                        var face = new THREE.Face3(geometry.vertices.length - 3, geometry.vertices.length - 2, geometry.vertices.length - 1);
+                        geometry.faces.push(face);
+                    }
+                });
+                var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color: 0x0000ff, wireframe: true }));                
+                return mesh;
             }
 
             function addGridHelper() {
