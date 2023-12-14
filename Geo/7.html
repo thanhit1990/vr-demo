@@ -363,6 +363,13 @@
                     board.update();
                 });
                 extendFolder.open();
+
+                var obj = {
+                    close: function () {
+                        window.close();
+                    }
+                };
+                var closeButton = gui.add(obj, "close").name("Close");
             }
 
             function clearPoint() {
