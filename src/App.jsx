@@ -98,10 +98,15 @@ const App = () => {
     return <></>;
   }
 
+  const XRPlus = () => {
+    window.location.href = "./xrplus/index.html";
+    return <></>;
+  }
+
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<VRApp />} />
+        <Route exact path="/" element={<XRPlus />} />
 
         <Route exact path="/VRApp" element={<VRApp />} />
 

@@ -12,6 +12,7 @@ dist
 dist_bk
 dist-ssr
 *.local
+public/xrplus
 
 # Editor directories and files
 .vscode/*
